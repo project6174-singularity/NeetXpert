@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeetXPert — Reaction Mechanism & Name Reactions</title>
+<style>
+:root{
+  --bg:#080b10;--panel:#0d131b;--panel2:#111a24;--line:#202c38;
+  --text:#f4f6f8;--muted:#8c98a8;--teal:#62e2cf;--gold:#e6bd68;
+  --blue:#819bff;--purple:#bb8dff;--red:#ff817a;--green:#75e3a2;
+  --serif:Georgia,"Times New Roman",serif;--sans:Inter,system-ui,-apple-system,Segoe UI,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+ margin:0;background:
+ radial-gradient(circle at 8% 0%,rgba(98,226,207,.10),transparent 26%),
+ radial-gradient(circle at 95% 8%,rgba(129,155,255,.10),transparent 28%),
+ var(--bg);color:var(--text);font-family:var(--sans);min-height:100vh
+}
+body:before{
+ content:"";position:fixed;inset:0;pointer-events:none;opacity:.11;
+ background-image:linear-gradient(rgba(255,255,255,.035) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(255,255,255,.035) 1px,transparent 1px);
+ background-size:42px 42px;mask-image:linear-gradient(#000,transparent 88%)
+}
+.wrap{width:min(1240px,calc(100% - 34px));margin:auto}
+header{
+ height:76px;display:flex;align-items:center;justify-content:space-between;
+ border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;
+ background:rgba(8,11,16,.84);backdrop-filter:blur(18px)
+}
+.brand{display:flex;align-items:center;gap:11px;min-width:max-content}
+.logo{
+ width:43px;height:43px;border-radius:13px;display:grid;place-items:center;
+ border:1px solid #35655e;background:linear-gradient(145deg,#132823,#0d151d);
+ box-shadow:0 0 32px rgba(98,226,207,.10)
+}
+.logo svg{width:31px;height:31px}
+.brand-name{font-weight:800;font-size:19px;letter-spacing:-.045em;line-height:1}
+.brand-name .x{color:var(--teal)}
+.header-right{display:flex;align-items:center;gap:12px}
+.xp{
+ color:var(--gold);border:1px solid #4a3d27;background:#15130e;border-radius:999px;
+ padding:8px 11px;font:800 10px var(--mono);letter-spacing:.08em
+}
+.bar{width:120px;height:6px;background:#202a35;border-radius:99px;overflow:hidden}
+.bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),var(--blue));transition:.3s}
+
+.hero{padding:54px 0 30px;display:grid;grid-template-columns:1.15fr .85fr;gap:42px;align-items:center}
+.eyebrow{font:800 10px var(--mono);letter-spacing:.16em;color:var(--teal);text-transform:uppercase}
+.eyebrow:before{content:"";display:inline-block;width:25px;height:1px;background:var(--teal);vertical-align:middle;margin-right:9px}
+h1{font:700 clamp(46px,6vw,78px)/.92 var(--serif);letter-spacing:-.06em;margin:15px 0 19px}
+h1 em{font-style:normal;color:transparent;background:linear-gradient(100deg,var(--teal),#d0fff7 48%,var(--gold));background-clip:text;-webkit-background-clip:text}
+.hero p{max-width:720px;color:var(--muted);font-size:13px;line-height:1.8;margin:0}
+.hero p b{color:#dbe6e8}
+.lab{
+ border:1px solid var(--line);border-radius:20px;padding:23px;
+ background:linear-gradient(145deg,rgba(19,29,40,.96),rgba(10,15,22,.96));
+ box-shadow:0 25px 80px rgba(0,0,0,.35);position:relative;overflow:hidden
+}
+.lab:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;right:-70px;top:-90px;background:rgba(98,226,207,.08);filter:blur(10px)}
+.lab-code{font:800 9px var(--mono);letter-spacing:.14em;color:var(--gold)}
+.lab h2{font:700 25px var(--serif);margin:8px 0}
+.lab p{font-size:11px;color:var(--muted);line-height:1.65;margin:0}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}
+.stat{border-top:1px solid var(--line);padding-top:12px}.stat b{display:block;font:800 18px var(--serif)}.stat span{font:9px var(--mono);color:var(--muted)}
+
+.tabs{
+ display:flex;gap:8px;overflow:auto;padding:17px 0;border-top:1px solid var(--line);
+ border-bottom:1px solid var(--line);position:sticky;top:76px;z-index:35;
+ background:rgba(8,11,16,.88);backdrop-filter:blur(15px)
+}
+.tab{
+ border:1px solid var(--line);background:#0e151e;color:var(--muted);border-radius:8px;
+ padding:10px 13px;white-space:nowrap;cursor:pointer;font-size:10px;font-weight:800
+}
+.tab.active,.tab:hover{border-color:#477a72;background:#12231f;color:var(--text)}
+.tab span{color:var(--gold);font:800 9px var(--mono);margin-left:4px}
+
+.toolbar{display:flex;gap:9px;flex-wrap:wrap;padding:22px 0 15px}
+.search{flex:1;min-width:250px;border:1px solid var(--line);background:#0c131b;color:var(--text);border-radius:9px;padding:13px 14px;outline:none;font-size:11px}
+.search:focus{border-color:#477a72;box-shadow:0 0 0 3px rgba(98,226,207,.04)}
+.tool{border:1px solid var(--line);background:#101821;color:var(--muted);border-radius:9px;padding:12px 13px;cursor:pointer;font-size:10px;font-weight:800}
+.tool.on{color:var(--gold);border-color:#5b4928;background:#17140f}
+
+.section-head{display:flex;align-items:end;justify-content:space-between;margin:15px 0}
+.section-head h2{font:700 30px var(--serif);letter-spacing:-.04em;margin:5px 0 0}
+.section-head>span{font:9px var(--mono);color:#697586}
+
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px}
+.card{
+ border:1px solid var(--line);border-radius:16px;padding:18px;
+ background:linear-gradient(145deg,rgba(17,25,35,.97),rgba(9,14,20,.98));
+ position:relative;overflow:hidden;transition:.2s
+}
+.card:before{content:"";position:absolute;inset:0 0 auto;height:1px;background:linear-gradient(90deg,transparent,var(--accent,var(--teal)),transparent);opacity:.5}
+.card:hover{transform:translateY(-3px);border-color:#344453;box-shadow:0 20px 55px rgba(0,0,0,.38)}
+.card.mastered{border-color:#315c52}
+.card.mastered:after{content:"✓";position:absolute;right:14px;top:12px;color:var(--green);font-weight:900}
+.card-top{display:flex;justify-content:space-between;gap:10px}.code{font:800 9px var(--mono);color:#667385;letter-spacing:.1em}
+.badge{font:800 8px var(--mono);padding:5px 7px;border-radius:5px;border:1px solid #4b4127;background:#19160f;color:var(--gold)}
+.card h3{font:700 21px var(--serif);margin:13px 0 5px;letter-spacing:-.025em}
+.tagline{font-size:10px;color:var(--teal);margin-bottom:11px}
+.card p{font-size:10.5px;line-height:1.65;color:var(--muted);margin:0 0 12px}
+.eq{
+ border:1px solid #202b37;background:#090f15;border-radius:9px;padding:11px;
+ font:10px/1.65 var(--mono);color:#d9e0e7;white-space:pre-wrap
+}
+.logic{margin-top:11px;padding-top:11px;border-top:1px solid var(--line);font-size:10px;line-height:1.6;color:#9da9b8}
+.logic b{color:var(--gold);font:800 8px var(--mono);letter-spacing:.08em}
+.master{
+ width:100%;margin-top:12px;padding:9px;border-radius:8px;border:1px solid var(--line);
+ background:#121a23;color:#dfe7ed;cursor:pointer;font-size:9px;font-weight:900
+}
+.master:hover{border-color:#4b776f}
+
+.learn{
+ margin:42px 0;border:1px solid var(--line);border-radius:20px;background:#0d141c;padding:24px
+}
+.learn-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.box{border:1px solid var(--line);border-radius:15px;background:#101821;padding:20px}
+.box h3{font:700 24px var(--serif);margin:0 0 14px}
+.steps{display:grid;gap:8px}.step{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:10px;border:1px solid #202b36;border-radius:8px;background:#0d151d}
+.step i{width:25px;height:25px;border-radius:50%;display:grid;place-items:center;background:#172a27;color:var(--teal);font:800 9px var(--mono);font-style:normal}
+.step p{margin:0;font-size:10px;line-height:1.6;color:var(--muted)}.step b{color:var(--text)}
+.callout{margin-top:12px;border-left:3px solid var(--gold);background:#17130d;color:#c8c0ad;padding:12px;font-size:10px;line-height:1.65}
+.compare{width:100%;border-collapse:collapse;font-size:9px}.compare th,.compare td{text-align:left;border-bottom:1px solid var(--line);padding:9px;color:var(--muted)}.compare th{color:var(--text)}
+
+.quiz{margin:42px 0;border:1px solid var(--line);border-radius:20px;background:linear-gradient(145deg,#121a24,#0a1017);padding:24px}
+.quiz-top{display:flex;justify-content:space-between}.quiz h2{font:700 31px var(--serif);margin:5px 0}.quiz-sub{font-size:10px;color:var(--muted)}.score{font:800 11px var(--mono);color:var(--gold)}
+.q{font:700 18px var(--serif);line-height:1.45;margin-top:22px}.opts{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:13px}
+.opt{border:1px solid var(--line);background:#101821;color:#cdd5dd;text-align:left;border-radius:9px;padding:12px;cursor:pointer;font-size:10px}
+.opt:hover{border-color:#4c776f}.opt.ok{background:#10231a;border-color:#458461;color:#a2efbf}.opt.no{background:#261413;border-color:#854b47;color:#ffaaa4}
+.explain{display:none;margin-top:11px;border:1px solid var(--line);background:#0a1118;border-radius:8px;padding:12px;color:var(--muted);font-size:10px;line-height:1.6}.explain.show{display:block}
+.next{display:none;margin-top:11px;border:0;background:var(--teal);color:#07100e;padding:10px 14px;border-radius:8px;font-size:9px;font-weight:900;cursor:pointer}
+
+.gloss{margin:42px 0}.gloss-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}.term{border:1px solid var(--line);border-radius:10px;background:#0d151d;padding:13px}.term b{font:700 14px var(--serif)}.term p{margin:5px 0 0;color:var(--muted);font-size:9.5px;line-height:1.55}
+footer{border-top:1px solid var(--line);padding:25px 0 38px;color:#637083;font:8px var(--mono);display:flex;justify-content:space-between}
+.toast{position:fixed;right:20px;bottom:20px;background:#14241f;border:1px solid #315c52;color:#b9f5e8;border-radius:9px;padding:11px 14px;font-size:10px;opacity:0;transform:translateY(80px);transition:.25s;z-index:100}.toast.show{opacity:1;transform:none}
+
+@media(max-width:900px){.hero{grid-template-columns:1fr}.grid{grid-template-columns:1fr 1fr}.learn-grid{grid-template-columns:1fr}.gloss-grid{grid-template-columns:1fr 1fr}}
+@media(max-width:600px){.wrap{width:calc(100% - 22px)}.grid,.opts,.gloss-grid{grid-template-columns:1fr}.bar{display:none}.hero{padding-top:38px}h1{font-size:50px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+ <div class="brand">
+  <div class="logo">
+   <svg viewBox="0 0 34 34" fill="none" aria-label="NeetXPert chemistry logo">
+    <path d="M17 3.5c-7.5 0-13.5 6-13.5 13.5S9.5 30.5 17 30.5 30.5 24.5 30.5 17 24.5 3.5 17 3.5Z" stroke="#62e2cf" stroke-width="1.3"/>
+    <path d="M9 11h4.3v12M9 23h4.3M20.7 11h4.3v12M20.7 23H25M13.3 17h7.4" stroke="#f4f6f8" stroke-width="2" stroke-linecap="round"/>
+    <path d="M15.1 8.2h3.8" stroke="#e6bd68" stroke-width="2" stroke-linecap="round"/>
+   </svg>
+  </div>
+  <div class="brand-name">Neet<span class="x">X</span>pert</div>
+ </div>
+ <div class="header-right"><div class="xp" id="xp">XP 000</div><div class="bar"><i id="progress"></i></div></div>
+</header>
+
+<section class="hero">
+ <div>
+  <div class="eyebrow">Organic Chemistry · Chapter 02</div>
+  <h1>Reaction Mechanism<br>&amp; <em>Name Reactions</em></h1>
+  <p>From <b>zero → mechanism → reaction map → NEET speed</b>. Learn who attacks, where it attacks, which intermediate forms, why one product wins, and finally lock the reaction into memory with active recall.</p>
+ </div>
+ <div class="lab">
+  <div class="lab-code">REACTION LAB / CASE 002</div>
+  <h2>Make organic chemistry predictable.</h2>
+  <p>Every card follows the same mental model: <b>reagent → mechanism → intermediate → stability → product → exam trigger.</b></p>
+  <div class="stats">
+   <div class="stat"><b id="count">0</b><span>REACTION CARDS</span></div>
+   <div class="stat"><b id="mastery">0%</b><span>MASTERY</span></div>
+   <div class="stat"><b>15</b><span>BOSS QUESTIONS</span></div>
+  </div>
+ </div>
+</section>
+
+<nav class="tabs">
+ <button class="tab active" data-filter="all">ALL <span>CORE</span></button>
+ <button class="tab" data-filter="mechanism">MECHANISMS <span>09</span></button>
+ <button class="tab" data-filter="named">NAME REACTIONS <span>30+</span></button>
+ <button class="tab" data-filter="tests">TESTS <span>05</span></button>
+</nav>
+
+<div class="toolbar">
+ <input id="search" class="search" placeholder="Search reaction, reagent, product, test, mechanism…">
+ <button id="high" class="tool">★ HIGH YIELD</button>
+ <button id="zero" class="tool">☑ UNMASTERED</button>
+</div>
+
+<div class="section-head"><div><div class="eyebrow">REACTION ARCHIVE</div><h2>Build the reaction map</h2></div><span id="shown">SHOWING ALL</span></div>
+<div id="grid" class="grid"></div>
+
+<section class="learn">
+ <div class="section-head"><div><div class="eyebrow">MECHANISM LAB</div><h2>Understand before memorising</h2></div><span>ZERO → NEET READY</span></div>
+ <div class="learn-grid">
+  <div class="box">
+   <h3>The 4-question engine</h3>
+   <div class="steps">
+    <div class="step"><i>01</i><p><b>Who attacks?</b><br>Electrophile seeks electrons; nucleophile donates an electron pair; radicals react through single-electron pathways.</p></div>
+    <div class="step"><i>02</i><p><b>Where?</b><br>Look for electron-rich π bonds, electrophilic carbonyl carbon, or a carbon attached to a leaving group.</p></div>
+    <div class="step"><i>03</i><p><b>What intermediate?</b><br>Carbocation, carbanion, radical, halonium ion, alkoxide or sigma complex can decide the route.</p></div>
+    <div class="step"><i>04</i><p><b>Why this product?</b><br>Use resonance, substitution, inductive effects, sterics, leaving-group ability and aromaticity.</p></div>
+   </div>
+   <div class="callout"><b>NEET move:</b> mechanism → intermediate → stability → major product. Only then reach for the memorised name.</div>
+  </div>
+  <div class="box">
+   <h3>E1 / E2 / SN1 / SN2</h3>
+   <table class="compare">
+    <tr><th>Feature</th><th>E1</th><th>E2</th><th>SN1</th><th>SN2</th></tr>
+    <tr><td>Steps</td><td>2</td><td>1</td><td>2</td><td>1</td></tr>
+    <tr><td>Intermediate</td><td>Carbocation</td><td>None</td><td>Carbocation</td><td>None</td></tr>
+    <tr><td>Rate</td><td>Substrate</td><td>Substrate × base</td><td>Substrate</td><td>Substrate × Nu</td></tr>
+    <tr><td>Rearrangement</td><td>Possible</td><td>No</td><td>Possible</td><td>No</td></tr>
+    <tr><td>Stereochemistry</td><td>—</td><td>Anti favoured</td><td>Racemisation tendency</td><td>Inversion</td></tr>
+    <tr><td>Clue</td><td>Stable C⁺</td><td>Strong base</td><td>Polar protic</td><td>Backside attack</td></tr>
+   </table>
+   <div class="callout">Concerted = E2/SN2. Carbocation = E1/SN1. This single split explains many NEET product and rate questions.</div>
+  </div>
+ </div>
+</section>
+
+<section class="quiz">
+ <div class="quiz-top"><div><div class="eyebrow">BOSS BATTLE</div><h2>Reaction Rapid-Fire</h2><div class="quiz-sub">Correct answers earn XP. Explanations teach the mechanism, not just the answer.</div></div><div id="score" class="score">0 / 0</div></div>
+ <div id="quizbox"></div>
+</section>
+
+<section class="gloss">
+ <div class="section-head"><div><div class="eyebrow">STARTING FROM ZERO</div><h2>Micro-glossary</h2></div><span>CORE INSTINCTS</span></div>
+ <div class="gloss-grid">
+  <div class="term"><b>Electrophile</b><p>Electron-pair seeker; attacks electron-rich regions.</p></div>
+  <div class="term"><b>Nucleophile</b><p>Electron-pair donor; attacks an electron-poor centre.</p></div>
+  <div class="term"><b>Leaving group</b><p>Departs with the bonding electron pair.</p></div>
+  <div class="term"><b>Carbocation</b><p>Electron-deficient carbon; stability controls many pathways.</p></div>
+  <div class="term"><b>Carbanion</b><p>Electron-rich carbon; resonance and substituents matter.</p></div>
+  <div class="term"><b>Resonance</b><p>Delocalisation of electrons across a conjugated system.</p></div>
+  <div class="term"><b>Markovnikov</b><p>Common ionic HX addition orientation based on the more stable carbocation pathway.</p></div>
+  <div class="term"><b>Anti-Markovnikov</b><p>Peroxide-assisted HBr addition via a radical pathway.</p></div>
+ </div>
+</section>
+
+<footer><span>NEETXPERT · ORGANIC CHEMISTRY / CASE FILE 002</span><span>MECHANISM → MEMORY → MASTERY</span></footer>
+</div>
+<div id="toast" class="toast">+10 XP · Reaction mastered</div>
+
+<script>
+const reactions = [
+/* MECHANISMS */
+["mechanism",1,"M-01","E2 Elimination","One-step · anti-periplanar · no intermediate","R–CH₂–CHX–R′ + strong base → alkene + HX","Base removes a β-H while the leaving group leaves in the same concerted step.","Rate depends on substrate and base. Strong bulky bases can favour removal of the less hindered β-H; anti-periplanar geometry is favoured.","E2 elimination dehydrohalogenation alcoholic KOH bulky base alkene"],
+["mechanism",1,"M-02","E1 Elimination","Two-step · carbocation · rearrangement possible","R–CHX–R′ → carbocation → alkene","Leaving group departure forms a carbocation; deprotonation then forms the alkene.","Rate depends mainly on substrate. Carbocation stability controls the pathway and rearrangements can occur.","E1 dehydration alcohol carbocation rearrangement"],
+["mechanism",1,"M-03","Electrophilic Addition","π bond → electrophile → carbocation → nucleophile","Alkene + HX → major Markovnikov product","The π bond attacks an electrophile and the pathway favours the more stable carbocation.","Check carbocation stability first. If rearrangement creates a more stable carbocation, the product can change.","addition alkene HX Markovnikov carbocation rearrangement"],
+["mechanism",1,"M-04","Nucleophilic Addition","Carbonyl carbon is attacked by a nucleophile","R₂C=O + Nu⁻ → R₂C(O⁻)–Nu","The nucleophile attacks the electrophilic carbonyl carbon; the C=O π bond moves to oxygen, giving an alkoxide.","Aldehydes are generally less sterically hindered than ketones. Electron-withdrawing groups increase electrophilicity.","carbonyl nucleophilic addition aldehyde ketone Grignard sp2 sp3"],
+["mechanism",1,"M-05","Free Radical Addition","Initiation → propagation → termination","HBr + alkene + peroxide → anti-Markovnikov product","Peroxides initiate a radical chain; Br• addition gives anti-Markovnikov HBr addition.","The peroxide effect is classically associated with HBr. Think radical stability and propagation steps.","radical HBr peroxide anti Markovnikov initiation propagation termination"],
+["mechanism",1,"M-06","SN1 Substitution","Carbocation intermediate · unimolecular rate","R–LG → R⁺ → R–Nu","Leaving group departs first, then a nucleophile attacks the planar carbocation.","Favoured by carbocation stability, good leaving groups and polar protic conditions. Rearrangements can occur.","SN1 substitution carbocation polar protic racemization rearrangement"],
+["mechanism",1,"M-07","SN2 Substitution","Backside attack · one step · inversion","Nu⁻ + R–LG → R–Nu + LG⁻","Nucleophile attacks from the backside while the leaving group leaves simultaneously.","Favoured by less hindered substrates and polar aprotic solvents. Steric hindrance slows it. Gives inversion.","SN2 substitution backside attack Walden inversion polar aprotic"],
+["mechanism",1,"M-08","Aromatic Electrophilic Substitution","Wheland / sigma complex","Ar–H + E⁺ → Ar–E + H⁺","Electrophile attacks the aromatic ring, temporarily destroying aromaticity in the sigma complex before restoration.","Electron donating groups activate and commonly direct ortho/para; strong electron-withdrawing groups deactivate and commonly direct meta.","EAS aromatic electrophilic substitution sigma Wheland ortho para meta +M -M"],
+["mechanism",1,"M-09","SNAr / Meisenheimer","Addition–elimination on activated aryl halide","Ar–X + Nu⁻ → Meisenheimer complex → Ar–Nu","Nucleophile adds to an aryl carbon bearing a leaving group; strong electron-withdrawing groups can stabilise the intermediate.","Look for a strongly activated aryl halide and electron-withdrawing groups.","SNAr aromatic nucleophilic substitution Meisenheimer NO2 addition elimination"],
+
+/* NAME REACTIONS / TESTS / PROCESSES */
+["named",1,"N-01","Wurtz Reaction","Alkyl halide coupling","2 R–X + 2 Na / dry ether → R–R + 2 NaX","Couples alkyl halides to form an alkane.","Recognition: sodium + dry ether + alkyl halide → alkane coupling.","Wurtz sodium dry ether alkane coupling"],
+["named",1,"N-02","Gabriel Phthalimide Synthesis","Primary amine preparation","Phthalimide → N-alkyl phthalimide → hydrolysis → R–NH₂","Uses phthalimide as a nitrogen source to prepare primary amines by substitution followed by hydrolysis.","Used for primary amines; the substrate should suit SN2 chemistry.","Gabriel phthalimide primary amine synthesis hydrolysis SN2"],
+["named",1,"N-03","Hofmann Bromamide Degradation","Amide → amine with one fewer carbon","RCONH₂ + Br₂/NaOH → RNH₂","Converts an amide to a primary amine with loss of the carbonyl carbon.","Exam trigger: one carbon less than the starting amide.","Hofmann bromamide degradation amide amine one carbon less Br2 NaOH"],
+["named",1,"N-04","Sandmeyer Reaction","Diazonium salt → aryl halide / nitrile","Ar–N₂⁺ + CuX → Ar–X + N₂","Aryl diazonium salts react with copper(I) salts to replace the diazonium group by Cl, Br or CN.","Spot aryl diazonium + Cu(I) salt.","Sandmeyer diazonium CuCl CuBr CuCN aryl chloride bromide nitrile"],
+["named",1,"N-05","Gattermann Reaction","Diazonium substitution using Cu powder","Ar–N₂⁺ + HX/Cu → Ar–X + N₂","Aryl diazonium chemistry can replace the diazonium group with halogen using copper powder and acid.","Distinguish from Sandmeyer by the copper powder / acid setup.","Gattermann diazonium copper powder HCl HBr aryl halide"],
+["named",1,"N-06","Gattermann–Koch Reaction","Aromatic formylation","Ar–H + CO + HCl / AlCl₃, CuCl → Ar–CHO","Introduces a formyl group onto an aromatic ring.","CO + HCl + Lewis-acid system is the recognition pattern.","Gattermann Koch formylation benzaldehyde CO HCl AlCl3 CuCl"],
+["named",1,"N-07","Finkelstein Reaction","Halide exchange","R–Cl/R–Br + NaI / acetone → R–I + NaCl/NaBr","Halide exchange commonly used to prepare alkyl iodides.","NaI in acetone is the high-yield recognition pair.","Finkelstein NaI acetone alkyl iodide halide exchange"],
+["named",1,"N-08","Swarts Reaction","Preparation of alkyl fluorides","R–Cl/R–Br + metal fluoride → R–F","Halogen exchange used to prepare alkyl fluorides.","Swarts → F.","Swarts alkyl fluoride AgF halogen exchange"],
+["named",1,"N-09","Williamson Ether Synthesis","Alkoxide + alkyl halide → ether","RO⁻Na⁺ + R′–X → R–O–R′ + NaX","Ether formation by nucleophilic substitution, commonly SN2.","Best with a suitable primary alkyl halide; bulky tertiary halides favour elimination.","Williamson ether alkoxide alkyl halide SN2"],
+["named",1,"N-10","Wolff–Kishner Reduction","Carbonyl → methylene · basic","R₂C=O → R₂CH₂ / NH₂NH₂, strong base, heat","Reduces aldehydes and ketones to hydrocarbons under strongly basic conditions.","Wolff–Kishner = basic. Contrast with Clemmensen = acidic.","Wolff Kishner carbonyl reduction hydrazine KOH base"],
+["named",1,"N-11","Clemmensen Reduction","Carbonyl → methylene · acidic","R₂C=O → R₂CH₂ / Zn(Hg), HCl","Reduces aldehydes and ketones to hydrocarbons under acidic conditions.","Clemmensen = acidic; Zn(Hg)/HCl is the trigger.","Clemmensen reduction Zn Hg HCl acidic carbonyl"],
+["named",1,"N-12","Rosenmund Reduction","Acid chloride → aldehyde","RCOCl + H₂ / Pd–BaSO₄ → RCHO","Catalytic hydrogenation of an acid chloride stops at the aldehyde stage.","Poisoned catalyst Pd/BaSO₄ prevents further reduction.","Rosenmund acid chloride aldehyde H2 Pd BaSO4"],
+["named",1,"N-13","Reimer–Tiemann Reaction","Phenol → ortho-hydroxybenzaldehyde","Phenol + CHCl₃/NaOH → o-hydroxybenzaldehyde","Formylation of phenols under basic chloroform conditions, typically giving an ortho-formyl product.","Phenol + CHCl₃ + base → –CHO on the ring.","Reimer Tiemann phenol chloroform NaOH formylation salicylaldehyde"],
+["named",1,"N-14","Aldol Condensation","Carbonyl + α-H → β-hydroxy carbonyl → alkene","2 carbonyl compounds → β-hydroxy carbonyl → α,β-unsaturated carbonyl","Enolate/enol chemistry creates a new C–C bond; dehydration can give an α,β-unsaturated carbonyl.","First check for an α-hydrogen. Cross-aldol variants use different carbonyl partners.","Aldol condensation alpha hydrogen enolate beta hydroxy carbonyl"],
+["named",1,"N-15","Cannizzaro Reaction","Aldehyde without α-H → alcohol + carboxylate","2 R–CHO + strong base → R–CH₂OH + R–COO⁻","Non-enolizable aldehydes disproportionate under strong base: one oxidised, one reduced.","Classic trigger: aldehyde with no α-hydrogen.","Cannizzaro aldehyde no alpha hydrogen disproportionation"],
+["named",1,"N-16","Hell–Volhard–Zelinsky (HVZ)","α-Halogenation of carboxylic acids","R–CH₂–COOH → R–CHX–COOH","Introduces halogen at the α-carbon of a carboxylic acid.","Look for carboxylic acid + α-H + α-halogenation.","HVZ Hell Volhard Zelinsky alpha halogenation carboxylic acid"],
+["named",1,"N-17","Kolbe Electrolysis","Carboxylate → coupled alkane","2 RCOO⁻ → R–R + 2CO₂","Electrochemical oxidative decarboxylative coupling of carboxylate ions produces an alkane.","Electrolysis + decarboxylation + coupling.","Kolbe electrolysis carboxylate alkane decarboxylation coupling"],
+["named",1,"N-18","Soda Lime Decarboxylation","Carboxylate salt → alkane with one fewer carbon","RCOONa + NaOH/CaO, heat → RH + Na₂CO₃","Heating a sodium carboxylate with soda lime removes the carboxyl carbon.","One carbon less: compare with Hofmann, which starts from an amide.","soda lime decarboxylation carboxylate alkane NaOH CaO"],
+["named",1,"N-19","Darzens Reaction","Carbonyl + α-halo ester → epoxide","Carbonyl + α-halo ester/base → epoxide","A base-promoted C–C bond-forming reaction gives an epoxide.","α-halo ester + aldehyde/ketone + base → epoxide.","Darzens epoxide alpha halo ester aldehyde ketone"],
+["named",1,"N-20","Hydroboration–Oxidation","Anti-Markovnikov hydration","Alkene —BH₃→ organoborane —H₂O₂/OH⁻→ alcohol","Hydrates an alkene without the free-carbocation pathway, giving anti-Markovnikov alcohol orientation.","BH₃ then H₂O₂/OH⁻ is the recognition sequence.","hydroboration oxidation anti Markovnikov alcohol BH3 H2O2"],
+["named",1,"N-21","Oxymercuration–Demercuration","Markovnikov hydration without rearrangement","Alkene —Hg(OAc)₂/H₂O→ organomercury —NaBH₄→ alcohol","Hydration gives Markovnikov orientation without a free carbocation rearrangement pathway.","Markovnikov + no rearrangement is the recognition pair.","oxymercuration demercuration Markovnikov alcohol HgOAc NaBH4"],
+["named",1,"N-22","Tollens’ Test","Aldehyde → silver mirror","Aldehyde + Tollens reagent → carboxylate + Ag mirror","Aldehydes reduce the silver complex to metallic silver while being oxidised.","Silver mirror = Tollens.","Tollens aldehyde silver mirror oxidation test"],
+["named",1,"N-23","Fehling’s Test","Aldehyde → Cu₂O precipitate","Aldehyde + Fehling solution → carboxylate + Cu₂O","Aldehydes reduce copper(II) to copper(I) oxide.","Think aldehyde oxidation + Cu₂O precipitate.","Fehling aldehyde Cu2O test oxidation"],
+["named",1,"N-24","Iodoform Test","Methyl ketone / ethanol pattern","R–CO–CH₃ + I₂/NaOH → CHI₃ + carboxylate","Methyl ketones and suitable precursors give the characteristic iodoform reaction.","Yellow CHI₃ is the visual clue.","iodoform methyl ketone ethanol CHI3 yellow test"],
+["named",1,"N-25","Lucas Test","Alcohol classification","ROH + HCl/ZnCl₂ → RCl + H₂O","Differentiates alcohols by the relative rate at which turbidity appears.","ZnCl₂/HCl = Lucas reagent; tertiary alcohols react fastest in the classic comparison.","Lucas test alcohol primary secondary tertiary ZnCl2 HCl test"],
+["named",1,"N-26","Hinsberg Test","Amine classification","Amine + sulfonyl chloride/base → diagnostic solubility behaviour","Distinguishes primary, secondary and tertiary amines using sulfonyl chloride chemistry and solubility.","Hinsberg = amine differentiation.","Hinsberg test amines primary secondary tertiary sulfonyl chloride test"],
+["named",1,"N-27","Isocyanide / Carbylamine Test","Primary amine detection","R–NH₂ + CHCl₃ + alc. KOH → R–NC","Primary amines give foul-smelling isocyanides under carbylamine conditions.","Only primary amines give the classic positive test.","isocyanide carbylamine test primary amine CHCl3 KOH"],
+["named",0,"N-28","Wittig Reaction","Carbonyl → alkene","R₂C=O + phosphorus ylide → R₂C=CHR + Ph₃P=O","Converts a carbonyl group into an alkene using a phosphorus ylide.","Reference item from the supplied list; the source summary says it was not discussed in detail.","Wittig carbonyl alkene ylide phosphorus"],
+["named",0,"N-29","Kumene Process","Cumene → phenol + acetone","Cumene → hydroperoxide → phenol + acetone","Industrial route in which cumene oxidation is followed by cleavage to phenol and acetone.","Recognition pair: cumene process gives phenol + acetone.","cumene process phenol acetone hydroperoxide"],
+["named",0,"N-30","Dow Process","Chlorobenzene → phenol","C₆H₅Cl + NaOH → C₆H₅ONa → C₆H₅OH","Aromatic nucleophilic substitution under severe conditions converts chlorobenzene to phenol.","High temperature and pressure with molten NaOH is the recognition clue.","Dow process chlorobenzene phenol NaOH high temperature pressure"],
+["named",0,"N-31","Diazotization","Primary aromatic amine → diazonium salt","Ar–NH₂ + NaNO₂/HCl, 0–5°C → Ar–N₂⁺Cl⁻","Converts a primary aromatic amine into an aryl diazonium salt at low temperature.","0–5°C + NaNO₂/HCl is the recognition sequence.","diazotization aniline diazonium NaNO2 HCl 0 5"],
+["named",0,"N-32","Cross-Aldol Condensation","Different carbonyl partners","Carbonyl A + carbonyl B → cross-aldol product","Aldol chemistry between two different carbonyl compounds.","Check α-H and competing self-condensation pathways.","cross aldol condensation enolate carbonyl alpha hydrogen"],
+["named",0,"N-33","Bergman Cyclization","Reference reaction","Enediyne → 1,4-dehydrobenzene diradical","A high-energy enediyne cyclization reference from the supplied list.","Reference-only in the supplied chapter summary.","Bergman cyclization enediyne"],
+["named",0,"N-34","Simmons–Smith Reaction","Reference cyclopropanation","Alkene + carbenoid → cyclopropane","Classic cyclopropanation reference included because it appeared in the supplied list.","Reference-only in the supplied chapter summary.","Simmons Smith cyclopropane carbenoid alkene"],
+["named",0,"N-35","Bial’s Test","Reference carbohydrate test","Pentose + orcinol reagent → characteristic colour","Qualitative carbohydrate test listed in the supplied material.","Reference-only in the supplied chapter summary.","Bial test pentose orcinol"]
+];
+
+const qs=[
+["Which mechanism is concerted and commonly requires anti-periplanar geometry?","E2",["E1","E2","SN1","EAS"],"E2 is a one-step elimination with simultaneous β-H abstraction and leaving-group departure."],
+["Which mechanism has a carbocation intermediate and can rearrange?","E1",["E2","SN2","E1","SNAr"],"E1 forms a carbocation before deprotonation; rearrangement can occur."],
+["HBr + peroxide with an alkene gives which orientation?","Anti-Markovnikov",["Markovnikov","Anti-Markovnikov","Meta","Ortho"],"Peroxide-assisted HBr addition proceeds by a radical chain."],
+["Which reaction is recognised by NaI in acetone?","Finkelstein",["Swarts","Finkelstein","Wurtz","Sandmeyer"],"Finkelstein is halide exchange using NaI in acetone."],
+["Which reduction uses Zn(Hg)/HCl?","Clemmensen",["Wolff–Kishner","Rosenmund","Clemmensen","Hofmann"],"Clemmensen reduces carbonyls under acidic conditions."],
+["Which named reaction converts an amide to an amine with one fewer carbon?","Hofmann Bromamide",["Gabriel","Hofmann Bromamide","Wurtz","HVZ"],"Hofmann bromamide degradation removes the carbonyl carbon."],
+["Silver mirror test is characteristic of:","Tollens",["Fehling","Tollens","Lucas","Hinsberg"],"Tollens reagent gives the silver mirror with aldehydes."],
+["Which reaction prepares ethers from an alkoxide and suitable alkyl halide?","Williamson",["Williamson","Reimer–Tiemann","Darzens","Gattermann"],"Williamson ether synthesis is an SN2-based ether-forming route."],
+["Aldehyde without α-hydrogen under strong base gives:","Cannizzaro",["Aldol","Cannizzaro","HVZ","Kolbe"],"Non-enolizable aldehydes undergo disproportionation."],
+["Which pair contrasts acidic vs basic carbonyl reduction?","Clemmensen / Wolff–Kishner",["Wurtz / Finkelstein","Sandmeyer / Gattermann","Clemmensen / Wolff–Kishner","Tollens / Fehling"],"Clemmensen is acidic; Wolff–Kishner is basic."],
+["Which mechanism gives Walden inversion?","SN2",["SN1","SN2","E1","EAS"],"Backside attack in SN2 causes inversion of configuration."],
+["Which intermediate is associated with aromatic electrophilic substitution?","Wheland sigma complex",["Meisenheimer complex","Wheland sigma complex","Carbanion","Alkoxide"],"EAS temporarily loses aromaticity in the sigma complex."],
+["Which reaction gives anti-Markovnikov alcohol using BH₃ then H₂O₂/OH⁻?","Hydroboration–Oxidation",["Oxymercuration","Hydroboration–Oxidation","Wurtz","HVZ"],"That reagent sequence gives anti-Markovnikov hydration."],
+["Which test differentiates alcohols by reaction rate?","Lucas",["Lucas","Tollens","Iodoform","Hinsberg"],"Lucas reagent is HCl/ZnCl₂; tertiary alcohols react fastest in the classic comparison."],
+["What should you check first in SN2?","Steric accessibility",["Carbocation rearrangement","Steric accessibility","Aromaticity loss","Silver mirror"],"SN2 requires backside attack, so steric hindrance is critical."]
+];
+
+let S={filter:"all",q:"",high:false,un:false,done:new Set(JSON.parse(localStorage.getItem("nx_org_done")||"[]")),xp:+localStorage.getItem("nx_org_xp")||0};
+function save(){localStorage.setItem("nx_org_done",JSON.stringify([...S.done]));localStorage.setItem("nx_org_xp",S.xp)}
+function stats(){let pct=Math.round(S.done.size/reactions.length*100);document.getElementById("xp").textContent="XP "+String(S.xp).padStart(3,"0");document.getElementById("mastery").textContent=pct+"%";document.getElementById("progress").style.width=pct+"%"}
+function toast(){let t=document.getElementById("toast");t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1200)}
+function render(){
+ let q=S.q.toLowerCase();
+ let list=reactions.filter(r=>(S.filter==="all"||r[0]===S.filter||S.filter==="tests"&&r[8].includes("test"))&&(!q||(r.slice(2).join(" ")).toLowerCase().includes(q))&&(!S.high||r[1])&&(!S.un||!S.done.has(r[2])));
+ document.getElementById("shown").textContent="SHOWING "+list.length+" / "+reactions.length;
+ document.getElementById("grid").innerHTML=list.map(r=>`<article class="card ${S.done.has(r[2])?"mastered":""}">
+  <div class="card-top"><span class="code">${r[2]} · ${r[0].toUpperCase()}</span>${r[1]?'<span class="badge">★ HIGH YIELD</span>':''}</div>
+  <h3>${r[3]}</h3><div class="tagline">${r[4]}</div><p>${r[6]}</p>
+  <div class="eq">${r[5]}</div>
+  <div class="logic"><b>WHY / EXAM LOGIC</b><br>${r[7]}</div>
+  <button class="master" onclick="master('${r[2]}')">${S.done.has(r[2])?"✓ MASTERED · REVIEW AGAIN":"MARK AS MASTERED · +10 XP"}</button>
+ </article>`).join("") || '<div style="grid-column:1/-1;color:#8c98a8;padding:30px 5px">No reactions match. Try another filter or search term.</div>';
+ stats();
+}
+function master(code){if(!S.done.has(code)){S.done.add(code);S.xp+=10;save();toast()}render()}
+document.getElementById("search").oninput=e=>{S.q=e.target.value;render()};
+document.getElementById("high").onclick=()=>{S.high=!S.high;document.getElementById("high").classList.toggle("on",S.high);render()};
+document.getElementById("zero").onclick=()=>{S.un=!S.un;document.getElementById("zero").classList.toggle("on",S.un);render()};
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));b.classList.add("active");S.filter=b.dataset.filter;render()});
+
+let qi=0,ans=false,score=0;
+function quiz(){
+ let [q,a,o,e]=qs[qi];
+ document.getElementById("score").textContent=score+" / "+qi;
+ document.getElementById("quizbox").innerHTML=`<div class="q">${qi+1}. ${q}</div><div class="opts">${o.map(x=>`<button class="opt" onclick="answer(this,${JSON.stringify(x)},${JSON.stringify(a)})">${x}</button>`).join("")}</div><div id="explain" class="explain"><b>Mechanism note:</b> ${e}</div><button id="next" class="next" onclick="nextQ()">NEXT →</button>`;
+}
+function answer(el,v,a){if(ans)return;ans=true;let ok=v===a;el.classList.add(ok?"ok":"no");if(!ok)[...document.querySelectorAll(".opt")].find(x=>x.textContent===a)?.classList.add("ok");if(ok){score++;S.xp+=20;save();toast()}document.getElementById("explain").classList.add("show");document.getElementById("next").style.display="inline-block";document.getElementById("score").textContent=score+" / "+(qi+1);stats()}
+function nextQ(){qi=(qi+1)%qs.length;ans=false;quiz()}
+document.getElementById("count").textContent=reactions.length;render();quiz();
+</script>
+</body>
+</html>
