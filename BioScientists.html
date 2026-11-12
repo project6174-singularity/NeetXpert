@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Ten Names — NeetXPert Biology Field Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0f1b16;
+    --bg-alt:#122720;
+    --bg-deep:#0a1310;
+    --paper:#f6efdd;
+    --paper-alt:#efe4c6;
+    --ink:#1c2b22;
+    --ink-soft:#4a5a4d;
+    --moss:#4c7a5e;
+    --moss-bright:#6fae86;
+    --gold:#b8863b;
+    --gold-bright:#d9a856;
+    --crimson:#8c2f39;
+    --line-dark:rgba(246,239,221,0.14);
+    --line-paper:rgba(28,43,34,0.14);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--paper);
+    font-family:'Inter',sans-serif;
+    font-size:16px;
+    line-height:1.6;
+  }
+  ::selection{background:var(--gold); color:var(--bg-deep);}
+  a{color:inherit;}
+
+  .eyebrow{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11.5px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--gold-bright);
+  }
+  h1,h2,h3,h4{
+    font-family:'Fraunces',serif;
+    font-weight:600;
+    margin:0;
+  }
+
+  /* ---------- background texture ---------- */
+  .grain-bg{
+    background-image:
+      radial-gradient(circle at 15% 8%, rgba(111,174,134,0.09), transparent 40%),
+      radial-gradient(circle at 85% 92%, rgba(184,134,59,0.08), transparent 45%);
+  }
+
+  /* ---------- nav ---------- */
+  header.nav{
+    position:sticky; top:0; z-index:50;
+    background:rgba(15,27,22,0.92);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--line-dark);
+  }
+  .nav-inner{
+    max-width:1180px; margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:14px 28px;
+    gap:20px;
+  }
+  .brand{display:flex; align-items:baseline; gap:8px;}
+  .brand .mark{font-family:'Fraunces',serif; font-weight:700; font-size:19px; color:var(--paper);}
+  .brand .tag{font-family:'JetBrains Mono',monospace; font-size:10px; color:var(--moss-bright); letter-spacing:.08em;}
+  nav.toc{display:flex; gap:2px; overflow-x:auto; scrollbar-width:none;}
+  nav.toc::-webkit-scrollbar{display:none;}
+  nav.toc a{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px; letter-spacing:.04em;
+    white-space:nowrap;
+    color:rgba(246,239,221,0.55);
+    text-decoration:none;
+    padding:7px 11px;
+    border-radius:20px;
+    transition:.2s;
+  }
+  nav.toc a:hover, nav.toc a.active{
+    color:var(--bg-deep);
+    background:var(--moss-bright);
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    max-width:1180px; margin:0 auto;
+    padding:88px 28px 64px;
+    display:grid; grid-template-columns:1.3fr 1fr; gap:56px; align-items:end;
+  }
+  .hero h1{
+    font-size:clamp(40px,5.4vw,68px);
+    line-height:1.02;
+    letter-spacing:-.01em;
+    color:var(--paper);
+  }
+  .hero h1 em{
+    font-style:italic; color:var(--gold-bright); font-weight:500;
+  }
+  .hero .lede{
+    margin-top:22px; max-width:52ch;
+    color:rgba(246,239,221,0.72);
+    font-size:16.5px;
+  }
+  .hero .stats{
+    display:grid; grid-template-columns:repeat(3,1fr);
+    border-top:1px solid var(--line-dark);
+    padding-top:20px;
+  }
+  .hero .stats div{padding-right:16px;}
+  .hero .stats .n{font-family:'Fraunces',serif; font-size:30px; color:var(--gold-bright); font-weight:600;}
+  .hero .stats .l{font-family:'JetBrains Mono',monospace; font-size:10px; text-transform:uppercase; letter-spacing:.08em; color:rgba(246,239,221,0.5); margin-top:2px;}
+
+  /* signature specimen plate graphic in hero */
+  .hero-plate{
+    border:1px solid var(--line-dark);
+    background:var(--bg-alt);
+    padding:22px;
+    position:relative;
+  }
+  .hero-plate::before{
+    content:"FIG. 0 — SPECIMEN INDEX";
+    position:absolute; top:-11px; left:16px;
+    background:var(--bg);
+    padding:0 8px;
+    font-family:'JetBrains Mono',monospace;
+    font-size:10px; letter-spacing:.1em;
+    color:var(--moss-bright);
+  }
+  .hero-plate svg{width:100%; height:auto; display:block;}
+
+  /* ---------- section shell ---------- */
+  section{max-width:1180px; margin:0 auto; padding:64px 28px;}
+  .section-head{
+    display:flex; align-items:baseline; gap:16px;
+    margin-bottom:32px;
+    border-bottom:1px solid var(--line-dark);
+    padding-bottom:18px;
+  }
+  .section-head h2{font-size:clamp(26px,3vw,36px); color:var(--paper);}
+  .section-head .n{
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--gold-bright);
+  }
+
+  /* ---------- preface / concepts chapter ---------- */
+  .preface{background:var(--bg-alt); border-top:1px solid var(--line-dark); border-bottom:1px solid var(--line-dark);}
+  .concept-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+    background:var(--line-dark);
+    border:1px solid var(--line-dark);
+  }
+  .concept-card{
+    background:var(--bg-deep); padding:26px 24px;
+  }
+  .concept-card .num{font-family:'JetBrains Mono',monospace; font-size:11px; color:var(--gold); margin-bottom:10px; display:block;}
+  .concept-card h3{font-size:19px; color:var(--paper); margin-bottom:10px; font-weight:600;}
+  .concept-card p{font-size:14.5px; color:rgba(246,239,221,0.68); margin:0;}
+  .concept-flow{
+    margin-top:28px; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    font-family:'JetBrains Mono',monospace; font-size:12px; color:var(--moss-bright);
+  }
+  .concept-flow span.step{
+    border:1px solid var(--moss); border-radius:20px; padding:6px 14px; color:var(--paper);
+  }
+  .concept-flow span.arrow{color:var(--gold);}
+
+  /* ---------- specimen cards ---------- */
+  .specimens{padding-top:56px;}
+  .specimen{
+    background:var(--paper);
+    color:var(--ink);
+    border-radius:2px;
+    margin-bottom:40px;
+    position:relative;
+    box-shadow:0 24px 60px -30px rgba(0,0,0,0.6);
+    overflow:hidden;
+  }
+  .specimen::before{ /* stitched edge */
+    content:"";
+    position:absolute; left:0; top:0; bottom:0; width:10px;
+    background:repeating-linear-gradient(180deg, var(--moss) 0 6px, transparent 6px 14px);
+    opacity:.55;
+  }
+  .specimen-head{
+    display:flex; justify-content:space-between; gap:24px;
+    padding:30px 36px 24px 44px;
+    border-bottom:1px dashed var(--line-paper);
+    flex-wrap:wrap;
+  }
+  .specimen-id{
+    font-family:'JetBrains Mono',monospace;
+    font-size:11px; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--moss);
+    margin-bottom:8px;
+  }
+  .specimen-head h3{
+    font-size:clamp(24px,2.6vw,32px);
+    color:var(--ink);
+  }
+  .specimen-head .epithet{
+    font-style:italic; color:var(--ink-soft); font-size:15px; margin-top:6px; font-family:'Fraunces',serif;
+  }
+  .field-tag{
+    align-self:flex-start;
+    display:flex; align-items:center; gap:8px;
+    background:var(--paper-alt);
+    border:1px solid var(--line-paper);
+    border-radius:20px;
+    padding:8px 14px 8px 10px;
+  }
+  .field-tag svg{width:20px; height:20px; stroke:var(--moss);}
+  .field-tag span{font-family:'JetBrains Mono',monospace; font-size:10.5px; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft);}
+
+  .specimen-body{
+    display:grid; grid-template-columns:1.5fr 1fr; gap:0;
+  }
+  .specimen-main{padding:26px 36px 34px 44px;}
+  .field-mark{
+    font-family:'Fraunces',serif; font-style:italic; font-weight:500;
+    font-size:19px; color:var(--crimson);
+    border-left:3px solid var(--gold);
+    padding-left:16px;
+    margin-bottom:22px;
+    line-height:1.4;
+  }
+  .specimen-main h4{
+    font-size:12px; text-transform:uppercase; letter-spacing:.1em;
+    font-family:'JetBrains Mono',monospace; color:var(--moss);
+    margin:22px 0 8px;
+  }
+  .specimen-main h4:first-of-type{margin-top:0;}
+  .specimen-main p{margin:0 0 4px; font-size:15px; color:var(--ink);}
+
+  .specimen-side{
+    background:var(--paper-alt);
+    border-left:1px dashed var(--line-paper);
+    padding:26px 30px 30px;
+  }
+  .side-title{
+    font-family:'JetBrains Mono',monospace; font-size:11px; text-transform:uppercase; letter-spacing:.08em;
+    color:var(--gold); display:block; margin-bottom:14px;
+  }
+  .facts{list-style:none; margin:0 0 24px; padding:0;}
+  .facts li{
+    font-size:13.8px; color:var(--ink);
+    padding:9px 0 9px 20px;
+    border-bottom:1px solid rgba(28,43,34,0.09);
+    position:relative;
+  }
+  .facts li:last-child{border-bottom:none;}
+  .facts li::before{
+    content:"•"; position:absolute; left:2px; color:var(--crimson); font-weight:700;
+  }
+  .recall{
+    background:var(--ink); color:var(--paper);
+    padding:16px 18px; border-radius:2px;
+    font-size:13.5px;
+  }
+  .recall .stamp{
+    font-family:'JetBrains Mono',monospace; font-size:10px; letter-spacing:.1em;
+    color:var(--gold-bright); text-transform:uppercase; display:block; margin-bottom:8px;
+  }
+  .badge-note{
+    margin-top:16px; font-size:12px; color:var(--ink-soft);
+    font-style:italic;
+  }
+
+  @media (max-width:820px){
+    .specimen-body{grid-template-columns:1fr;}
+    .specimen-side{border-left:none; border-top:1px dashed var(--line-paper);}
+    .hero{grid-template-columns:1fr;}
+    .concept-grid{grid-template-columns:1fr;}
+    .nav-inner{flex-direction:column; align-items:flex-start; gap:10px;}
+  }
+
+  /* ---------- ledger table ---------- */
+  .ledger-wrap{overflow-x:auto; border:1px solid var(--line-dark);}
+  table.ledger{
+    width:100%; border-collapse:collapse; min-width:760px;
+    background:var(--bg-alt);
+  }
+  table.ledger th, table.ledger td{
+    text-align:left; padding:13px 16px; font-size:13.5px;
+    border-bottom:1px solid var(--line-dark);
+  }
+  table.ledger th{
+    font-family:'JetBrains Mono',monospace; font-size:10.5px; text-transform:uppercase;
+    letter-spacing:.06em; color:var(--gold-bright); font-weight:500;
+  }
+  table.ledger td{color:rgba(246,239,221,0.82);}
+  table.ledger td.name{color:var(--paper); font-weight:600; font-family:'Fraunces',serif; font-size:15px;}
+  table.ledger tr:hover td{background:rgba(111,174,134,0.06);}
+
+  /* ---------- study strategy ---------- */
+  .strategy{background:var(--bg-deep); border-top:1px solid var(--line-dark);}
+  .strategy-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:var(--line-dark); border:1px solid var(--line-dark);}
+  .strategy-card{background:var(--bg-alt); padding:22px 20px;}
+  .strategy-card .k{font-family:'JetBrains Mono',monospace; font-size:22px; color:var(--gold-bright); display:block; margin-bottom:10px;}
+  .strategy-card h4{font-size:15px; color:var(--paper); margin:0 0 6px; font-family:'Fraunces',serif;}
+  .strategy-card p{font-size:13px; color:rgba(246,239,221,0.65); margin:0;}
+  @media (max-width:820px){.strategy-grid{grid-template-columns:1fr 1fr;}}
+
+  footer{
+    text-align:center; padding:40px 28px 60px;
+    font-family:'JetBrains Mono',monospace; font-size:11px;
+    color:rgba(246,239,221,0.4); letter-spacing:.06em;
+  }
+</style>
+</head>
+<body class="grain-bg">
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="brand">
+      <span class="mark">NeetXPert</span>
+      <span class="tag">BIO · FIELD LEDGER</span>
+    </div>
+    <nav class="toc" id="toc">
+      <a href="#preface">Preface</a>
+      <a href="#s1">Mayr</a>
+      <a href="#s2">Esau</a>
+      <a href="#s3">Ramachandran</a>
+      <a href="#s4">Calvin</a>
+      <a href="#s5">Corti</a>
+      <a href="#s6">Maheshwari</a>
+      <a href="#s7">Watson &amp; Crick</a>
+      <a href="#s8">Swaminathan</a>
+      <a href="#s9">Boyer &amp; Cohen</a>
+      <a href="#s10">Mishra</a>
+      <a href="#ledger">Quick Ledger</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div>
+    <span class="eyebrow">Unit 0 · Diversity &amp; Reductionist Biology</span>
+    <h1 style="margin-top:14px;">The ten minds<br>behind your <em>Biology</em> syllabus.</h1>
+    <p class="lede">Every one of the ten units in your 11th–12th Biology textbook opens on a scientist's portrait. NEET has asked questions straight off those two intro pages for years — so here they are, indexed like specimens, with nothing skipped: who they were, what they actually discovered, and the exact lines examiners lift questions from.</p>
+    <div class="stats">
+      <div><span class="n">10</span><div class="l">Scientists</div></div>
+      <div><span class="n">10</span><div class="l">Textbook Units</div></div>
+      <div><span class="n">01</span><div class="l">Concept Chapter</div></div>
+    </div>
+  </div>
+  <div class="hero-plate">
+    <svg viewBox="0 0 260 220" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="#6fae86" stroke-width="1.4">
+      <!-- simple double helix motif -->
+      <path d="M40 10 C70 40 10 70 40 100 C70 130 10 160 40 190" stroke-opacity="0.8"/>
+      <path d="M100 10 C70 40 130 70 100 100 C70 130 130 160 100 190" stroke-opacity="0.8"/>
+      <line x1="42" y1="20" x2="98" y2="20" stroke="#b8863b" stroke-opacity="0.7"/>
+      <line x1="45" y1="45" x2="95" y2="45" stroke="#b8863b" stroke-opacity="0.5"/>
+      <line x1="40" y1="70" x2="100" y2="70" stroke="#b8863b" stroke-opacity="0.7"/>
+      <line x1="45" y1="95" x2="95" y2="95" stroke="#b8863b" stroke-opacity="0.5"/>
+      <line x1="40" y1="120" x2="100" y2="120" stroke="#b8863b" stroke-opacity="0.7"/>
+      <line x1="45" y1="145" x2="95" y2="145" stroke="#b8863b" stroke-opacity="0.5"/>
+      <line x1="40" y1="170" x2="100" y2="170" stroke="#b8863b" stroke-opacity="0.7"/>
+      <!-- leaf -->
+      <path d="M160 30 C210 30 230 70 230 100 C190 100 160 70 160 30 Z" stroke-opacity="0.7"/>
+      <line x1="163" y1="35" x2="222" y2="94" stroke-opacity="0.5"/>
+      <!-- wheat stalk -->
+      <line x1="190" y1="120" x2="190" y2="200" stroke-opacity="0.7"/>
+      <path d="M190 130 q10 -6 14 2 q-10 6 -14 -2Z" stroke-opacity="0.6"/>
+      <path d="M190 145 q-10 -6 -14 2 q10 6 14 -2Z" stroke-opacity="0.6"/>
+      <path d="M190 160 q10 -6 14 2 q-10 6 -14 -2Z" stroke-opacity="0.6"/>
+      <path d="M190 175 q-10 -6 -14 2 q10 6 14 -2Z" stroke-opacity="0.6"/>
+    </svg>
+  </div>
+</section>
+
+<!-- PREFACE / CONCEPTS -->
+<div class="preface" id="preface">
+<section>
+  <div class="section-head">
+    <span class="n">CH.0</span>
+    <h2>Before the specimens — what "biology" means in this syllabus</h2>
+  </div>
+  <p style="max-width:70ch;color:rgba(246,239,221,0.72);font-size:15.5px;">
+    Both intro pages (11th and 12th) build one argument in stages. NEET has tested each stage as a standalone one-liner, so read them as a sequence, not as trivia.
+  </p>
+
+  <div class="concept-grid" style="margin-top:28px;">
+    <div class="concept-card">
+      <span class="num">01</span>
+      <h3>Natural history</h3>
+      <p>Biology began as description — using the eye and a magnifying glass to record the external and internal structure of living things. No mechanism, just form.</p>
+    </div>
+    <div class="concept-card">
+      <span class="num">02</span>
+      <h3>Cell theory</h3>
+      <p>Every organism, however different it looks, is built from the same basic unit. This is the first hint that diversity sits on top of a shared, unifying design.</p>
+    </div>
+    <div class="concept-card">
+      <span class="num">03</span>
+      <h3>Reductionist biology</h3>
+      <p>Post-1950s biology borrowed the tools of physics and chemistry — centrifugation, X-ray diffraction, isotope tracing — to explain life at the molecular and physico-chemical level. Also called molecular biology or biochemistry.</p>
+    </div>
+    <div class="concept-card">
+      <span class="num">04</span>
+      <h3>Emergent properties</h3>
+      <p>A molecule alone can't explain a population. Properties "emerge" as you climb levels — molecule → cell → tissue → organ → organism → population — so no single level, alone, explains life.</p>
+    </div>
+    <div class="concept-card">
+      <span class="num">05</span>
+      <h3>Systems biology</h3>
+      <p>The syllabus's real thesis: pure organismal biology and pure reductionist biology are each incomplete alone. You need both, integrated, to actually understand a living system.</p>
+    </div>
+    <div class="concept-card">
+      <span class="num">06</span>
+      <h3>Biology &amp; human welfare</h3>
+      <p>Post-1945, biology stopped being purely descriptive and became utilitarian — antibiotics, high-yield agriculture, food processing, and later, biotechnology and transgenics.</p>
+    </div>
+  </div>
+
+  <div class="concept-flow">
+    <span class="step">Observation</span><span class="arrow">→</span>
+    <span class="step">Natural History</span><span class="arrow">→</span>
+    <span class="step">Cell Theory</span><span class="arrow">→</span>
+    <span class="step">Reductionist Biology</span><span class="arrow">→</span>
+    <span class="step">Emergent Properties</span><span class="arrow">→</span>
+    <span class="step">Systems Biology</span>
+  </div>
+</section>
+</div>
+
+<!-- SPECIMENS -->
+<section class="specimens">
+  <div class="section-head">
+    <span class="n">CH.1–10</span>
+    <h2 style="color:var(--paper)">The specimen index</h2>
+  </div>
+
+  <!-- 1 MAYR -->
+  <article class="specimen" id="s1">
+    <div class="specimen-head">
+      <div>
+        <div class="specimen-id">Unit 01 · Evolution &amp; Taxonomy</div>
+        <h3>Ernst Mayr</h3>
+        <div class="epithet">"The Darwin of the twentieth century"</div>
+      </div>
+      <div class="field-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 2v6M12 8c-4 0-6 2-6 6M12 8c4 0 6 2 6 6M6 14c0 4 2 6 6 6s6-2 6-6"/></svg>
+        <span>Evolutionary Biology</span>
+      </div>
+    </div>
+    <div class="specimen-body">
+      <div class="specimen-main">
+        <p class="field-mark">"A species is not a look-alike group — it's a breeding community."</p>
+        <h4>Who he was</h4>
+        <p>A German-born evolutionary biologist whose entire career was spent asking a deceptively simple question: what actually makes two organisms the same species? Before him, species were mostly sorted by appearance alone.</p>
+        <h4>The core idea NEET tests</h4>
+        <p>Mayr's <strong>Biological Species Concept</strong> defines a species as a group of actually or potentially interbreeding natural populations that produce fertile offspring — and are reproductively isolated from other such groups. Notice both halves: they must interbreed <em>and</em> the offspring must themselves be fertile.</p>
+        <h4>Why "Triple Crown"</h4>
+        <p>He is one of the very few biologists to win all three of the field's top honours — the Balzan Prize, the International Prize for Biology, and the Crafoord Prize — which is exactly why textbooks anchor his profile to that nickname.</p>
+      </div>
+      <div class="specimen-side">
+        <span class="side-title">Exam-ready facts</span>
+        <ul class="facts">
+          <li>Called the "Darwin of the 20th century" for reshaping how species are defined.</li>
+          <li>Author of the Biological Species Concept: interbreeding + fertile offspring.</li>
+          <li>Holder of biology's "Triple Crown" — Balzan, International Prize for Biology, Crafoord Prize.</li>
+          <li>His concept underlies the entire "species" chapter in taxonomy.</li>
+        </ul>
+        <div class="recall">
+          <span class="stamp">One-line recall</span>
+          Mayr = species defined by <strong>who can breed with whom</strong>, not by how alike they look.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 2 ESAU -->
+  <article class="specimen" id="s2">
+    <div class="specimen-head">
+      <div>
+        <div class="specimen-id">Unit 02 · Plant Morphology</div>
+        <h3>Katharine Esau</h3>
+        <div class="epithet">The "Webster's dictionary" of plant anatomy</div>
+      </div>
+      <div class="field-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 21c0-9 4-13 8-15-2 6-3 10-8 15Z"/><path d="M12 21c0-9-4-13-8-15 2 6 3 10 8 15Z"/></svg>
+        <span>Plant Anatomy</span>
+      </div>
+    </div>
+    <div class="specimen-body">
+      <div class="specimen-main">
+        <p class="field-mark">Traced a plant virus through the very tissue that feeds the plant — the phloem.</p>
+        <h4>Who she was</h4>
+        <p>A German-American botanist whose research career focused on how plant tissues are actually built, and how disease moves through them. She worked especially on the Curly Top Virus, a pathogen that spreads through the phloem — the plant's food-conducting tissue — distorting leaves and stunting growth.</p>
+        <h4>Why she matters to this syllabus</h4>
+        <p>Her book, <em>The Anatomy of Seed Plants</em>, became so comprehensive and precise that it's informally called the "Webster's Dictionary of Plant Biology" — the reference every serious plant anatomy chapter still draws from.</p>
+      </div>
+      <div class="specimen-side">
+        <span class="side-title">Exam-ready facts</span>
+        <ul class="facts">
+          <li>Studied the Curly Top Virus and its spread through plant phloem.</li>
+          <li>Authored <em>The Anatomy of Seed Plants</em> — nicknamed plant biology's "Webster's dictionary."</li>
+          <li>Her work anchors the Unit 2 "Morphology of Flowering Plants" profile page.</li>
+        </ul>
+        <div class="recall">
+          <span class="stamp">One-line recall</span>
+          Esau = phloem virus + the definitive seed-plant anatomy textbook.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 3 RAMACHANDRAN -->
+  <article class="specimen" id="s3">
+    <div class="specimen-head">
+      <div>
+        <div class="specimen-id">Unit 03 · Biomolecules</div>
+        <h3>G. N. Ramachandran</h3>
+        <div class="epithet">Mapped what a protein backbone is allowed to do</div>
+      </div>
+      <div class="field-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M6 4c6 3 -6 8 0 11s-6 5 0 5"/><path d="M12 4c6 3 -6 8 0 11s-6 5 0 5" opacity="0.5"/></svg>
+        <span>Structural Biology</span>
+      </div>
+    </div>
+    <div class="specimen-body">
+      <div class="specimen-main">
+        <p class="field-mark">Published the triple-helical structure of collagen in <em>Nature</em> — biology's most cited protein-structure paper from India.</p>
+        <h4>Who he was</h4>
+        <p>An Indian physicist-turned-structural-biologist who took Linus Pauling's earlier work on the protein alpha-helix and beta-sheet as a launching point, then went further into how collagen — the body's most abundant structural protein — folds into a distinctive triple helix.</p>
+        <h4>His lasting tool: the Ramachandran Plot</h4>
+        <p>He devised a graph plotting the two rotation angles (phi and psi) around a protein's backbone, showing which combinations are sterically allowed. It's still the standard way structural biologists validate a protein model today.</p>
+      </div>
+      <div class="specimen-side">
+        <span class="side-title">Exam-ready facts</span>
+        <ul class="facts">
+          <li>Discovered collagen's triple-helical structure, published in <em>Nature</em>.</li>
+          <li>Built on Linus Pauling's alpha-helix / beta-sheet work.</li>
+          <li>Devised the Ramachandran Plot for allowed protein backbone angles.</li>
+          <li>Landmark Indian contribution to structural/molecular biology.</li>
+        </ul>
+        <div class="recall">
+          <span class="stamp">One-line recall</span>
+          Ramachandran = collagen's triple helix + the Ramachandran Plot.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 4 CALVIN -->
+  <article class="specimen" id="s4">
+    <div class="specimen-head">
+      <div>
+        <div class="specimen-id">Unit 04 · Photosynthesis</div>
+        <h3>Melvin Calvin</h3>
+        <div class="epithet">Turned radioactivity into a tracking device, not a weapon</div>
+      </div>
+      <div class="field-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg>
+        <span>Biochemistry</span>
+      </div>
+    </div>
+    <div class="specimen-body">
+      <div class="specimen-main">
+        <p class="field-mark">Used radioactive carbon-14 to literally watch CO₂ turn into sugar, step by step.</p>
+        <h4>Who he was</h4>
+        <p>An American biochemist working in the years right after the atomic bombings of Hiroshima and Nagasaki — a period when radioactivity was, in the public mind, purely destructive. Calvin's work was a deliberate counter-example: he fed algae radioactively labelled CO₂ and tracked the C14 atoms as they moved through the plant's biochemical pathways.</p>
+        <h4>What it revealed</h4>
+        <p>This mapped out the light-independent reactions of photosynthesis — the dark reaction — showing exactly how carbon is fixed and reduced into carbohydrate. It earned him the Nobel Prize in Chemistry in 1961.</p>
+      </div>
+      <div class="specimen-side">
+        <span class="side-title">Exam-ready facts</span>
+        <ul class="facts">
+          <li>Used radioactive C14 to trace carbon assimilation in the dark reaction.</li>
+          <li>Nobel Prize in Chemistry, 1961.</li>
+          <li>Textbook framing: radioactivity used for good, not destruction.</li>
+          <li>His pathway is the basis of the "Calvin Cycle" taught in the same unit.</li>
+        </ul>
+        <div class="recall">
+          <span class="stamp">One-line recall</span>
+          Calvin = C14 tracer → mapped the dark reaction → Nobel 1961.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 5 CORTI -->
+  <article class="specimen" id="s5">
+    <div class="specimen-head">
+      <div>
+        <div class="specimen-id">Unit 05 · Structural Organisation</div>
+        <h3>Alfonso Corti</h3>
+        <div class="epithet">Gave the inner ear's hearing organ its name</div>
+      </div>
+      <div class="field-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M6 12a6 6 0 0112 0c0 3-2 4-2 7a3 3 0 01-6 0"/></svg>
+        <span>Anatomy / Physiology</span>
+      </div>
+    </div>
+    <div class="specimen-body">
+      <div class="specimen-main">
+        <p class="field-mark">Described the exact structure inside the cochlea that turns vibration into sensation.</p>
+        <h4>Who he was</h4>
+        <p>An Italian anatomist whose broader research covered the cardiovascular system in reptiles, but whose name survives in physiology courses for one specific structure: the <strong>Organ of Corti</strong>, sitting on the basilar membrane inside the cochlea of the inner ear, responsible for converting sound vibrations into nerve signals.</p>
+        <h4>A note on the syllabus</h4>
+        <p>Detailed ear physiology has been trimmed from the current NEET syllabus, but his name and the Organ of Corti still appear as an identification-level fact — know the name-to-structure link even if the deep mechanism isn't tested.</p>
+      </div>
+      <div class="specimen-side">
+        <span class="side-title">Exam-ready facts</span>
+        <ul class="facts">
+          <li>Discovered the Organ of Corti in the cochlea.</li>
+          <li>Also studied the cardiovascular system in reptiles.</li>
+          <li>Ear-physiology detail is reduced in the current syllabus, but the name-tag remains examinable.</li>
+        </ul>
+        <div class="recall">
+          <span class="stamp">One-line recall</span>
+          Corti = Organ of Corti = the cochlea's sound-to-signal structure.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 6 MAHESHWARI -->
+  <article class="specimen" id="s6">
+    <div class="specimen-head">
+      <div>
+        <div class="specimen-id">Unit 06 · Reproduction in Plants</div>
+        <h3>Panchanan Maheshwari</h3>
+        <div class="epithet">Brought the embryo into the classification room</div>
+      </div>
+      <div class="field-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="12" cy="9" r="3"/><path d="M12 12v9M8 21h8"/></svg>
+        <span>Embryology</span>
+      </div>
+    </div>
+    <div class="specimen-body">
+      <div class="specimen-main">
+        <p class="field-mark">Pioneered using embryo development itself as a character for classifying plants.</p>
+        <h4>Who he was</h4>
+        <p>An Indian botanist who argued that how a plant's embryo forms carries real taxonomic information — not just the mature plant's visible features. This became a foundational idea in plant embryology and taxonomy alike.</p>
+        <h4>Practical contributions</h4>
+        <p>He set up one of India's first tissue culture departments (at Delhi University) and developed in-vitro fertilisation techniques for plants, including intra-ovarian pollination. He was also directly involved in shaping the NCERT biology syllabus you're studying from right now.</p>
+      </div>
+      <div class="specimen-side">
+        <span class="side-title">Exam-ready facts</span>
+        <ul class="facts">
+          <li>Pioneered embryological characters as a taxonomic tool.</li>
+          <li>Established a tissue culture department at Delhi University.</li>
+          <li>Developed intra-ovarian pollination / in-vitro fertilisation techniques in plants.</li>
+          <li>Contributed directly to the NCERT 11th–12th biology curriculum.</li>
+        </ul>
+        <div class="recall">
+          <span class="stamp">One-line recall</span>
+          Maheshwari = embryo-based plant taxonomy + India's tissue-culture pioneer.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 7 WATSON CRICK -->
+  <article class="specimen" id="s7">
+    <div class="specimen-head">
+      <div>
+        <div class="specimen-id">Unit 07 · Molecular Basis of Inheritance</div>
+        <h3>James Watson &amp; Francis Crick</h3>
+        <div class="epithet">Read a diffraction pattern and saw a double helix</div>
+      </div>
+      <div class="field-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M8 3c4 3 -4 9 0 12s-4 3 0 6"/><path d="M16 3c-4 3 4 9 0 12s4 3 0 6" opacity="0.5"/></svg>
+        <span>Molecular Genetics</span>
+      </div>
+    </div>
+    <div class="specimen-body">
+      <div class="specimen-main">
+        <p class="field-mark">Neither started on DNA — Watson began with bacteriophages, Crick with proteins.</p>
+        <h4>Before the double helix</h4>
+        <p>Watson's early research used X-ray methods to study how bacteriophages multiply inside bacteria. Crick, meanwhile, was doing X-ray diffraction analysis on polypeptides and proteins — general structural biology, not yet genetics.</p>
+        <h4>The 1953 model, and the prize</h4>
+        <p>Combining their structural-biology instincts with Rosalind Franklin and Maurice Wilkins's X-ray diffraction images of DNA, they proposed the double-helix model in 1953. Watson, Crick, and Wilkins shared the Nobel Prize in Physiology or Medicine in 1962.</p>
+      </div>
+      <div class="specimen-side">
+        <span class="side-title">Exam-ready facts</span>
+        <ul class="facts">
+          <li>Watson: pre-DNA work on bacteriophage multiplication via X-ray methods.</li>
+          <li>Crick: pre-DNA X-ray diffraction work on polypeptides/proteins.</li>
+          <li>Proposed the DNA double-helix model in 1953.</li>
+          <li>Shared the 1962 Nobel Prize with Maurice Wilkins.</li>
+        </ul>
+        <div class="recall">
+          <span class="stamp">One-line recall</span>
+          Watson &amp; Crick = phage + protein backgrounds → double helix, 1953 → Nobel 1962.
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 8 SWAMINATHAN -->
+  <article class="specimen" id="s8">
+    <div class="specimen-head">
+      <div>
+        <div class="specimen-id">Unit 08 · Strategies for Food Enhancement</div>
+        <h3>M. S. Swaminathan</h3>
+        <div class="epithet">Took the lab to the land</div>
+      </div>
+      <div class="field-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 21V9"/><path d="M12 11q-8 -2 -8 -9q8 0 8 9Z"/><path d="M12 15q8 -2 8 -9q-8 0 -8 9Z"/></svg>
+        <span>Agricultural Science</span>
+      </div>
+    </div>
+    <div class="specimen-body">
+      <div class="specimen-main">
+        <p class="field-mark">The Indian scientist most directly responsible for the country's shift from food scarcity to food self-sufficiency.</p>
+        <h4>Who he was</h4>
+        <p>An Indian agricultural scientist who founded the School of Cryogenetics at the Indian Agricultural Research Institute and worked closely with Norman Borlaug — the architect of the global Green Revolution — to develop high-yielding, disease-resistant varieties of wheat and rice suited to Indian conditions.</p>
+        <h4>His signature philosophy</h4>
+        <p>He popularised the phrase <strong>"Lab to Land"</strong> — the idea that agricultural research is only useful once it actually reaches the farmer's field, not when it stays in a research paper.</p>
+      </div>
+      <div class="specimen-side">
+        <span class="side-title">Exam-ready facts</span>
+        <ul class="facts">
+          <li>Founded the School of Cryogenetics, Indian Agricultural Research Institute.</li>
+          <li>Collaborated with Norman Borlaug on India's Green Revolution.</li>
+          <li>Developed high-yield wheat and rice varieties.</li>
+          <li>Coined/popularised the "Lab to Land" approach.</li>
+        </ul>
+        <div class="recall">
+          <span class="stamp">One-line recall</span>
+          Swaminathan = India's Green Revolution + "Lab to Land."
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 9 BOYER COHEN -->
+  <article class="specimen" id="s9">
+    <div class="specimen-head">
+      <div>
+        <div class="specimen-id">Unit 09 · Biotechnology: Principles &amp; Processes</div>
+        <h3>Herbert Boyer &amp; Stanley Cohen</h3>
+        <div class="epithet">Cut DNA with one hand, carried it with the other</div>
+      </div>
+      <div class="field-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><circle cx="9" cy="6" r="3"/><circle cx="9" cy="18" r="3"/><path d="M9 9v6M15 4l6 16" /></svg>
+        <span>Genetic Engineering</span>
+      </div>
+    </div>
+    <div class="specimen-body">
+      <div class="specimen-main">
+        <p class="field-mark">One found the scissors, the other found the delivery vehicle — together, biotechnology's foundational toolkit.</p>
+        <h4>Boyer: the cut</h4>
+        <p>Herbert Boyer's work centred on restriction enzymes — proteins that cut DNA at specific sequences, generating "sticky ends" that can be rejoined with DNA from another source.</p>
+        <h4>Cohen: the carrier</h4>
+        <p>Stanley Cohen worked on isolating plasmids — small circular DNA molecules found in bacteria — and reintroducing them into living cells, effectively giving science a vehicle to move new genetic material into an organism.</p>
+        <h4>Together</h4>
+        <p>Combined, restriction-enzyme cutting plus plasmid delivery is the basic recipe behind recombinant DNA technology — the entire foundation of modern genetic engineering and biotechnology.</p>
+      </div>
+      <div class="specimen-side">
+        <span class="side-title">Exam-ready facts</span>
+        <ul class="facts">
+          <li>Boyer: discovered/worked on restriction enzymes cutting DNA into sticky ends.</li>
+          <li>Cohen: isolated plasmids and reintroduced them into cells.</li>
+          <li>Together, their work founded recombinant DNA technology.</li>
+          <li>Direct foundation for the entire Biotechnology unit.</li>
+        </ul>
+        <div class="recall">
+          <span class="stamp">One-line recall</span>
+          Boyer = the cut (restriction enzymes). Cohen = the carrier (plasmids).
+        </div>
+      </div>
+    </div>
+  </article>
+
+  <!-- 10 MISHRA -->
+  <article class="specimen" id="s10">
+    <div class="specimen-head">
+      <div>
+        <div class="specimen-id">Unit 10 · Ecology &amp; Environment</div>
+        <h3>Ramdeo Mishra</h3>
+        <div class="epithet">The Father of Indian Ecology</div>
+      </div>
+      <div class="field-tag">
+        <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6"><path d="M12 2l6 9h-4l4 7H6l4-7H6l6-9Z"/><path d="M12 22v-4"/></svg>
+        <span>Ecology</span>
+      </div>
+    </div>
+    <div class="specimen-body">
+      <div class="specimen-main">
+        <p class="field-mark">Built the institutions Indian ecology now runs on, before "ecology" was even a common word.</p>
+        <h4>Who he was</h4>
+        <p>An Indian botanist widely regarded as the founder of ecological science in India. He established the National Committee for Environmental Planning and worked closely with what became the Ministry of Environment and Forests to shape national environmental policy.</p>
+        <h4>Institutional legacy</h4>
+        <p>He also founded the Botany Department at Banaras Hindu University (BHU), training the generation of ecologists who followed him — which is why his profile closes out the final, ecology-focused unit of the syllabus.</p>
+      </div>
+      <div class="specimen-side">
+        <span class="side-title">Exam-ready facts</span>
+        <ul class="facts">
+          <li>Known as the "Father of Indian Ecology."</li>
+          <li>Established the National Committee for Environmental Planning.</li>
+          <li>Worked with the Ministry of Environment and Forests.</li>
+          <li>Founded the Botany Department at Banaras Hindu University.</li>
+        </ul>
+        <div class="recall">
+          <span class="stamp">One-line recall</span>
+          Mishra = Father of Indian Ecology + BHU Botany founder.
+        </div>
+      </div>
+    </div>
+  </article>
+</section>
+
+<!-- LEDGER -->
+<section id="ledger">
+  <div class="section-head">
+    <span class="n">CH.11</span>
+    <h2 style="color:var(--paper)">Quick-revision ledger</h2>
+  </div>
+  <div class="ledger-wrap">
+    <table class="ledger">
+      <thead>
+        <tr><th>Scientist</th><th>Unit / Field</th><th>Signature Contribution</th><th>Remembered For</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="name">Ernst Mayr</td><td>Evolution &amp; Taxonomy</td><td>Biological Species Concept</td><td>"Darwin of the 20th century," Triple Crown</td></tr>
+        <tr><td class="name">Katharine Esau</td><td>Plant Morphology</td><td>Curly Top Virus in phloem</td><td>"Webster's" of plant anatomy</td></tr>
+        <tr><td class="name">G. N. Ramachandran</td><td>Biomolecules</td><td>Collagen's triple helix</td><td>The Ramachandran Plot</td></tr>
+        <tr><td class="name">Melvin Calvin</td><td>Photosynthesis</td><td>C14-traced carbon fixation</td><td>Nobel Prize, 1961</td></tr>
+        <tr><td class="name">Alfonso Corti</td><td>Structural Organisation</td><td>Cochlear anatomy</td><td>Organ of Corti</td></tr>
+        <tr><td class="name">Panchanan Maheshwari</td><td>Plant Reproduction</td><td>Embryology in taxonomy</td><td>India's tissue-culture pioneer</td></tr>
+        <tr><td class="name">Watson &amp; Crick</td><td>Molecular Genetics</td><td>DNA double helix, 1953</td><td>Nobel Prize, 1962</td></tr>
+        <tr><td class="name">M. S. Swaminathan</td><td>Food Enhancement</td><td>High-yield wheat &amp; rice</td><td>India's Green Revolution, "Lab to Land"</td></tr>
+        <tr><td class="name">Boyer &amp; Cohen</td><td>Biotechnology</td><td>Restriction enzymes + plasmids</td><td>Founders of recombinant DNA tech</td></tr>
+        <tr><td class="name">Ramdeo Mishra</td><td>Ecology</td><td>National environmental planning</td><td>"Father of Indian Ecology"</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- STRATEGY -->
+<div class="strategy">
+<section>
+  <div class="section-head">
+    <span class="n">CH.12</span>
+    <h2 style="color:var(--paper)">How to actually retain this</h2>
+  </div>
+  <div class="strategy-grid">
+    <div class="strategy-card">
+      <span class="k">01</span>
+      <h4>Concept before name</h4>
+      <p>Learn what each person discovered first. The name sticks far more easily once it's attached to an idea instead of floating alone.</p>
+    </div>
+    <div class="strategy-card">
+      <span class="k">02</span>
+      <h4>One line, ten times</h4>
+      <p>Write the "recall" line for each scientist by hand a few times. Ten short lines beat one long paragraph for exam-day recall.</p>
+    </div>
+    <div class="strategy-card">
+      <span class="k">03</span>
+      <h4>Don't skip the "trimmed" ones</h4>
+      <p>Even topics reduced in the syllabus, like Corti's ear physiology, still leave the scientist's name-to-discovery link examinable.</p>
+    </div>
+    <div class="strategy-card">
+      <span class="k">04</span>
+      <h4>Revisit the ledger, not the essay</h4>
+      <p>Use the quick-revision table for your final 48-hour pass — it's built to be scanned, not re-read line by line.</p>
+    </div>
+  </div>
+</section>
+</div>
+
+<footer>NEETXPERT · BIOLOGY FIELD LEDGER · UNITS 01–10 · COMPILED FOR REVISION</footer>
+
+<script>
+  // scroll-spy for nav highlighting
+  const links = document.querySelectorAll('#toc a');
+  const targets = Array.from(links).map(a => document.querySelector(a.getAttribute('href')));
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      const idx = targets.indexOf(entry.target);
+      if (idx === -1) return;
+      if (entry.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        links[idx].classList.add('active');
+      }
+    });
+  }, { rootMargin: '-40% 0px -50% 0px', threshold: 0 });
+  targets.forEach(t => t && io.observe(t));
+</script>
+
+</body>
+</html>
