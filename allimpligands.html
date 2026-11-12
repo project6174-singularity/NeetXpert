@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch.07 — Coordination Compounds</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0A0A14; --surface:rgba(255,255,255,0.045); --surface2:rgba(255,255,255,0.075);
+    --border:rgba(255,255,255,0.10); --border-strong:rgba(255,255,255,0.20);
+    --text:#ECEAF7; --text-dim:#9C96B8; --text-faint:#615C7D;
+    --violet:#8B5CF6; --gold:#FBBF24; --emerald:#34D399; --magenta:#F472B6; --sapphire:#60A5FA; --red:#F87171;
+    --display:'Sora', sans-serif; --mono:'JetBrains Mono', monospace; --sans:'Plus Jakarta Sans', sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0; background-color:var(--bg); color:var(--text); font-family:var(--sans); line-height:1.55;
+    -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
+    background-image: radial-gradient(rgba(139,92,246,0.10) 1.4px, transparent 1.4px);
+    background-size:26px 26px;
+  }
+  ::selection{ background:var(--magenta); color:#0A0A14; }
+  a{ color:inherit; } button{ font-family:inherit; cursor:pointer; } input,select{ font-family:inherit; }
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:.001s !important; transition:none !important; scroll-behavior:auto !important; } }
+
+  .bg-orb{ position:fixed; border-radius:50%; filter:blur(100px); z-index:-1; pointer-events:none; }
+  .o1{ width:440px; height:440px; background:var(--violet); opacity:.16; top:-140px; left:-120px; animation:floatOrb 20s ease-in-out infinite; }
+  .o2{ width:400px; height:400px; background:var(--magenta); opacity:.13; bottom:-160px; right:-100px; animation:floatOrb 24s ease-in-out infinite reverse; }
+  .o3{ width:320px; height:320px; background:var(--gold); opacity:.08; top:38%; right:6%; animation:floatOrb 28s ease-in-out infinite; }
+  @keyframes floatOrb{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(26px,-30px); } }
+
+  .topbar{ position:sticky; top:0; z-index:90; background:rgba(10,10,20,0.82); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border); padding:10px 22px; font-family:var(--mono); font-size:11px;
+    letter-spacing:.06em; color:var(--text-dim); }
+  .topbar b{ color:var(--violet); }
+
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 22px; }
+
+  .hero{ padding:56px 0 8px; }
+  .hero-tag{ font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; color:var(--violet); text-transform:uppercase;
+    display:inline-flex; align-items:center; gap:8px; padding:7px 15px; border:1px solid rgba(139,92,246,.4);
+    border-radius:20px; background:rgba(139,92,246,.08); margin-bottom:22px; }
+  .hero h1{ font-family:var(--display); font-weight:700; font-size:clamp(32px,5.4vw,54px); margin:0 0 14px;
+    letter-spacing:-0.02em; background:linear-gradient(135deg,#fff 10%,var(--violet) 55%,var(--magenta) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent; max-width:800px; }
+  .hero .sub{ font-size:15.5px; color:var(--text-dim); max-width:700px; margin:0 0 24px; }
+  .hero .sub b{ color:var(--text); }
+
+  .hero-actions{ display:flex; gap:12px; margin:0 0 30px; flex-wrap:wrap; }
+  .hero-btn{ font-family:var(--mono); font-size:12.5px; font-weight:600; padding:11px 18px; border-radius:24px;
+    border:1px solid var(--border-strong); background:var(--surface); color:var(--text); display:inline-flex;
+    align-items:center; gap:8px; transition:.2s; }
+  .hero-btn:hover{ border-color:var(--violet); box-shadow:0 0 20px rgba(139,92,246,.28); transform:translateY(-1px); }
+  .hero-btn.mag:hover{ border-color:var(--magenta); box-shadow:0 0 20px rgba(244,114,182,.28); }
+
+  .level-select{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px; }
+  .level-label{ font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-faint); }
+  .level-btn{ font-family:var(--mono); font-size:12px; font-weight:600; padding:9px 16px; border-radius:24px;
+    border:1px solid var(--border); background:var(--surface); color:var(--text-dim); transition:.2s ease; }
+  .level-btn:hover{ border-color:var(--border-strong); color:var(--text); }
+  .level-btn[data-level="newbie"].active{ background:rgba(52,211,153,.15); border-color:var(--emerald); color:var(--emerald); box-shadow:0 0 18px rgba(52,211,153,.22); }
+  .level-btn[data-level="intermediate"].active{ background:rgba(96,165,250,.15); border-color:var(--sapphire); color:var(--sapphire); box-shadow:0 0 18px rgba(96,165,250,.22); }
+  .level-btn[data-level="expert"].active{ background:rgba(251,191,36,.15); border-color:var(--gold); color:var(--gold); box-shadow:0 0 18px rgba(251,191,36,.22); }
+  .level-desc{ font-size:12.5px; color:var(--text-faint); margin:10px 0 30px; max-width:640px; }
+
+  .topic-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px; }
+  .topic-tab{ font-family:var(--mono); font-size:12.5px; font-weight:600; padding:10px 16px; border-radius:24px;
+    border:1px solid var(--border); background:var(--surface); color:var(--text-dim); display:flex; align-items:center;
+    gap:7px; transition:.18s ease; }
+  .topic-tab:hover{ border-color:var(--border-strong); color:var(--text); transform:translateY(-1px); }
+  .topic-tab.active{ background:linear-gradient(135deg, rgba(139,92,246,.2), rgba(244,114,182,.14));
+    border-color:var(--violet); color:#fff; box-shadow:0 0 20px rgba(139,92,246,.18); }
+
+  #topicBoard{ display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:20px; padding-bottom:16px; }
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:24px;
+    backdrop-filter:blur(16px); position:relative; overflow:hidden; box-shadow:0 12px 32px rgba(0,0,0,.35);
+    transition:transform .18s ease, border-color .18s ease; }
+  .card::before{ content:""; position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); }
+  .card:hover{ border-color:var(--border-strong); transform:translateY(-2px); }
+  .card.wide{ grid-column:1/-1; }
+  .card-eyebrow{ font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-faint); display:block; margin-bottom:8px; }
+  .card h3{ font-family:var(--display); font-size:21px; margin:0 0 8px; font-weight:600; }
+  .card p{ color:var(--text-dim); font-size:14px; margin:0 0 10px; }
+  .card ul{ margin:0 0 10px; padding-left:20px; color:var(--text-dim); font-size:13.5px; }
+  .card li{ margin-bottom:5px; }
+  .card li b{ color:var(--text); }
+
+  table.mono-table{ width:100%; border-collapse:collapse; font-family:var(--mono); font-size:12.5px; margin-top:8px; }
+  table.mono-table th{ text-align:left; color:var(--text-faint); font-weight:500; padding:6px 8px; border-bottom:1px solid var(--border-strong); }
+  table.mono-table td{ padding:7px 8px; border-bottom:1px solid var(--border); color:var(--text-dim); }
+  table.mono-table td:first-child{ color:var(--text); }
+
+  .callout{ display:none; padding:13px 15px; border-radius:10px; font-size:13px; line-height:1.6; margin-top:12px; border-left:3px solid; }
+  .callout .lbl{ font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; display:block; margin-bottom:5px; opacity:.85; }
+  .callout.plain{ background:rgba(52,211,153,.08); border-color:var(--emerald); color:#CDF6E4; }
+  .callout.apply{ background:rgba(96,165,250,.08); border-color:var(--sapphire); color:#D6E7FE; }
+  .callout.trap{ background:rgba(244,114,182,.08); border-color:var(--magenta); color:#FBD9EC; }
+  body.level-newbie .callout.plain{ display:block; }
+  body.level-intermediate .callout.apply, body.level-intermediate .callout.trap{ display:block; }
+  body.level-expert .callout.apply, body.level-expert .callout.trap{ display:block; }
+
+  .formula-badge{ display:inline-block; font-family:var(--mono); font-size:14px; color:#fff; background:rgba(139,92,246,.16);
+    border:1px solid rgba(139,92,246,.4); padding:8px 13px; border-radius:9px; margin:4px 6px 4px 0; }
+  .anatomy{ font-family:var(--mono); font-size:17px; text-align:center; padding:18px 10px; }
+  .anatomy .part{ padding:3px 4px; border-radius:5px; }
+  .anatomy .sphere{ background:rgba(139,92,246,.22); color:#D9CFFF; }
+  .anatomy .counter{ background:rgba(251,191,36,.2); color:#FDE7A8; }
+  .anatomy-legend{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; margin-top:12px; font-family:var(--mono); font-size:11px; color:var(--text-dim); }
+  .anatomy-legend span.dot{ display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; }
+
+  .widget{ margin-top:16px; padding:18px; background:rgba(0,0,0,.28); border:1px solid var(--border); border-radius:14px; }
+  .widget svg{ width:100%; height:auto; display:block; }
+  .widget-controls{ display:flex; flex-wrap:wrap; gap:10px; margin-top:14px; }
+  .mini-btn{ font-family:var(--mono); font-size:11.5px; padding:9px 15px; border-radius:20px; border:1px solid var(--border); background:var(--surface2); color:var(--text-dim); }
+  .mini-btn:hover{ border-color:var(--border-strong); color:var(--text); }
+  .mini-btn.active{ background:rgba(139,92,246,.2); border-color:var(--violet); color:#fff; }
+  .readout{ font-family:var(--mono); font-size:13px; color:var(--text); margin-top:12px; background:rgba(255,255,255,.03); padding:11px 13px; border-radius:8px; }
+  .readout b{ color:var(--violet); }
+
+  .steps{ counter-reset:stepnum; margin-top:10px; }
+  .step{ position:relative; padding:10px 0 10px 34px; border-bottom:1px dashed var(--border); font-size:13px; color:var(--text-dim); }
+  .step:last-child{ border-bottom:none; }
+  .step::before{ counter-increment:stepnum; content:counter(stepnum); position:absolute; left:0; top:9px; width:22px; height:22px;
+    border-radius:50%; background:rgba(139,92,246,.2); border:1px solid var(--violet); color:#fff; font-family:var(--mono);
+    font-size:11px; display:flex; align-items:center; justify-content:center; }
+  .step b{ color:var(--text); }
+  .example-name{ font-family:var(--mono); color:var(--emerald); font-size:14.5px; margin-top:8px; display:block; }
+
+  /* ligand filter + grid */
+  .lig-filter-row{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px; }
+  .lig-filter-row input{ flex:1; min-width:200px; padding:10px 14px; border:1px solid var(--border); background:var(--surface); color:var(--text); border-radius:20px; font-size:13px; }
+  .lig-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:14px; }
+  .lig-card{ background:rgba(255,255,255,.035); border:1px solid var(--border); border-top:3px solid var(--accent); border-radius:12px; padding:16px; position:relative; }
+  .lig-stamp{ position:absolute; top:12px; right:12px; font-family:var(--mono); font-size:9px; letter-spacing:.05em; padding:3px 7px; border-radius:10px; background:rgba(251,191,36,.18); border:1px solid var(--gold); color:var(--gold); }
+  .lig-formula{ font-family:var(--mono); font-size:19px; color:#fff; margin-bottom:2px; }
+  .lig-name{ font-size:12.5px; color:var(--text-dim); margin-bottom:8px; }
+  .lig-tags{ display:flex; gap:5px; flex-wrap:wrap; margin-bottom:8px; }
+  .lig-tag{ font-family:var(--mono); font-size:9.5px; text-transform:uppercase; letter-spacing:.04em; padding:3px 8px; border-radius:12px; background:rgba(255,255,255,.06); color:var(--text-dim); border:1px solid var(--border); }
+  .lig-donor, .lig-iupac{ font-family:var(--mono); font-size:11px; color:var(--text-dim); margin-bottom:4px; }
+  .lig-donor b, .lig-iupac b{ color:var(--text); }
+  .lig-trick{ margin-top:8px; font-size:11.5px; color:var(--emerald); background:rgba(52,211,153,.08); padding:8px 10px; border-radius:8px; }
+
+  .tricks-vault{ display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:10px; margin-top:10px; }
+  .trick-chip{ font-size:12.5px; color:#CDF6E4; background:rgba(52,211,153,.08); border:1px solid rgba(52,211,153,.3); padding:10px 12px; border-radius:10px; }
+
+  /* spectrochemical bar */
+  .spectro-bar{ display:flex; border-radius:14px; overflow:hidden; margin:16px 0 8px; height:70px;
+    background:linear-gradient(90deg,#8B5CF6,#60A5FA,#34D399,#FBBF24,#F97316,#EF4444); }
+  .spectro-item{ flex:1; display:flex; align-items:center; justify-content:center; font-family:var(--mono); font-size:12.5px;
+    font-weight:700; color:#0A0A14; border-right:1px solid rgba(0,0,0,.15); }
+  .spectro-item:last-child{ border-right:none; }
+  .spectro-labels{ display:flex; justify-content:space-between; font-family:var(--mono); font-size:10.5px; color:var(--text-faint); margin-bottom:4px; }
+
+  .section-eyebrow{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--magenta); margin-bottom:6px; display:block; }
+  h2.section-title{ font-family:var(--display); font-size:28px; margin:0 0 20px; font-weight:600; }
+
+  /* ---------------- Modals ---------------- */
+  .modal-overlay{ position:fixed; inset:0; background:rgba(4,4,9,0.78); backdrop-filter:blur(6px); z-index:200;
+    display:none; align-items:center; justify-content:center; padding:20px; }
+  .modal-overlay.open{ display:flex; }
+  .modal-box{ background:#0F0F1E; border:1px solid var(--border-strong); border-radius:20px; max-width:980px; width:100%;
+    max-height:88vh; overflow:auto; padding:28px; position:relative; box-shadow:0 30px 90px rgba(0,0,0,.6); }
+  .modal-close{ position:absolute; top:14px; right:14px; width:36px; height:36px; border-radius:50%; border:1px solid var(--border);
+    background:var(--surface); color:var(--text); font-size:18px; line-height:1; z-index:5; }
+  .modal-close:hover{ border-color:var(--border-strong); }
+  .modal-title{ font-family:var(--display); font-size:22px; margin:0 0 18px; padding-right:40px; }
+
+  /* mind map — pure responsive SVG, scales to fit, nothing ever clipped */
+  .mm-canvas{ width:100%; }
+  .mm-canvas svg{ width:100%; height:auto; display:block; }
+  .mm-branch-g{ cursor:pointer; }
+  .mm-branch-g:hover rect{ filter:brightness(1.35); }
+  .mm-branch-g:active rect{ filter:brightness(1.6); }
+
+  /* flashcards */
+  .fc-wrap{ text-align:center; }
+  .fc-progress{ font-family:var(--mono); font-size:11.5px; color:var(--text-faint); margin-bottom:14px; }
+  .fc-card{ perspective:1200px; max-width:520px; margin:0 auto 18px; }
+  .fc-inner{ position:relative; min-height:220px; transition:transform .5s; transform-style:preserve-3d; }
+  .fc-card.flipped .fc-inner{ transform:rotateY(180deg); }
+  .fc-face{ position:absolute; inset:0; backface-visibility:hidden; border:1px solid var(--border-strong); border-radius:14px;
+    padding:26px 22px; background:rgba(255,255,255,.04); display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; }
+  .fc-back{ transform:rotateY(180deg); }
+  .fc-tag{ font-family:var(--mono); font-size:10px; color:var(--text-faint); margin-bottom:10px; text-transform:uppercase; letter-spacing:.06em; }
+  .fc-front-text{ font-family:var(--display); font-size:22px; font-weight:700; }
+  .fc-back-text{ font-size:14px; color:var(--text-dim); }
+  .fc-actions{ display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+  .fc-btn{ padding:10px 18px; border-radius:20px; font-family:var(--mono); font-size:12px; font-weight:600; border:1px solid var(--border-strong); background:var(--surface); color:var(--text); }
+  .fc-btn:hover{ border-color:var(--violet); }
+
+  /* quiz */
+  #quiz{ padding:36px 0 60px; border-top:1px solid var(--border); margin-top:34px; }
+  .shell{ background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:26px; max-width:680px; backdrop-filter:blur(16px); box-shadow:0 12px 32px rgba(0,0,0,.35); }
+  .quiz-meta{ font-family:var(--mono); font-size:11px; color:var(--text-faint); letter-spacing:.06em; margin-bottom:14px; }
+  .quiz-q{ font-family:var(--display); font-size:17.5px; margin:0 0 16px; font-weight:600; }
+  .ar-block{ padding:12px 14px; background:rgba(255,255,255,.04); border-radius:10px; margin-bottom:10px; font-size:13.5px; }
+  .ar-line{ margin-bottom:6px; }
+  .quiz-opts{ display:flex; flex-direction:column; gap:9px; margin-bottom:16px; }
+  .quiz-opt{ text-align:left; padding:12px 15px; border:1px solid var(--border); background:rgba(255,255,255,.03); border-radius:10px; color:var(--text); font-size:13.5px; transition:.15s; }
+  .quiz-opt:hover:not(:disabled){ border-color:var(--border-strong); }
+  .quiz-opt.correct{ border-color:var(--emerald); background:rgba(52,211,153,.12); }
+  .quiz-opt.incorrect{ border-color:var(--red); background:rgba(248,113,113,.12); }
+  .quiz-explain{ font-size:13px; color:var(--text-dim); background:rgba(255,255,255,.03); padding:12px 14px; border-left:3px solid var(--magenta); margin-bottom:16px; display:none; border-radius:8px; }
+  .quiz-explain.show{ display:block; }
+  .quiz-nav{ display:flex; justify-content:space-between; align-items:center; }
+  .quiz-btn{ font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase; padding:10px 18px; border:1px solid var(--violet); background:rgba(139,92,246,.14); color:#fff; border-radius:8px; }
+  .quiz-btn:disabled{ opacity:.35; cursor:default; }
+  .quiz-score{ font-family:var(--mono); font-size:12px; color:var(--text-dim); }
+  .quiz-done{ text-align:center; padding:14px 0; }
+  .quiz-done .big{ font-family:var(--display); font-size:42px; margin-bottom:6px; color:var(--violet); }
+  .restart-btn{ margin-top:14px; font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase; padding:10px 18px; border:1px solid var(--border-strong); background:transparent; color:var(--text); border-radius:8px; }
+
+  footer{ border-top:1px solid var(--border); padding:22px 0 44px; font-family:var(--mono); font-size:11px; color:var(--text-faint); letter-spacing:.04em; }
+
+  @media (max-width:640px){
+    .hero{ padding-top:36px; }
+    .shell{ padding:20px; }
+    .spectro-bar{ flex-direction:column; height:auto; }
+    .spectro-item{ padding:10px; border-right:none; border-bottom:1px solid rgba(0,0,0,.15); }
+  }
+</style>
+</head>
+<body class="level-intermediate">
+
+<div class="bg-orb o1"></div>
+<div class="bg-orb o2"></div>
+<div class="bg-orb o3"></div>
+
+<div class="topbar">CH.07 · COORDINATION COMPOUNDS <b id="topbarTopic">— Basics &amp; Terminology</b></div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <span class="hero-tag">🧪 Chapter 07 · Inorganic Chemistry</span>
+    <h1>Coordination Compounds</h1>
+    <p class="sub">From ligands and denticity to Werner's theory, CFT, and isomerism — the whole NCERT chapter, <b>rebuilt as something you can actually explore</b>, with live diagrams and NEET-level practice.</p>
+
+    <div class="hero-actions">
+      <button class="hero-btn" id="openMindMap">🧠 Open Mind Map</button>
+      <button class="hero-btn mag" id="openFlashcards">🗂️ Flashcards</button>
+    </div>
+
+    <div class="level-select" id="levelSelect">
+      <span class="level-label">Learner level</span>
+      <button class="level-btn" data-level="newbie">🌱 Newbie</button>
+      <button class="level-btn" data-level="intermediate">📘 Intermediate</button>
+      <button class="level-btn" data-level="expert">🎯 Expert</button>
+    </div>
+    <p class="level-desc" id="levelDesc"></p>
+
+    <nav class="topic-tabs" id="topicTabs"></nav>
+  </header>
+
+  <main id="topicBoard"></main>
+
+  <section id="quiz">
+    <span class="section-eyebrow">Practice</span>
+    <h2 class="section-title">NEET-Level Quick Check</h2>
+    <div class="shell" id="quizShell"></div>
+  </section>
+
+  <footer>Built as a single-file app — paste into CodePen or serve on GitHub Pages. All diagrams are drawn live with SVG — no image files, no libraries.</footer>
+
+</div>
+
+<!-- Mind Map Modal -->
+<div class="modal-overlay" id="mmOverlay">
+  <div class="modal-box">
+    <button class="modal-close" id="mmClose">✕</button>
+    <h3 class="modal-title">🧠 Chapter Mind Map</h3>
+    <p style="color:var(--text-dim);font-size:12.5px;margin:-10px 0 16px;">Click any coloured branch to jump straight to that topic.</p>
+    <div class="mm-canvas" id="mmCanvas"></div>
+  </div>
+</div>
+
+<!-- Flashcards Modal -->
+<div class="modal-overlay" id="fcOverlay">
+  <div class="modal-box">
+    <button class="modal-close" id="fcClose">✕</button>
+    <h3 class="modal-title">🗂️ Flashcards</h3>
+    <div class="fc-wrap">
+      <div class="fc-progress" id="fcProgress"></div>
+      <div class="fc-card" id="fcCardEl">
+        <div class="fc-inner">
+          <div class="fc-face fc-front">
+            <div class="fc-tag" id="fcFrontTag"></div>
+            <div class="fc-front-text" id="fcFrontText"></div>
+            <div class="fc-tag" style="margin-top:14px;">Tap to reveal</div>
+          </div>
+          <div class="fc-face fc-back">
+            <div class="fc-tag" id="fcBackTag"></div>
+            <div class="fc-back-text" id="fcBackText"></div>
+          </div>
+        </div>
+      </div>
+      <div class="fc-actions">
+        <button class="fc-btn" id="fcPrev">◀ Prev</button>
+        <button class="fc-btn" id="fcShuffle">🔀 Shuffle</button>
+        <button class="fc-btn" id="fcNext">Next ▶</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =======================================================================
+   PERSISTENCE NOTE — kept in-memory only so this runs safely inside
+   Claude's own artifact preview. Once hosted yourself, swap in
+   localStorage for the level choice / flashcard progress if desired.
+   ======================================================================= */
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+/* =======================================================================
+   LEVEL SELECTOR
+   ======================================================================= */
+let currentLevel = "intermediate";
+const LEVEL_DESC = {
+  newbie: "Every card opens with a plain-English explanation first — jargon gets defined before it gets used.",
+  intermediate: "The standard view — definitions, NEET application notes, and common traps, side by side.",
+  expert: "Traps and application notes stay visible everywhere; treat this as rapid revision.",
+};
+function setLevel(lv){
+  currentLevel = lv;
+  document.body.className = document.body.className.replace(/level-\S+/g,"").trim();
+  document.body.classList.add("level-" + lv);
+  document.querySelectorAll(".level-btn").forEach(b=> b.classList.toggle("active", b.getAttribute("data-level")===lv));
+  document.getElementById("levelDesc").textContent = LEVEL_DESC[lv];
+}
+document.querySelectorAll(".level-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=> setLevel(btn.getAttribute("data-level")));
+});
+
+/* =======================================================================
+   TOPIC TABS
+   ======================================================================= */
+const TOPICS = [
+  { id:"basics",       label:"Basics & Terms" },
+  { id:"ligands",      label:"Ligands & Denticity" },
+  { id:"nomen",        label:"IUPAC Nomenclature" },
+  { id:"bonding",      label:"Bonding Theories" },
+  { id:"spectro",      label:"Spectrochemical Series" },
+  { id:"isomer",       label:"Isomerism" },
+  { id:"applications", label:"Applications" },
+];
+const TOPIC_LABEL = {}; TOPICS.forEach(t=> TOPIC_LABEL[t.id]=t.label);
+const topicTabsEl = document.getElementById("topicTabs");
+function renderTopicTabs(active){
+  topicTabsEl.innerHTML = TOPICS.map(t=>
+    `<button class="topic-tab${t.id===active?" active":""}" data-topic="${t.id}">${t.label}</button>`
+  ).join("");
+  topicTabsEl.querySelectorAll(".topic-tab").forEach(btn=>{
+    btn.addEventListener("click", ()=> renderTopic(btn.getAttribute("data-topic")));
+  });
+}
+
+/* =======================================================================
+   LIGAND DATABASE
+   ======================================================================= */
+const CAT_LABEL = { mono:"Monodentate", bi:"Bidentate", poly:"Polydentate", ambi:"Ambidentate", flex:"Variable Denticity" };
+const CAT_COLOR = { mono:"#34D399", bi:"#60A5FA", poly:"#FBBF24", ambi:"#F472B6", flex:"#8B5CF6" };
+const LIGANDS = [
+  { id:"nh3",  formula:"NH₃", name:"Ammonia", iupac:"ammine", cat:"mono", charge:"neutral", donor:"N", hy:true,
+    trick:'"Ammine" (double-m) is the IUPAC ligand name — don\'t confuse it with organic "amine".' },
+  { id:"h2o",  formula:"H₂O", name:"Water", iupac:"aqua", cat:"mono", charge:"neutral", donor:"O", hy:true },
+  { id:"cl",   formula:"Cl⁻", name:"Chloride", iupac:"chlorido", cat:"mono", charge:"anionic", donor:"Cl", hy:true,
+    trick:"Weak-field ligand — sits near the low-energy end of the spectrochemical series." },
+  { id:"cn",   formula:"CN⁻", name:"Cyanide", iupac:"cyanido", cat:"mono", charge:"anionic", donor:"C", hy:true,
+    trick:"Binds through CARBON, not nitrogen — and it's one of the strongest field ligands there is." },
+  { id:"co",   formula:"CO", name:"Carbon monoxide", iupac:"carbonyl", cat:"mono", charge:"neutral", donor:"C", hy:true,
+    trick:"The single strongest common field ligand — sits at the very top of the spectrochemical series." },
+  { id:"oh",   formula:"OH⁻", name:"Hydroxide", iupac:"hydroxido", cat:"mono", charge:"anionic", donor:"O", hy:false },
+  { id:"f",    formula:"F⁻", name:"Fluoride", iupac:"fluorido", cat:"mono", charge:"anionic", donor:"F", hy:false },
+  { id:"br",   formula:"Br⁻", name:"Bromide", iupac:"bromido", cat:"mono", charge:"anionic", donor:"Br", hy:false },
+  { id:"i",    formula:"I⁻", name:"Iodide", iupac:"iodido", cat:"mono", charge:"anionic", donor:"I", hy:false,
+    trick:"Weakest common field ligand — bottom of the spectrochemical series." },
+  { id:"no2",  formula:"NO₂⁻", name:"Nitrite", iupac:"nitrito-N / nitrito-O", cat:"ambi", charge:"anionic", donor:"N or O (one at a time)", hy:true,
+    trick:"THE textbook ambidentate example — binds via N (nitro) or via O (nitrito), never both at once." },
+  { id:"en",   formula:"en", name:"Ethylenediamine", iupac:"ethylenediamine", cat:"bi", charge:"neutral", donor:"N, N", hy:true,
+    trick:'Symmetrical bidentate, forms a 5-membered chelate ring. Because its name already has "di", naming uses bis/tris, not di/tri.' },
+  { id:"ox",   formula:"C₂O₄²⁻", name:"Oxalate", iupac:"oxalato", cat:"bi", charge:"anionic", donor:"O, O", hy:true,
+    trick:"Symmetrical bidentate — also forms a stable 5-membered chelate ring." },
+  { id:"gly",  formula:"gly⁻", name:"Glycinate", iupac:"glycinato", cat:"bi", charge:"anionic", donor:"N, O", hy:false,
+    trick:"Unsymmetrical bidentate — one nitrogen donor, one oxygen donor." },
+  { id:"dtc",  formula:"dtc⁻", name:"Diethyldithiocarbamate", iupac:"dithiocarbamato", cat:"bi", charge:"anionic", donor:"S, S", hy:false },
+  { id:"dien", formula:"dien", name:"Diethylenetriamine", iupac:"diethylenetriamine", cat:"poly", charge:"neutral", donor:"N, N, N", hy:false,
+    trick:"Tridentate — three nitrogen donors strung in a row." },
+  { id:"edta", formula:"EDTA⁴⁻", name:"Ethylenediaminetetraacetate", iupac:"edta", cat:"poly", charge:"anionic", donor:"2 N + 4 O", hy:true,
+    trick:'"EDTA Hexa" — hexadentate, wraps almost completely around the metal. The classic strong chelating agent.' },
+  { id:"co3",  formula:"CO₃²⁻", name:"Carbonate", iupac:"carbonato", cat:"flex", charge:"anionic", donor:"O (1 or 2)", hy:false,
+    trick:"Flexible denticity — can act as monodentate or bidentate depending on the complex." },
+];
+
+/* =======================================================================
+   TOPIC CONTENT
+   ======================================================================= */
+const TOPIC_CONTENT = {};
+
+TOPIC_CONTENT.basics = `
+  <article class="card">
+    <span class="card-eyebrow">Foundations</span>
+    <h3>Double Salt vs. Complex Compound</h3>
+    <table class="mono-table">
+      <tr><th></th><th>Double Salt</th><th>Complex Compound</th></tr>
+      <tr><td>In water</td><td>Fully dissociates</td><td>Retains its identity</td></tr>
+      <tr><td>Example</td><td>Potassium alum</td><td>[Fe(CN)₆]⁴⁻</td></tr>
+      <tr><td>Ion tests</td><td>Gives usual ion tests</td><td>Gives unique tests, not those of free ions</td></tr>
+    </table>
+    <div class="callout plain"><span class="lbl">🌱 Plain English</span>Dissolve potassium alum in water and you just get K⁺, Al³⁺ and SO₄²⁻ ions swimming around separately — it forgot it was ever "alum". Dissolve K₄[Fe(CN)₆] and the [Fe(CN)₆]⁴⁻ unit stays glued together as one particle — it never forgets what it is.</div>
+  </article>
+
+  <article class="card">
+    <span class="card-eyebrow">Anatomy of a Complex</span>
+    <h3>Coordination Sphere &amp; Counter Ions</h3>
+    <div class="anatomy">
+      [Co(NH₃)<span class="part sphere">₆</span>]<span class="part sphere" style="border:1px dashed rgba(139,92,246,.5);">Cl₃</span>
+    </div>
+    <div class="anatomy-legend">
+      <span><span class="dot" style="background:#8B5CF6;"></span>Coordination sphere = metal + ligands</span>
+      <span><span class="dot" style="background:#FBBF24;"></span>Cl₃ = counter ions (outside the bracket)</span>
+    </div>
+    <ul style="margin-top:14px;">
+      <li>Ligands <b>donate</b> electron pairs; the metal <b>accepts</b> them — a coordinate covalent (dative) bond.</li>
+      <li>Everything inside the square bracket is the <b>coordination sphere</b>.</li>
+      <li>Ions outside the bracket are <b>counter ions</b>, balancing the overall charge.</li>
+    </ul>
+  </article>
+
+  <article class="card">
+    <span class="card-eyebrow">Ligand Variety</span>
+    <h3>Homoleptic vs. Heteroleptic</h3>
+    <ul>
+      <li><b>Homoleptic</b> — all ligands identical, e.g. [Co(NH₃)₆]³⁺.</li>
+      <li><b>Heteroleptic</b> — more than one type of ligand, e.g. [Co(NH₃)₄Cl₂]⁺.</li>
+    </ul>
+    <div class="callout apply"><span class="lbl">🎯 NEET note</span>Homoleptic complexes made only of monodentate ligands have just one possible arrangement — no geometrical isomerism. That changes once chelating ligands are involved (see Isomerism tab).</div>
+  </article>
+
+  <article class="card">
+    <span class="card-eyebrow">Don't Mix These Up</span>
+    <h3>Denticity vs. Coordination Number</h3>
+    <ul>
+      <li><b>Denticity</b> — how many donor atoms ONE ligand uses.</li>
+      <li><b>Coordination number (C.N.)</b> — the TOTAL number of donor atoms bonded to the metal, from all ligands combined.</li>
+    </ul>
+    <div class="callout trap"><span class="lbl">⚠ Exam trap</span>3 bidentate ligands (like en) around one metal → denticity of each ligand is 2, but the coordination number is 3 × 2 = <b>6</b>, not 3. This exact trap appears constantly in NEET.</div>
+  </article>
+`;
+
+TOPIC_CONTENT.ligands = `
+  <article class="card wide">
+    <span class="card-eyebrow">Classification</span>
+    <h3>Every NCERT Ligand, Sorted by Denticity</h3>
+    <p>Filter by category or search a formula/name. Gold "NEET" tags mark the ones that show up most often in questions.</p>
+    <div class="lig-filter-row">
+      <input type="text" id="ligSearch" placeholder="Search a ligand…">
+    </div>
+    <div class="widget-controls" id="ligFilterBtns" style="margin-top:0;margin-bottom:14px;"></div>
+    <div class="lig-grid" id="ligandGrid"></div>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Why Chelates Are Special</span>
+    <h3>The Chelate Ring</h3>
+    <p>When a bidentate ligand like ethylenediamine (en) wraps back to bond the same metal twice, it forms a ring — a "chelate ring". 5- and 6-membered rings are the most stable, and more chelate rings mean a more stable complex overall.</p>
+    <div class="widget">
+      <svg viewBox="0 0 320 240">
+        <polygon points="90,160 150,90 230,100 230,180 150,190" fill="rgba(139,92,246,0.08)" stroke="#8B5CF6" stroke-width="2"/>
+        <circle cx="90" cy="160" r="16" fill="#FBBF24"/><text x="90" y="165" text-anchor="middle" font-family="JetBrains Mono" font-size="13" fill="#0A0A14">M</text>
+        <circle cx="150" cy="90" r="14" fill="#60A5FA"/><text x="150" y="95" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#0A0A14">N</text>
+        <circle cx="230" cy="100" r="13" fill="#9C96B8"/><text x="230" y="105" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#0A0A14">C</text>
+        <circle cx="230" cy="180" r="13" fill="#9C96B8"/><text x="230" y="185" text-anchor="middle" font-family="JetBrains Mono" font-size="11" fill="#0A0A14">C</text>
+        <circle cx="150" cy="190" r="14" fill="#60A5FA"/><text x="150" y="195" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#0A0A14">N</text>
+      </svg>
+      <div class="readout">5-membered ring: M–N–C–C–N–(back to M) — this is exactly how ethylenediamine chelates a metal.</div>
+    </div>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">💡 Revision</span>
+    <h3>Tricks &amp; Mnemonics Vault</h3>
+    <div class="tricks-vault" id="tricksVault"></div>
+  </article>
+`;
+
+TOPIC_CONTENT.nomen = `
+  <article class="card wide">
+    <span class="card-eyebrow">Golden Rules</span>
+    <h3>IUPAC Naming, Step by Step</h3>
+    <ul>
+      <li>Name the <b>cation before the anion</b> — always, whether the complex itself is the cation or the anion.</li>
+      <li>Inside the complex ion, name <b>ligands alphabetically</b> first, then the metal — ignore multiplying prefixes when alphabetising.</li>
+      <li>Use <b>mono, di, tri, tetra, penta, hexa</b> to count simple ligands (chlorido, ammine, aqua…).</li>
+      <li>If the ligand's own name already contains "di/tri" (like ethylenediamine), switch to <b>bis, tris, tetrakis</b> instead, with the ligand name in brackets.</li>
+      <li>Anionic ligands take the suffix <b>"-o"/"-ido"</b> (chlorido, cyanido).</li>
+      <li>If the whole complex ion is an <b>anion</b>, the metal name gets the suffix <b>"-ate"</b> (ferrate, cuprate).</li>
+      <li>Oxidation state of the metal is written as a <b>Roman numeral</b> in brackets right after its name.</li>
+    </ul>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Worked Examples</span>
+    <h3>From Formula to Full Name</h3>
+
+    <span class="example-name">[Co(NH₃)₆]Cl₃ → hexaamminecobalt(III) chloride</span>
+    <div class="steps">
+      <div class="step"><b>Cation first:</b> the complex ion [Co(NH₃)₆]³⁺ is the cation, so it's named before chloride.</div>
+      <div class="step"><b>Ligands:</b> 6 × NH₃ (ammine) → hexaammine.</div>
+      <div class="step"><b>Metal + oxidation state:</b> 3 Cl⁻ balance a +3 charge → cobalt(III).</div>
+      <div class="step"><b>Anion:</b> chloride.</div>
+    </div>
+
+    <span class="example-name">K₄[Fe(CN)₆] → potassium hexacyanidoferrate(II)</span>
+    <div class="steps">
+      <div class="step"><b>Cation first:</b> simple cation K⁺ → potassium, named before the complex anion.</div>
+      <div class="step"><b>Ligands:</b> 6 × CN⁻ (cyanido) → hexacyanido.</div>
+      <div class="step"><b>Metal, anionic complex:</b> iron → ferrate. Overall charge −4, six CN⁻ contribute −6, so Fe is +2 → ferrate(II).</div>
+      <div class="step">Combine: hexacyanidoferrate(II), with potassium named first.</div>
+    </div>
+
+    <span class="example-name">[Co(en)₃]Cl₃ → tris(ethylenediamine)cobalt(III) chloride</span>
+    <div class="steps">
+      <div class="step"><b>Ligand count:</b> 3 × en, each bidentate → coordination number 6.</div>
+      <div class="step"><b>The "bis/tris" exception:</b> "ethylenediamine" already contains "di", so use <b>tris(ethylenediamine)</b>, not "trien-".</div>
+      <div class="step"><b>Metal + oxidation state:</b> 3 Cl⁻ balance +3 → cobalt(III).</div>
+    </div>
+    <div class="callout trap"><span class="lbl">⚠ Exam trap</span>Forgetting the bis/tris/tetrakis swap is one of the most common nomenclature mistakes in NEET — any ligand name already containing a numerical prefix needs it.</div>
+  </article>
+`;
+
+TOPIC_CONTENT.bonding = `
+  <article class="card">
+    <span class="card-eyebrow">Werner's Theory</span>
+    <h3>Primary &amp; Secondary Valency</h3>
+    <ul>
+      <li><b>Primary valency</b> = oxidation state of the metal (ionic/dissociable bonds).</li>
+      <li><b>Secondary valency</b> = coordination number (bonds to ligands, fixed and non-ionizable).</li>
+    </ul>
+    <table class="mono-table">
+      <tr><th>C.N.</th><th>Common geometry</th></tr>
+      <tr><td>2</td><td>Linear</td></tr>
+      <tr><td>4</td><td>Tetrahedral / Square planar</td></tr>
+      <tr><td>6</td><td>Octahedral</td></tr>
+    </table>
+  </article>
+
+  <article class="card">
+    <span class="card-eyebrow">Valence Bond Theory</span>
+    <h3>Hybridization &amp; Spin</h3>
+    <table class="mono-table">
+      <tr><th>C.N.</th><th>Hybridization</th><th>Geometry</th></tr>
+      <tr><td>4</td><td>sp³</td><td>Tetrahedral</td></tr>
+      <tr><td>4</td><td>dsp²</td><td>Square planar</td></tr>
+      <tr><td>6</td><td>sp³d² (outer)</td><td>Octahedral, high spin</td></tr>
+      <tr><td>6</td><td>d²sp³ (inner)</td><td>Octahedral, low spin</td></tr>
+    </table>
+    <div class="callout apply"><span class="lbl">🎯 NEET note</span>Square planar dsp² shows up almost exclusively for d⁸ metal ions — think Ni(II), Pd(II), Pt(II).</div>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Interactive · Signature Tool</span>
+    <h3>Crystal Field Theory — Watch the d-Orbitals Split</h3>
+    <p>Five d-orbitals start off equal in energy. Bring ligands in, and an octahedral field splits them into a lower t₂g set and a higher eg set. How big that gap (Δ₀) is — and how the electrons fill in — depends entirely on ligand strength.</p>
+    <div class="widget">
+      <div id="cftSvgHolder"></div>
+      <div class="widget-controls">
+        <button class="mini-btn" id="cftFree">Free Ion</button>
+        <button class="mini-btn" id="cftWeak">Weak Field (High Spin)</button>
+        <button class="mini-btn" id="cftStrong">Strong Field (Low Spin)</button>
+      </div>
+      <div class="readout" id="cftReadout"></div>
+    </div>
+    <div class="callout trap"><span class="lbl">⚠ Exam trap</span>This example uses a d⁶ metal ion (like Fe²⁺/Co³⁺). Weak field → 4 unpaired electrons (paramagnetic). Strong field → 0 unpaired electrons (diamagnetic). Same metal, same electron count — the ligand alone decides the spin state.</div>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Quick Reference</span>
+    <h3>Geometry Preferences</h3>
+    <ul>
+      <li><b>Coordination number 4, d⁸ metal:</b> square planar (dsp²) — Ni(II), Pd(II), Pt(II).</li>
+      <li><b>Coordination number 4, other metals:</b> tetrahedral (sp³).</li>
+      <li><b>Coordination number 6:</b> octahedral — d²sp³ (low spin) or sp³d² (high spin), depending on ligand field strength.</li>
+    </ul>
+  </article>
+`;
+
+TOPIC_CONTENT.spectro = `
+  <article class="card wide">
+    <span class="card-eyebrow">The Series</span>
+    <h3>Spectrochemical Series</h3>
+    <p>Ligands ranked from strongest to weakest field. Strong-field ligands cause a bigger split (Δ₀) — shown here on a spectral gradient, violet (high energy) to red (low energy):</p>
+    <div class="spectro-labels"><span>← Strong field, large Δ₀</span><span>Weak field, small Δ₀ →</span></div>
+    <div class="spectro-bar">
+      <div class="spectro-item">CO</div><div class="spectro-item">CN⁻</div><div class="spectro-item">NH₃</div>
+      <div class="spectro-item">H₂O</div><div class="spectro-item">F⁻</div><div class="spectro-item">Cl⁻</div>
+      <div class="spectro-item">Br⁻</div><div class="spectro-item">I⁻</div>
+    </div>
+    <div class="callout plain"><span class="lbl">🌱 Plain English</span>Some ligands grip the metal's d-orbitals harder than others. The harder the grip, the bigger the energy gap they force open between the two sets of d-orbitals — that gap is what decides spin state, and the colour of light the complex absorbs.</div>
+  </article>
+
+  <article class="card">
+    <span class="card-eyebrow">Consequences</span>
+    <h3>What the Field Strength Decides</h3>
+    <table class="mono-table">
+      <tr><th></th><th>Strong field</th><th>Weak field</th></tr>
+      <tr><td>Δ₀ (splitting)</td><td>Large</td><td>Small</td></tr>
+      <tr><td>Electron pairing</td><td>Favoured</td><td>Avoided</td></tr>
+      <tr><td>Spin state</td><td>Low spin</td><td>High spin</td></tr>
+      <tr><td>Magnetism</td><td>Fewer/no unpaired e⁻</td><td>More unpaired e⁻</td></tr>
+    </table>
+  </article>
+
+  <article class="card">
+    <span class="card-eyebrow">Stability</span>
+    <h3>The Chelate Effect</h3>
+    <p>Complexes with chelating (bidentate/polydentate) ligands are consistently more stable than equivalent complexes with monodentate ligands. The more chelate rings formed, the greater the stability boost.</p>
+    <div class="callout apply"><span class="lbl">🎯 NEET note</span>[Ni(EDTA)]²⁻ is far more stable than [Ni(NH₃)₆]²⁺ even though both bind through similar donor atoms — EDTA's six-point grip is the difference.</div>
+  </article>
+`;
+
+TOPIC_CONTENT.isomer = `
+  <article class="card">
+    <span class="card-eyebrow">Structural Isomerism</span>
+    <h3>Four Flavours</h3>
+    <ul>
+      <li><b>Ionization isomers</b> — an ion swaps between inside and outside the coordination sphere.</li>
+      <li><b>Linkage isomers</b> — an ambidentate ligand binds through a different donor atom (classic case: NO₂⁻ via N vs. via O).</li>
+      <li><b>Hydrate (solvate) isomers</b> — differ in how many water molecules sit inside vs. outside the sphere.</li>
+      <li><b>Coordination isomers</b> — ligands swap between the cationic and anionic complex parts.</li>
+    </ul>
+    <div class="callout trap"><span class="lbl">⚠ Exam trap</span>Linkage isomerism is the direct isomer version of an ambidentate ligand's flexibility — if you know NO₂⁻ is ambidentate, you already understand what linkage isomerism is.</div>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Stereoisomerism</span>
+    <h3>Geometrical Isomers — cis &amp; trans</h3>
+    <p>For a square-planar complex MA₂B₂, the two identical A ligands can sit next to each other (cis) or opposite each other (trans):</p>
+    <div class="widget">
+      <svg viewBox="0 0 420 200">
+        <text x="90" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="13" fill="#60A5FA">cis</text>
+        <line x1="90" y1="100" x2="90" y2="50" stroke="#615C7D" stroke-width="2"/>
+        <line x1="90" y1="100" x2="140" y2="100" stroke="#615C7D" stroke-width="2"/>
+        <line x1="90" y1="100" x2="90" y2="150" stroke="#615C7D" stroke-width="2"/>
+        <line x1="90" y1="100" x2="40" y2="100" stroke="#615C7D" stroke-width="2"/>
+        <circle cx="90" cy="100" r="14" fill="#FBBF24"/>
+        <circle cx="90" cy="50" r="11" fill="#34D399"/><circle cx="140" cy="100" r="11" fill="#34D399"/>
+        <circle cx="90" cy="150" r="11" fill="#F472B6"/><circle cx="40" cy="100" r="11" fill="#F472B6"/>
+
+        <text x="320" y="24" text-anchor="middle" font-family="JetBrains Mono" font-size="13" fill="#60A5FA">trans</text>
+        <line x1="320" y1="100" x2="320" y2="50" stroke="#615C7D" stroke-width="2"/>
+        <line x1="320" y1="100" x2="370" y2="100" stroke="#615C7D" stroke-width="2"/>
+        <line x1="320" y1="100" x2="320" y2="150" stroke="#615C7D" stroke-width="2"/>
+        <line x1="320" y1="100" x2="270" y2="100" stroke="#615C7D" stroke-width="2"/>
+        <circle cx="320" cy="100" r="14" fill="#FBBF24"/>
+        <circle cx="320" cy="50" r="11" fill="#34D399"/><circle cx="320" cy="150" r="11" fill="#34D399"/>
+        <circle cx="370" cy="100" r="11" fill="#F472B6"/><circle cx="270" cy="100" r="11" fill="#F472B6"/>
+      </svg>
+      <div class="readout"><span style="color:#34D399;">●</span> Ligand A &nbsp; <span style="color:#F472B6;">●</span> Ligand B &nbsp; <span style="color:#FBBF24;">●</span> Central metal M</div>
+    </div>
+    <p>The same idea extends to octahedral complexes, where it's described as <b>fac</b> (facial) and <b>mer</b> (meridional) for MA₃B₃ arrangements.</p>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Stereoisomerism</span>
+    <h3>Optical Isomers — Mirror Images That Don't Match</h3>
+    <div class="widget">
+      <svg viewBox="0 0 420 200">
+        <line x1="210" y1="20" x2="210" y2="180" stroke="#9C96B8" stroke-width="1.5" stroke-dasharray="5,4"/>
+        <text x="210" y="14" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="#9C96B8">mirror plane</text>
+        <circle cx="120" cy="100" r="13" fill="#FBBF24"/>
+        <circle cx="90" cy="60" r="10" fill="#8B5CF6"/><circle cx="160" cy="70" r="10" fill="#34D399"/><circle cx="110" cy="150" r="10" fill="#F472B6"/>
+        <line x1="120" y1="100" x2="90" y2="60" stroke="#615C7D"/><line x1="120" y1="100" x2="160" y2="70" stroke="#615C7D"/><line x1="120" y1="100" x2="110" y2="150" stroke="#615C7D"/>
+        <circle cx="300" cy="100" r="13" fill="#FBBF24"/>
+        <circle cx="330" cy="60" r="10" fill="#8B5CF6"/><circle cx="260" cy="70" r="10" fill="#34D399"/><circle cx="310" cy="150" r="10" fill="#F472B6"/>
+        <line x1="300" y1="100" x2="330" y2="60" stroke="#615C7D"/><line x1="300" y1="100" x2="260" y2="70" stroke="#615C7D"/><line x1="300" y1="100" x2="310" y2="150" stroke="#615C7D"/>
+      </svg>
+      <div class="readout">These two arrangements are mirror images of each other — but no amount of rotating one will make it land exactly on the other. That's optical isomerism (chirality).</div>
+    </div>
+    <p>Most common in octahedral complexes built from polydentate/chelating ligands. A complex with only monodentate, identical ligands has just one possible arrangement — no isomerism at all. But a <b>homoleptic</b> complex built from a chelating ligand, like [Co(en)₃]³⁺, is a textbook example of optical activity.</p>
+  </article>
+`;
+
+/* =======================================================================
+   RENDER TOPIC + WIDGET INIT
+   ======================================================================= */
+const topicBoardEl = document.getElementById("topicBoard");
+function renderTopic(id){
+  renderTopicTabs(id);
+  topicBoardEl.innerHTML = TOPIC_CONTENT[id];
+  document.getElementById("topbarTopic").textContent = "— " + TOPIC_LABEL[id];
+  if(id === "ligands") initLigands();
+  if(id === "bonding") initCFT();
+}
+
+/* ---------------- Ligands filter/search ---------------- */
+function initLigands(){
+  const filterBtnsEl = document.getElementById("ligFilterBtns");
+  const cats = ["all","mono","bi","poly","ambi","flex"];
+  let activeCat = "all";
+  let searchTerm = "";
+  filterBtnsEl.innerHTML = cats.map(c=>
+    `<button class="mini-btn${c==="all"?" active":""}" data-cat="${c}">${c==="all"?"All":CAT_LABEL[c]}</button>`
+  ).join("");
+  function draw(){
+    let list = LIGANDS.filter(l => activeCat==="all" || l.cat===activeCat);
+    const term = searchTerm.trim().toLowerCase();
+    if(term) list = list.filter(l => (l.formula+" "+l.name+" "+l.iupac).toLowerCase().includes(term));
+    const grid = document.getElementById("ligandGrid");
+    if(list.length === 0){ grid.innerHTML = `<p style="color:var(--text-faint);">No ligand matches that filter.</p>`; return; }
+    grid.innerHTML = list.map(l => `
+      <div class="lig-card" style="--accent:${CAT_COLOR[l.cat]}">
+        ${l.hy ? '<span class="lig-stamp">NEET</span>' : ''}
+        <div class="lig-formula">${l.formula}</div>
+        <div class="lig-name">${l.name}</div>
+        <div class="lig-tags"><span class="lig-tag">${CAT_LABEL[l.cat]}</span><span class="lig-tag">${l.charge}</span></div>
+        <div class="lig-donor">Donor: <b>${l.donor}</b></div>
+        <div class="lig-iupac">IUPAC: <b>${l.iupac}</b></div>
+        ${l.trick ? `<div class="lig-trick">💡 ${l.trick}</div>` : ''}
+      </div>
+    `).join("");
+  }
+  filterBtnsEl.querySelectorAll(".mini-btn").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      filterBtnsEl.querySelectorAll(".mini-btn").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      activeCat = btn.getAttribute("data-cat");
+      draw();
+    });
+  });
+  document.getElementById("ligSearch").addEventListener("input", (e)=>{ searchTerm = e.target.value; draw(); });
+  draw();
+
+  const TRICKS_EXTRA = [
+    "Monodentate = mono = ONE donor atom. Bidentate = two. Polydentate = more than two.",
+    'If a ligand name already has "di/tri" in it (ethylenediamine), IUPAC naming switches to bis/tris/tetrakis.',
+    "Denticity ≠ number of atoms in the ligand — it's the number of bonds that ligand makes to the metal.",
+    "Ambidentate ligands have two possible donor sites but only ever use ONE at a time, per complex.",
+    "5- and 6-membered chelate rings are the sweet spot for stability — same logic as stable cyclohexane rings.",
+    "Spectrochemical series order to memorise: CO &gt; CN⁻ &gt; NH₃ &gt; H₂O &gt; F⁻ &gt; Cl⁻ &gt; Br⁻ &gt; I⁻.",
+  ];
+  document.getElementById("tricksVault").innerHTML = TRICKS_EXTRA.map(t=>`<div class="trick-chip">💡 ${t}</div>`).join("");
+}
+
+/* ---------------- CFT orbital splitting diagram ---------------- */
+function cftSVG(state){
+  const xs = [90,160,230, 340,410];
+  let t2gY, egY, showLabels, electrons;
+  if(state === "free"){
+    t2gY = 140; egY = 140; showLabels = false;
+    electrons = ["↑↓","↑","↑","↑","↑"];
+  } else if(state === "weak"){
+    t2gY = 170; egY = 95; showLabels = true;
+    electrons = ["↑↓","↑","↑","↑","↑"];
+  } else {
+    t2gY = 205; egY = 60; showLabels = true;
+    electrons = ["↑↓","↑↓","↑↓","",""];
+  }
+  let svg = '<svg viewBox="0 0 480 260">';
+  xs.forEach((x,i)=>{
+    const y = i < 3 ? t2gY : egY;
+    const color = i < 3 ? "#8B5CF6" : "#F472B6";
+    svg += `<line x1="${x-24}" y1="${y}" x2="${x+24}" y2="${y}" stroke="${color}" stroke-width="3"/>`;
+    svg += `<text x="${x}" y="${y-10}" text-anchor="middle" font-family="JetBrains Mono" font-size="15" fill="#ECEAF7">${electrons[i]}</text>`;
+  });
+  if(showLabels){
+    svg += `<text x="160" y="${t2gY+26}" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#8B5CF6">t₂g</text>`;
+    svg += `<text x="375" y="${egY+26}" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#F472B6">eg</text>`;
+    svg += `<line x1="270" y1="${egY}" x2="270" y2="${t2gY}" stroke="#FBBF24" stroke-width="1.5" stroke-dasharray="4,3"/>`;
+    svg += `<text x="280" y="${(egY+t2gY)/2}" font-family="JetBrains Mono" font-size="12" fill="#FBBF24">Δ₀</text>`;
+  } else {
+    svg += `<text x="240" y="${t2gY+30}" text-anchor="middle" font-family="JetBrains Mono" font-size="12" fill="#9C96B8">5 degenerate d-orbitals (no field yet)</text>`;
+  }
+  svg += "</svg>";
+  return svg;
+}
+function initCFT(){
+  const holder = document.getElementById("cftSvgHolder");
+  const readout = document.getElementById("cftReadout");
+  function setState(state){
+    holder.innerHTML = cftSVG(state);
+    document.querySelectorAll("#cftFree,#cftWeak,#cftStrong").forEach(b=>b.classList.remove("active"));
+    if(state==="free"){ document.getElementById("cftFree").classList.add("active"); readout.innerHTML = "6 electrons fill 5 degenerate orbitals following Hund's rule — one pair, four singles."; }
+    if(state==="weak"){ document.getElementById("cftWeak").classList.add("active"); readout.innerHTML = "t₂g⁴ eg² — <b>4 unpaired electrons</b> — high spin, paramagnetic. Small Δ₀ isn't worth pairing up for."; }
+    if(state==="strong"){ document.getElementById("cftStrong").classList.add("active"); readout.innerHTML = "t₂g⁶ eg⁰ — <b>0 unpaired electrons</b> — low spin, diamagnetic. Large Δ₀ makes pairing in t₂g cheaper than jumping to eg."; }
+  }
+  document.getElementById("cftFree").addEventListener("click", ()=>setState("free"));
+  document.getElementById("cftWeak").addEventListener("click", ()=>setState("weak"));
+  document.getElementById("cftStrong").addEventListener("click", ()=>setState("strong"));
+  setState("free");
+}
+
+/* =======================================================================
+   MIND MAP
+   ======================================================================= */
+const MINDMAP = {
+  center: ["Coordination","Compounds"],
+  branches: [
+    { topic:"ligands",      label:["Ligands &","Denticity"],        color:"#34D399",
+      children:[["26 NCERT ligands,","mono → hexadentate"],["Chelate rings","(5–6 membered)"],["Ambidentate:","NO₂⁻, SCN⁻, CN⁻"]] },
+    { topic:"nomen",        label:["IUPAC","Nomenclature"],         color:"#60A5FA",
+      children:[["Cation before","anion"],["di/tri vs","bis/tris"],["-ido / -ate","suffixes"]] },
+    { topic:"bonding",      label:["Werner's","Theory"],            color:"#8B5CF6",
+      children:[["Primary =","oxidation state"],["Secondary =","coordination no."],["Geometry from","C.N."]] },
+    { topic:"bonding",      label:["Valence Bond","Theory"],        color:"#F472B6",
+      children:[["Hybridization sp³ /","dsp² / d²sp³"],["Inner vs outer","orbital complex"],["High spin vs","low spin"]] },
+    { topic:"bonding",      label:["Crystal Field","Theory"],       color:"#FBBF24",
+      children:[["d-orbital","splitting Δ₀"],["Strong vs","weak field"],["t₂g / eg","filling"]] },
+    { topic:"isomer",       label:["Isomerism"],                    color:"#F87171",
+      children:[["Structural: ionization,","linkage, hydrate"],["Geometrical:","cis / trans"],["Optical:","chirality"]] },
+    { topic:"applications", label:["Real-World","Applications"],    color:"#22D3EE",
+      children:[["Biological: Hb,","chlorophyll, B12"],["Medicinal:","cisplatin, EDTA"],["Industrial: Ag/Au","extraction, plating"]] },
+  ]
+};
+function mmNodeSVG(x, y, lines, cfg){
+  const { w, h, fontSize, fill, stroke, textColor, fontWeight, rx } = cfg;
+  const lineHeight = fontSize + 5;
+  const startY = y - ((lines.length-1)*lineHeight)/2 + fontSize*0.35;
+  const tspans = lines.map((ln,i)=>`<tspan x="${x}" y="${startY + i*lineHeight}">${ln}</tspan>`).join("");
+  return `<rect x="${x-w/2}" y="${y-h/2}" width="${w}" height="${h}" rx="${rx||10}" fill="${fill}" stroke="${stroke}" stroke-width="1.4"/>` +
+         `<text text-anchor="middle" font-family="JetBrains Mono" font-size="${fontSize}" font-weight="${fontWeight||500}" fill="${textColor}">${tspans}</text>`;
+}
+function renderMindMap(){
+  const vbW = 1080, vbH = 940, cx = 540, cy = 480, branchR = 230, childR = 380, spread = 0.4;
+  const canvas = document.getElementById("mmCanvas");
+  const n = MINDMAP.branches.length;
+  let lines = "", branchNodes = "", childNodes = "";
+
+  lines += `<line x1="${cx}" y1="${cy}" x2="${cx}" y2="${cy}" stroke="none"/>`;
+  MINDMAP.branches.forEach((b,i)=>{
+    const angle = (i/n) * 2*Math.PI - Math.PI/2;
+    const bx = cx + branchR*Math.cos(angle), by = cy + branchR*Math.sin(angle);
+    lines += `<line x1="${cx}" y1="${cy}" x2="${bx}" y2="${by}" stroke="${b.color}" stroke-width="2" opacity="0.55"/>`;
+    branchNodes += `<g class="mm-branch-g" data-topic="${b.topic}">` +
+      mmNodeSVG(bx, by, b.label, { w:172, h:56, fontSize:12.5, fontWeight:700, fill:b.color+"2E", stroke:b.color, textColor:"#fff", rx:13 }) +
+      `</g>`;
+    const m = b.children.length;
+    b.children.forEach((c,j)=>{
+      const cAngle = angle + (j - (m-1)/2) * (m>1 ? spread/(m-1) : 0);
+      const cx2 = cx + childR*Math.cos(cAngle), cy2 = cy + childR*Math.sin(cAngle);
+      lines += `<line x1="${bx}" y1="${by}" x2="${cx2}" y2="${cy2}" stroke="${b.color}" stroke-width="1" opacity="0.35"/>`;
+      childNodes += mmNodeSVG(cx2, cy2, c, { w:172, h:56, fontSize:10.3, fontWeight:500, fill:"rgba(20,20,35,0.92)", stroke:"rgba(255,255,255,0.16)", textColor:"#ADA7C6", rx:10 });
+    });
+  });
+  const centerNode = mmNodeSVG(cx, cy, MINDMAP.center, { w:196, h:78, fontSize:16, fontWeight:700, fill:"rgba(139,92,246,0.3)", stroke:"#8B5CF6", textColor:"#fff", rx:18 });
+
+  canvas.innerHTML = `<svg viewBox="0 0 ${vbW} ${vbH}">${lines}${childNodes}${branchNodes}${centerNode}</svg>`;
+  canvas.querySelectorAll(".mm-branch-g").forEach(el=>{
+    el.addEventListener("click", ()=>{
+      renderTopic(el.getAttribute("data-topic"));
+      closeModal("mmOverlay");
+      document.getElementById("topicBoard").scrollIntoView({ behavior:"smooth", block:"start" });
+    });
+  });
+}
+
+/* =======================================================================
+   FLASHCARDS
+   ======================================================================= */
+const CONCEPT_CARDS = [
+  { front:"Denticity", tag:"Concept", back:"The number of donor atoms ONE ligand uses to bind the central metal ion." },
+  { front:"Coordination Number", tag:"Concept", back:"The total number of donor atoms bonded to the metal from ALL ligands combined." },
+  { front:"Chelate Ring", tag:"Concept", back:"A ring formed when a bidentate/polydentate ligand bonds the same metal at two or more points. 5- and 6-membered rings are most stable." },
+  { front:"Homoleptic", tag:"Concept", back:"A complex where every ligand is identical, e.g. [Co(NH₃)₆]³⁺." },
+  { front:"Heteroleptic", tag:"Concept", back:"A complex with more than one type of ligand, e.g. [Co(NH₃)₄Cl₂]⁺." },
+  { front:"Ambidentate Ligand", tag:"Concept", back:"A ligand with two possible donor atoms, but it only ever binds through ONE at a time — e.g. NO₂⁻ via N or O." },
+  { front:"Δ₀", tag:"Concept", back:"Crystal field splitting energy in an octahedral field — the gap between the t₂g and eg orbital sets." },
+  { front:"Linkage Isomerism", tag:"Concept", back:"Structural isomerism where an ambidentate ligand binds through a different donor atom in each isomer." },
+  { front:"Homoleptic ≠ No Isomerism", tag:"Concept", back:"True for monodentate-only complexes, but [Co(en)₃]³⁺ is homoleptic AND optically active — chelating ligands change the rule." },
+];
+const FLASHCARDS = [
+  ...LIGANDS.map(l => ({ front:l.formula, tag:l.name, back:`${CAT_LABEL[l.cat]} · donor: ${l.donor} · IUPAC name: ${l.iupac}${l.trick ? " — " + l.trick : ""}` })),
+  ...CONCEPT_CARDS,
+];
+let fcOrder = FLASHCARDS.map((_,i)=>i);
+let fcIdx = 0, fcFlipped = false;
+function renderFlashcard(){
+  const item = FLASHCARDS[fcOrder[fcIdx]];
+  document.getElementById("fcProgress").textContent = `${fcIdx+1} / ${FLASHCARDS.length}`;
+  document.getElementById("fcFrontTag").textContent = item.tag || "";
+  document.getElementById("fcFrontText").textContent = item.front;
+  document.getElementById("fcBackTag").textContent = item.front;
+  document.getElementById("fcBackText").textContent = item.back;
+  document.getElementById("fcCardEl").classList.toggle("flipped", fcFlipped);
+}
+document.getElementById("fcCardEl").addEventListener("click", ()=>{ fcFlipped = !fcFlipped; document.getElementById("fcCardEl").classList.toggle("flipped", fcFlipped); });
+document.getElementById("fcPrev").addEventListener("click", ()=>{ fcIdx = (fcIdx - 1 + FLASHCARDS.length) % FLASHCARDS.length; fcFlipped = false; renderFlashcard(); });
+document.getElementById("fcNext").addEventListener("click", ()=>{ fcIdx = (fcIdx + 1) % FLASHCARDS.length; fcFlipped = false; renderFlashcard(); });
+document.getElementById("fcShuffle").addEventListener("click", ()=>{ fcOrder = shuffle(FLASHCARDS.map((_,i)=>i)); fcIdx = 0; fcFlipped = false; renderFlashcard(); });
+
+/* =======================================================================
+   MODALS
+   ======================================================================= */
+function openModal(id){ document.getElementById(id).classList.add("open"); }
+function closeModal(id){ document.getElementById(id).classList.remove("open"); }
+document.getElementById("openMindMap").addEventListener("click", ()=>{ openModal("mmOverlay"); });
+document.getElementById("mmClose").addEventListener("click", ()=> closeModal("mmOverlay"));
+document.getElementById("mmOverlay").addEventListener("click", (e)=>{ if(e.target.id==="mmOverlay") closeModal("mmOverlay"); });
+
+document.getElementById("openFlashcards").addEventListener("click", ()=>{ fcOrder = FLASHCARDS.map((_,i)=>i); fcIdx = 0; fcFlipped = false; renderFlashcard(); openModal("fcOverlay"); });
+document.getElementById("fcClose").addEventListener("click", ()=> closeModal("fcOverlay"));
+document.getElementById("fcOverlay").addEventListener("click", (e)=>{ if(e.target.id==="fcOverlay") closeModal("fcOverlay"); });
+
+document.addEventListener("keydown", (e)=>{
+  if(e.key === "Escape"){ closeModal("mmOverlay"); closeModal("fcOverlay"); }
+});
+
+/* =======================================================================
+   NEET-LEVEL QUICK CHECK
+   ======================================================================= */
+const AR_OPTIONS = [
+  "Both A and R are true, and R is the correct explanation of A.",
+  "Both A and R are true, but R is NOT the correct explanation of A.",
+  "A is true, but R is false.",
+  "A is false, but R is true.",
+];
+const QUIZ = [
+  { type:"mcq", q:"In [Co(NH₃)₆]Cl₃, the coordination number of Co is:", options:["3","6","9","4"], correct:1,
+    exp:"Six monodentate NH₃ ligands each contribute one donor atom → coordination number 6." },
+  { type:"mcq", q:"Which of the following is an ambidentate ligand?", options:["NH₃","en","NO₂⁻","EDTA"], correct:2,
+    exp:"NO₂⁻ can bind through N (nitro) or O (nitrito) — one at a time — the classic ambidentate ligand." },
+  { type:"mcq", q:"The IUPAC name of [Fe(CN)₆]⁴⁻ is:", options:["Hexacyanidoiron(II)","Hexacyanidoferrate(II)","Hexacyanoferrate(III)","Ferrihexacyanide"], correct:1,
+    exp:"Anionic complex → metal takes the '-ate' suffix; charge balance gives Fe(II): hexacyanidoferrate(II)." },
+  { type:"mcq", q:"How many donor atoms does EDTA use to bind a metal ion?", options:["2","4","6","8"], correct:2,
+    exp:"EDTA is hexadentate — 2 nitrogen + 4 oxygen donor atoms, 6 total." },
+  { type:"mcq", q:"A complex with 3 bidentate ligands has a coordination number of:", options:["3","6","4","2"], correct:1,
+    exp:"Each bidentate ligand contributes 2 donor atoms; 3 × 2 = 6." },
+  { type:"mcq", q:"Which ligand needs 'tris' instead of 'tri' in IUPAC naming?", options:["Ammine","Chlorido","Ethylenediamine","Aqua"], correct:2,
+    exp:"\"Ethylenediamine\" already contains \"di\", so tris(ethylenediamine) avoids ambiguity." },
+  { type:"mcq", q:"According to the spectrochemical series, which is the stronger field ligand?", options:["H₂O","Cl⁻","CN⁻","F⁻"], correct:2,
+    exp:"CN⁻ sits far above H₂O, F⁻ and Cl⁻ in the spectrochemical series." },
+  { type:"mcq", q:"Strong field ligands typically produce complexes that are:", options:["High spin, strongly paramagnetic","Low spin, often diamagnetic or weakly paramagnetic","Always colourless","Always tetrahedral"], correct:1,
+    exp:"Large Δ₀ favours electron pairing in the lower t₂g set — low spin, fewer unpaired electrons." },
+  { type:"mcq", q:"The hybridization of the metal in an octahedral, low-spin (inner orbital) complex is:", options:["sp³","dsp²","d²sp³","sp³d²"], correct:2,
+    exp:"Inner orbital (low spin) octahedral complexes use d²sp³ hybridization." },
+  { type:"mcq", q:"Square planar geometry with dsp² hybridization is most commonly seen for which metal ion configuration?", options:["d⁴","d⁶","d⁸","d¹⁰"], correct:2,
+    exp:"d⁸ ions like Pt(II) and Ni(II) are the classic square-planar, dsp² examples." },
+  { type:"mcq", q:"Which type of isomerism involves a ligand binding through different donor atoms in different isomers?", options:["Ionization isomerism","Linkage isomerism","Hydrate isomerism","Coordination isomerism"], correct:1,
+    exp:"Linkage isomerism arises directly from an ambidentate ligand's two possible donor atoms." },
+  { type:"mcq", q:"A double salt differs from a complex compound because:", options:["A double salt is always coloured","A double salt fully dissociates into its simple ions in solution","A double salt has a higher coordination number","A double salt cannot contain water"], correct:1,
+    exp:"Double salts (like potassium alum) lose their identity completely on dissolving; complexes retain theirs." },
+  { type:"mcq", q:"Which of the following is a hexadentate ligand?", options:["Oxalate","Glycinate","EDTA","Diethylenetriamine"], correct:2,
+    exp:"EDTA binds through 6 donor atoms total — 2 N and 4 O." },
+  { type:"mcq", q:"For an octahedral complex, the d-orbitals split into which two sets?", options:["sp³ and dsp²","t₂g and eg","σ and π","HOMO and LUMO"], correct:1,
+    exp:"Octahedral crystal field splitting produces a lower-energy t₂g set and a higher-energy eg set." },
+  { type:"mcq", q:"[Co(en)₃]³⁺ is a well-known example of which phenomenon?", options:["Linkage isomerism","Ionization isomerism","Optical isomerism","Hydrate isomerism"], correct:2,
+    exp:"Its three chelate rings create a chiral, non-superimposable arrangement — a textbook optical isomerism case." },
+  { type:"assertion", assertion:"[Fe(CN)₆]⁴⁻ is diamagnetic.", reason:"CN⁻ is a strong field ligand that causes pairing of electrons, giving a low-spin configuration.",
+    options:AR_OPTIONS, correct:0, exp:"Both are true, and the strong-field pairing directly explains the diamagnetism (0 unpaired electrons in low-spin d⁶)." },
+  { type:"assertion", assertion:"NO₂⁻ is called an ambidentate ligand.", reason:"NO₂⁻ binds to the metal simultaneously through both its nitrogen and oxygen atoms.",
+    options:AR_OPTIONS, correct:2, exp:"The assertion is true, but the reason is false — ambidentate ligands bind through only ONE donor atom at a time, never both simultaneously." },
+  { type:"assertion", assertion:"Ethylenediamine (en) is a chelating ligand.", reason:"en has two nitrogen donor atoms that can bind the same metal ion, forming a ring.",
+    options:AR_OPTIONS, correct:0, exp:"Both are true, and the two-nitrogen chelate-ring formation is exactly why en is classed as chelating." },
+  { type:"assertion", assertion:"A complex with all six ligands identical (homoleptic) can never show any form of isomerism.", reason:"Homoleptic octahedral complexes with chelating ligands, like [Co(en)₃]³⁺, can be optically active.",
+    options:AR_OPTIONS, correct:3, exp:"The assertion is false — [Co(en)₃]³⁺ is itself homoleptic and optically active, which is exactly what the (true) reason describes." },
+];
+let quizIdx = 0, quizScore = 0;
+const quizShell = document.getElementById("quizShell");
+function renderQuiz(){
+  if(quizIdx >= QUIZ.length){
+    quizShell.innerHTML = `
+      <div class="quiz-done">
+        <div class="quiz-meta">QUICK CHECK COMPLETE</div>
+        <div class="big">${quizScore} / ${QUIZ.length}</div>
+        <div style="color:var(--text-dim);">${quizScore===QUIZ.length ? "Full marks — exam ready." : quizScore/QUIZ.length>=0.6 ? "Solid — revisit the ones you missed above." : "Head back through the topic cards and try again."}</div>
+        <button class="restart-btn" id="quizRestart">Restart</button>
+      </div>`;
+    document.getElementById("quizRestart").addEventListener("click", ()=>{ quizIdx=0; quizScore=0; renderQuiz(); });
+    return;
+  }
+  const item = QUIZ[quizIdx];
+  let answered = false;
+  const promptHtml = item.type === "assertion"
+    ? `<div class="ar-block"><div class="ar-line"><b>Assertion (A):</b> ${item.assertion}</div><div class="ar-line"><b>Reason (R):</b> ${item.reason}</div></div>`
+    : `<p class="quiz-q">${item.q}</p>`;
+  quizShell.innerHTML = `
+    <div class="quiz-meta">QUESTION ${quizIdx+1} OF ${QUIZ.length} &middot; SCORE ${quizScore}</div>
+    ${promptHtml}
+    <div class="quiz-opts">${item.options.map((opt,i)=>`<button class="quiz-opt" data-i="${i}">${opt}</button>`).join("")}</div>
+    <div class="quiz-explain" id="quizExplain">${item.exp}</div>
+    <div class="quiz-nav"><span class="quiz-score">Score: ${quizScore}/${quizIdx}</span><button class="quiz-btn" id="nextBtn" disabled>Next →</button></div>`;
+  quizShell.querySelectorAll(".quiz-opt").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      if(answered) return; answered = true;
+      const i = parseInt(btn.getAttribute("data-i"));
+      quizShell.querySelectorAll(".quiz-opt").forEach((b,bi)=>{
+        b.disabled = true;
+        if(bi === item.correct) b.classList.add("correct");
+        else if(bi === i) b.classList.add("incorrect");
+      });
+      if(i === item.correct) quizScore++;
+      document.getElementById("quizExplain").classList.add("show");
+      document.getElementById("nextBtn").disabled = false;
+    });
+  });
+  document.getElementById("nextBtn").addEventListener("click", ()=>{ quizIdx++; renderQuiz(); });
+}
+
+/* =======================================================================
+   INIT
+   ======================================================================= */
+setLevel("intermediate");
+renderTopic("basics");
+renderMindMap();
+renderQuiz();
+</script>
+</body>
+</html>
