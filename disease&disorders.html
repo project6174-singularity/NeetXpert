@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case File Vol. 1 — Diseases &amp; Disorders | NEET Biology</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,400;8..60,600;8..60,700;8..60,900&family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F2EDE1;
+    --paper-deep:#E8E0CC;
+    --ink:#182437;
+    --ink-soft:#4B5A6E;
+    --ink-faint:#8790A0;
+    --critical:#A6362B;
+    --vital:#4B7358;
+    --gold:#AD7C2F;
+    --line:#CEC4A6;
+    --card:#FBF9F2;
+
+    --tab-all:#182437;
+    --tab-resp:#3E7C7C;
+    --tab-cardio:#A6362B;
+    --tab-gen:#6B4E71;
+    --tab-endo:#AD7C2F;
+    --tab-inf:#B5602E;
+    --tab-cancer:#6E2C2C;
+    --tab-renal:#3A4E6B;
+
+    --serif:'Source Serif 4', Georgia, serif;
+    --mono:'JetBrains Mono', monospace;
+    --sans:'Inter', -apple-system, sans-serif;
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(24,36,55,0.055) 1px, transparent 0);
+    background-size: 22px 22px;
+    color:var(--ink);
+    font-family:var(--sans);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  ::selection{ background:var(--gold); color:#fff; }
+
+  a{ color:inherit; }
+  button{ font-family:inherit; cursor:pointer; }
+  input{ font-family:inherit; }
+
+  /* ---------- layout shell ---------- */
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 22px; }
+
+  /* ---------- masthead ---------- */
+  .masthead{
+    padding:34px 0 0;
+    border-bottom:3px double var(--ink);
+  }
+  .masthead-top{
+    display:flex; justify-content:space-between; align-items:baseline;
+    font-family:var(--mono); font-size:11px; letter-spacing:.09em;
+    color:var(--ink-soft); text-transform:uppercase; margin-bottom:18px;
+    flex-wrap:wrap; gap:8px;
+  }
+  .masthead-top .stamp-red{ color:var(--critical); font-weight:700; }
+  .masthead h1{
+    font-family:var(--serif); font-weight:700; font-size:clamp(38px,6vw,64px);
+    margin:0 0 6px; letter-spacing:-0.01em;
+  }
+  .masthead .sub{
+    font-size:15.5px; color:var(--ink-soft); max-width:640px; margin:0 0 22px;
+  }
+  .masthead .sub em{ color:var(--ink); font-style:normal; border-bottom:1.5px solid var(--gold); }
+
+  .search-row{ display:flex; gap:10px; margin-bottom:20px; flex-wrap:wrap; align-items:center; }
+  #search{
+    flex:1; min-width:240px;
+    padding:13px 16px; border:1.5px solid var(--ink); background:var(--card);
+    font-size:15px; color:var(--ink); border-radius:2px;
+  }
+  #search:focus{ outline:2px solid var(--gold); outline-offset:1px; }
+  #search::placeholder{ color:var(--ink-faint); }
+
+  .hy-toggle{
+    display:flex; align-items:center; gap:8px; font-family:var(--mono); font-size:11.5px;
+    letter-spacing:.05em; padding:12px 14px; border:1.5px solid var(--ink); background:var(--card);
+    white-space:nowrap; border-radius:2px; user-select:none;
+  }
+  .hy-toggle input{ accent-color:var(--critical); width:15px; height:15px; }
+
+  /* ---------- tabs (folder tabs) ---------- */
+  .tabs{
+    display:flex; gap:4px; overflow-x:auto; padding:18px 0 0;
+    border-bottom:1.5px solid var(--ink);
+  }
+  .tab-btn{
+    font-family:var(--mono); font-size:12px; letter-spacing:.04em; font-weight:500;
+    padding:10px 16px 12px; border:none; background:var(--paper-deep);
+    color:var(--ink-soft); border-radius:6px 6px 0 0; white-space:nowrap;
+    border:1.5px solid var(--line); border-bottom:none; position:relative; top:2px;
+    transition:transform .12s ease, background .15s ease, color .15s ease;
+  }
+  .tab-btn .n{ opacity:.55; margin-left:5px; }
+  .tab-btn:hover{ transform:translateY(-2px); }
+  .tab-btn.active{
+    background:var(--card); color:var(--ink); font-weight:700;
+    border-color:var(--ink); border-bottom:2px solid var(--card);
+    box-shadow:0 -2px 0 var(--tab-color,var(--ink)) inset;
+  }
+
+  /* ---------- board / cards ---------- */
+  #board{ padding:26px 0 10px; }
+  .system-intro{
+    font-size:14px; color:var(--ink-soft); max-width:780px; margin:0 0 20px;
+    padding-left:14px; border-left:3px solid var(--tab-color,var(--ink));
+  }
+  .system-intro b{ color:var(--ink); }
+
+  .grid{
+    display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px;
+  }
+  .card{
+    background:var(--card); border:1.5px solid var(--ink); border-radius:3px;
+    padding:18px 18px 16px; position:relative; overflow:hidden;
+    box-shadow:3px 3px 0 rgba(24,36,55,0.08);
+  }
+  .card::before{ /* punch holes */
+    content:""; position:absolute; top:14px; left:14px; width:7px; height:7px;
+    border-radius:50%; background:var(--paper);
+    box-shadow: 0 26px 0 var(--paper), inset 0 0 0 1px var(--line);
+    border:1px solid var(--line);
+  }
+  .card-tab{
+    position:absolute; top:0; left:0; width:6px; height:100%; background:var(--tab-color,var(--ink));
+  }
+  .card-head{ padding-left:16px; display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
+  .card-code{ font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); letter-spacing:.06em; }
+  .card h3{
+    font-family:var(--serif); font-size:21px; font-weight:700; margin:2px 0 8px; padding-left:16px;
+    line-height:1.15;
+  }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:6px; padding-left:16px; margin-bottom:10px; }
+  .tag{
+    font-family:var(--mono); font-size:10px; letter-spacing:.04em; text-transform:uppercase;
+    padding:3px 7px; border-radius:20px; border:1px solid currentColor; opacity:.85;
+  }
+  .tag.b{ color:#6B7A3A; } .tag.v{ color:#C1642F; } .tag.p{ color:#3A6B8A; }
+  .tag.h{ color:#7A5C3A; } .tag.f{ color:#5C7A5C; }
+  .tag.inherit{ color:var(--tab-gen); }
+
+  .field{ padding-left:16px; margin-bottom:9px; }
+  .field .k{ font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint); display:block; margin-bottom:3px; }
+  .field .v{ font-size:13.6px; color:var(--ink-soft); }
+  .feat-list{ list-style:none; margin:0; padding:0 0 0 16px; }
+  .feat-list li{ font-size:13.4px; color:var(--ink-soft); position:relative; padding-left:14px; margin-bottom:4px; }
+  .feat-list li::before{ content:"—"; position:absolute; left:0; color:var(--tab-color,var(--ink)); }
+
+  .chrom{ font-family:var(--mono); font-size:13px; padding-left:16px; margin:6px 0 10px; letter-spacing:.04em; }
+  .chrom .box{ background:var(--ink); color:var(--card); padding:3px 9px; border-radius:2px; font-weight:700;}
+
+  .card-foot{
+    padding-left:16px; margin-top:10px; padding-top:10px; border-top:1px dashed var(--line);
+    display:flex; justify-content:space-between; align-items:center;
+  }
+  .reviewed-toggle{ display:flex; align-items:center; gap:6px; font-family:var(--mono); font-size:10.5px; color:var(--ink-faint); }
+  .reviewed-toggle input{ accent-color:var(--vital); width:14px; height:14px; }
+  .card.reviewed{ box-shadow:3px 3px 0 rgba(75,115,88,0.18); }
+  .card.reviewed .card-tab{ background:var(--vital); }
+
+  .stamp{
+    position:absolute; top:12px; right:-6px; width:96px; height:96px;
+    display:flex; align-items:center; justify-content:center; text-align:center;
+    border:2.5px solid var(--critical); border-radius:50%; color:var(--critical);
+    font-family:var(--mono); font-weight:700; font-size:10px; letter-spacing:.05em;
+    transform:rotate(11deg); opacity:.82; mix-blend-mode:multiply; pointer-events:none;
+    line-height:1.2;
+  }
+  .stamp::before{
+    content:""; position:absolute; inset:6px; border:1px solid var(--critical); border-radius:50%; opacity:.6;
+  }
+
+  .empty-state{
+    padding:60px 20px; text-align:center; color:var(--ink-faint); font-family:var(--mono); font-size:13px;
+  }
+
+  /* ---------- concepts / sticky notes ---------- */
+  #concepts{ padding:36px 0 10px; border-top:3px double var(--ink); margin-top:30px; }
+  .section-eyebrow{
+    font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--critical);
+    margin-bottom:6px; display:block;
+  }
+  #concepts h2, #quiz h2{ font-family:var(--serif); font-size:30px; margin:0 0 20px; }
+  .notes-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:18px; margin-bottom:8px; }
+  .note{
+    background:#F7F1D8; border:1px solid #DDD09A; padding:16px 16px 14px; border-radius:2px;
+    box-shadow:2px 3px 6px rgba(24,36,55,0.10); transform:rotate(-0.6deg); font-size:13.4px; color:var(--ink-soft);
+  }
+  .note:nth-child(2n){ transform:rotate(0.7deg); background:#F0F2E4; border-color:#CDD6B4; }
+  .note:nth-child(3n){ transform:rotate(-0.3deg); background:#EFE7EC; border-color:#D6C6D0; }
+  .note h4{ font-family:var(--serif); font-size:16px; margin:0 0 8px; color:var(--ink); }
+  .note table{ width:100%; border-collapse:collapse; font-family:var(--mono); font-size:11.5px; margin-top:6px; }
+  .note td{ padding:3px 4px; border-bottom:1px dotted rgba(24,36,55,0.2); }
+
+  /* ---------- quiz ---------- */
+  #quiz{ padding:36px 0 60px; border-top:3px double var(--ink); margin-top:30px; }
+  .quiz-shell{
+    background:var(--card); border:1.5px solid var(--ink); border-radius:3px; max-width:660px;
+    padding:26px 26px 22px; position:relative; box-shadow:4px 4px 0 rgba(24,36,55,0.08);
+  }
+  .quiz-shell::after{
+    content:"Rx"; position:absolute; top:18px; right:22px; font-family:var(--serif); font-style:italic;
+    font-size:26px; color:var(--tab-color,var(--critical)); opacity:.7;
+  }
+  .quiz-meta{ font-family:var(--mono); font-size:11px; color:var(--ink-faint); letter-spacing:.06em; margin-bottom:14px; }
+  .quiz-q{ font-family:var(--serif); font-size:19px; margin:0 0 16px; max-width:480px; }
+  .quiz-opts{ display:flex; flex-direction:column; gap:9px; margin-bottom:16px; }
+  .quiz-opt{
+    text-align:left; padding:11px 14px; border:1.5px solid var(--line); background:var(--paper);
+    border-radius:3px; font-size:14px; color:var(--ink); transition:border-color .12s, background .12s;
+  }
+  .quiz-opt:hover{ border-color:var(--ink); }
+  .quiz-opt.correct{ border-color:var(--vital); background:#EAF1EA; font-weight:600; }
+  .quiz-opt.incorrect{ border-color:var(--critical); background:#F5E9E7; }
+  .quiz-opt:disabled{ cursor:default; }
+  .quiz-explain{
+    font-size:13.3px; color:var(--ink-soft); background:var(--paper-deep); padding:12px 14px;
+    border-left:3px solid var(--gold); margin-bottom:16px; display:none; border-radius:2px;
+  }
+  .quiz-explain.show{ display:block; }
+  .quiz-nav{ display:flex; justify-content:space-between; align-items:center; }
+  .quiz-btn{
+    font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase;
+    padding:10px 18px; border:1.5px solid var(--ink); background:var(--ink); color:var(--card); border-radius:2px;
+  }
+  .quiz-btn:disabled{ opacity:.35; cursor:default; }
+  .quiz-score{ font-family:var(--mono); font-size:12px; color:var(--ink-soft); }
+  .quiz-done{ text-align:center; padding:20px 0; }
+  .quiz-done .big{ font-family:var(--serif); font-size:44px; margin-bottom:6px; }
+  .restart-btn{
+    margin-top:14px; font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase;
+    padding:10px 18px; border:1.5px solid var(--ink); background:transparent; color:var(--ink); border-radius:2px;
+  }
+
+  footer{
+    border-top:1.5px solid var(--ink); padding:20px 0 40px; font-family:var(--mono); font-size:11px;
+    color:var(--ink-faint); letter-spacing:.04em; display:flex; justify-content:space-between; flex-wrap:wrap; gap:8px;
+  }
+
+  @media (prefers-reduced-motion: reduce){ *{ transition:none !important; scroll-behavior:auto !important; } }
+
+  @media (max-width:640px){
+    .masthead{ padding-top:22px; }
+    .stamp{ width:78px; height:78px; font-size:8.5px; right:-10px; }
+    .grid{ grid-template-columns:1fr; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <div class="masthead-top">
+      <span>Case File Vol. 1 <span class="stamp-red">&middot; Confidential Revision Copy</span></span>
+      <span id="statStrip">7 SYSTEMS · 45 CONDITIONS</span>
+    </div>
+    <h1>Diseases &amp; Disorders</h1>
+    <p class="sub">A diagnostic manual across human physiology, genetics &amp; pathology — every cause, feature and exam-trap in one chart, built for <em>NEET (UG) Biology</em>.</p>
+    <div class="search-row">
+      <input id="search" type="text" placeholder="Search a condition, pathogen, gene defect, or vector…" autocomplete="off">
+      <label class="hy-toggle"><input type="checkbox" id="hyOnly"> High-yield only</label>
+    </div>
+  </header>
+
+  <nav class="tabs" id="tabs"></nav>
+
+  <main id="board"></main>
+
+  <section id="concepts">
+    <span class="section-eyebrow">Chart Notes</span>
+    <h2>Key concepts examiners love</h2>
+    <div class="notes-grid" id="notesGrid"></div>
+  </section>
+
+  <section id="quiz">
+    <span class="section-eyebrow">Self-Test</span>
+    <h2>Round on the ward</h2>
+    <div class="quiz-shell" id="quizShell"></div>
+  </section>
+
+  <footer>
+    <span>Built as a single-file app — paste into CodePen or serve on GitHub Pages.</span>
+    <span id="progressFoot">0 / 0 cases reviewed this session</span>
+  </footer>
+
+</div>
+
+<script>
+/* =======================================================================
+   DATA
+   ======================================================================= */
+const SYSTEMS = [
+  { id:"all",    label:"All Cases",              color:"var(--tab-all)" },
+  { id:"resp",   label:"Respiratory",             color:"var(--tab-resp)" },
+  { id:"cardio", label:"Cardiovascular",          color:"var(--tab-cardio)" },
+  { id:"gen",    label:"Genetic & Chromosomal",   color:"var(--tab-gen)" },
+  { id:"endo",   label:"Endocrine & Metabolic",   color:"var(--tab-endo)" },
+  { id:"inf",    label:"Infectious",              color:"var(--tab-inf)" },
+  { id:"cancer", label:"Cancer",                  color:"var(--tab-cancer)" },
+  { id:"renal",  label:"Renal & Misc",            color:"var(--tab-renal)" },
+];
+
+const SYSTEM_INTRO = {
+  resp:   "Airway and lung disorders — know the trigger (allergen vs. dust vs. smoke) and whether the damage is <b>functional</b> (asthma) or <b>structural</b> (emphysema, fibrosis).",
+  cardio: "Vascular and cardiac disease usually forms one chain: <b>hypertension → atherosclerosis → angina → infarction/failure</b>. Learn the chain, not just the terms.",
+  gen:    "Chromosomal and single-gene disorders. Fix three lenses first: <b>autosomal vs. X-linked</b>, <b>dominant vs. recessive</b>, and <b>numerical vs. structural</b> chromosome change.",
+  endo:   "Hormone excess/deficiency pairs are tested as opposites — <b>dwarfism vs. gigantism</b>, <b>Graves' vs. myxedema</b>. Learn each pair together.",
+  inf:    "Grouped by pathogen: bacterial, viral, protozoan, helminthic, fungal. The vector (mosquito species, housefly) is a favourite one-mark question.",
+  cancer: "Fewer named diseases, more concepts: loss of contact inhibition, benign vs. malignant, and the route of metastasis.",
+  renal:  "Kidney failure and its management — know the hemodialysis circuit step by step, and why cyclosporin A matters after a transplant.",
+};
+
+const CASES = [
+  // ---------------- RESPIRATORY ----------------
+  { id:"asthma", sys:"resp", code:"RESP-01", name:"Asthma", hy:true,
+    cause:"Inflammation of bronchi &amp; bronchioles with bronchoconstriction, mainly triggered by histamine release.",
+    features:["Wheezing, mainly on expiration","Difficulty breathing (dyspnoea)","Triggered by allergens, cold air, exercise"],
+    note:"Rx: antihistamines, adrenaline, and steroids to reopen the airway." },
+  { id:"emphysema", sys:"resp", code:"RESP-02", name:"Emphysema", hy:true,
+    cause:"Chronic damage to alveolar walls, almost always from long-term smoking.",
+    features:["Reduced respiratory surface area","Impaired gas exchange","Progressive, irreversible breathlessness"] },
+  { id:"silicosis", sys:"resp", code:"RESP-03", name:"Silicosis", hy:false,
+    cause:"Chronic inhalation of silica dust — classic occupational disease of stone-grinding &amp; mining workers.",
+    features:["Lung inflammation → fibrosis replaces normal tissue","One of two paired occupational lung diseases in the syllabus","Prevented simply by wearing masks"] },
+  { id:"asbestosis", sys:"resp", code:"RESP-04", name:"Asbestosis", hy:false,
+    cause:"Chronic inhalation of asbestos fibres in industrial settings.",
+    features:["Same fibrotic mechanism as silicosis","Different dust, same occupational-lung-disease category","Prevention: masks / dust control"] },
+
+  // ---------------- CARDIOVASCULAR ----------------
+  { id:"htn", sys:"cardio", code:"CVS-01", name:"Hypertension", hy:true,
+    cause:"Blood pressure persistently above 140/90 mmHg.",
+    features:["Damages heart, brain and kidneys over years","Often symptomless — the 'silent' disease","Leading risk factor for stroke &amp; MI"] },
+  { id:"cad", sys:"cardio", code:"CVS-02", name:"Coronary Artery Disease (Atherosclerosis)", hy:true,
+    cause:"Calcium, cholesterol &amp; fibrous tissue deposit in and narrow the coronary artery lumen.",
+    features:["Reduced blood/oxygen supply to heart muscle","Can progress to myocardial ischemia or infarction","First domino in the cardiovascular disease chain"] },
+  { id:"angina", sys:"cardio", code:"CVS-03", name:"Angina Pectoris", hy:false,
+    cause:"Insufficient oxygen supply to cardiac muscle, usually on exertion.",
+    features:["Presents as chest pain","A warning sign — distinct from an actual infarction","Needs urgent medical attention"] },
+  { id:"hf", sys:"cardio", code:"CVS-04", name:"Heart Failure", hy:false,
+    cause:"The heart can no longer pump sufficient blood for the body's needs.",
+    features:["Often produces lung congestion","= Congestive Heart Failure (CHF) when fluid backs up","Managed with diuretics / ACE inhibitors"] },
+  { id:"arrest", sys:"cardio", code:"CVS-05", name:"Cardiac Arrest", hy:true,
+    cause:"Complete, abrupt cessation of heart function.",
+    features:["An electrical failure, not a blocked-pipe failure","Results in sudden death without immediate CPR/defibrillation","Don't confuse with a heart attack (MI) in MCQs"] },
+
+  // ---------------- GENETIC ----------------
+  { id:"erythro", sys:"gen", code:"GEN-01", name:"Erythroblastosis Fetalis", hy:true, inherit:"Rh incompatibility",
+    cause:"Rh– mother carrying an Rh+ fetus; maternal anti-Rh antibodies attack fetal RBCs, typically from the 2nd pregnancy onward.",
+    features:["Hemolytic disease of the newborn","Leads to fetal anemia &amp; jaundice","Prevented by an anti-D (RhoGAM) injection after the first delivery"] },
+  { id:"colorblind", sys:"gen", code:"GEN-02", name:"Color Blindness", hy:true, inherit:"X-linked recessive",
+    cause:"Mutation affecting red-green cone cell function.",
+    features:["Cannot distinguish red &amp; green","Classic criss-cross inheritance: carrier mother → affected son","Affects ~8% of males vs ~0.4% of females"], chrom:"X<sup>c</sup>X (carrier) × XY → 1/2 sons affected" },
+  { id:"hemophilia", sys:"gen", code:"GEN-03", name:"Hemophilia", hy:true, inherit:"X-linked recessive",
+    cause:"Defect in clotting factor VIII/IX.",
+    features:["Excessive bleeding from minor injuries","Known as 'the Royal Disease' (European royal pedigrees)","Same cross-inheritance logic as colour blindness"] },
+  { id:"sickle", sys:"gen", code:"GEN-04", name:"Sickle Cell Anaemia", hy:true, inherit:"Autosomal recessive · point mutation",
+    cause:"Glutamic acid → Valine substitution in the β-globin chain.",
+    features:["RBCs become sickle-shaped and block capillaries","Heterozygous carriers resist malaria — textbook pleiotropy","Qualitative Hb defect (shape), not quantitative"] },
+  { id:"pku", sys:"gen", code:"GEN-05", name:"Phenylketonuria (PKU)", hy:true, inherit:"Autosomal recessive",
+    cause:"Deficiency of the enzyme phenylalanine hydroxylase.",
+    features:["Phenylalanine accumulates in blood &amp; brain","Causes mental retardation and loss of skin/hair pigment","Second classic pleiotropy example after sickle cell"] },
+  { id:"thal", sys:"gen", code:"GEN-06", name:"Thalassemia", hy:true, inherit:"Autosomal recessive",
+    cause:"Deletion of one or more α- or β-globin genes.",
+    features:["Quantitative Hb defect — amount, not shape","Requires regular blood transfusions","Frequently paired against sickle cell in MCQs"] },
+  { id:"down", sys:"gen", code:"GEN-07", name:"Down Syndrome", hy:true, inherit:"Trisomy",
+    cause:"An extra copy of chromosome 21.",
+    features:["Characteristic facial features, broad palm crease","Mental retardation, congenital heart defects","Most commonly tested autosomal trisomy"], chrom:"47, +21" },
+  { id:"klinefelter", sys:"gen", code:"GEN-08", name:"Klinefelter Syndrome", hy:true, inherit:"Trisomy (sex chromosome)",
+    cause:"An extra X chromosome in a male.",
+    features:["Gynecomastia — some female secondary characteristics","Infertility","Male overall body pattern retained"], chrom:"47, XXY" },
+  { id:"turner", sys:"gen", code:"GEN-09", name:"Turner Syndrome", hy:true, inherit:"Monosomy (sex chromosome)",
+    cause:"One X chromosome is missing in a female.",
+    features:["Sterility, rudimentary ovaries","Absence of secondary sexual characteristics","The only human monosomy compatible with life"], chrom:"45, X0" },
+  { id:"scid", sys:"gen", code:"GEN-10", name:"SCID", hy:true, inherit:"Autosomal recessive · enzyme defect",
+    cause:"Mutation in the ADA (adenosine deaminase) gene.",
+    features:["Defective T-cell maturation → severe immunodeficiency","Managed by enzyme therapy, bone-marrow transplant, or gene therapy","One of the first successful human gene-therapy targets"] },
+
+  // ---------------- ENDOCRINE ----------------
+  { id:"dwarfism", sys:"endo", code:"ENDO-01", name:"Dwarfism", hy:false,
+    cause:"Growth hormone deficiency starting in childhood.",
+    features:["Stunted overall growth","Paired opposite: Gigantism","GH axis, not thyroid axis"] },
+  { id:"gigantism", sys:"endo", code:"ENDO-02", name:"Gigantism", hy:false,
+    cause:"Excess growth hormone secreted before the epiphyseal plates close.",
+    features:["Abnormally tall stature","Paired opposite: Dwarfism","Compare with Acromegaly — same hormone, different timing"] },
+  { id:"acromegaly", sys:"endo", code:"ENDO-03", name:"Acromegaly", hy:true,
+    cause:"Excess growth hormone secreted after epiphyseal plate closure.",
+    features:["Abnormal enlargement of facial features, hands, feet","Same hormone as gigantism — timing is the exam trap","Bones can't lengthen further, so they thicken instead"] },
+  { id:"di", sys:"endo", code:"ENDO-04", name:"Diabetes Insipidus", hy:true,
+    cause:"Deficiency of ADH (vasopressin).",
+    features:["Excessive loss of dilute water in urine","Not to be confused with Diabetes Mellitus","Polyuria without glucose in urine — key MCQ differentiator"] },
+  { id:"cretinism", sys:"endo", code:"ENDO-05", name:"Cretinism", hy:false,
+    cause:"Congenital hypothyroidism — low T3/T4 from birth.",
+    features:["Stunted physical AND mental growth","Congenital = present from birth","Contrast with Myxedema (adult onset)"] },
+  { id:"myxedema", sys:"endo", code:"ENDO-06", name:"Myxedema", hy:false,
+    cause:"Hypothyroidism arising in adulthood.",
+    features:["Slowed metabolism","Menstrual irregularities","Puffy facial appearance"] },
+  { id:"goiter", sys:"endo", code:"ENDO-07", name:"Goiter", hy:true,
+    cause:"Iodine deficiency causing thyroid gland enlargement.",
+    features:["Simple goiter = low thyroid hormone, gland enlarges to compensate","'Exophthalmic goiter' instead points to hyperthyroidism","Iodine deficiency is the one-line cause examiners want"] },
+  { id:"graves", sys:"endo", code:"ENDO-08", name:"Graves' Disease", hy:true,
+    cause:"Autoimmune hyperthyroidism.",
+    features:["Protruding eyeballs (exophthalmos)","Increased metabolic rate, weight loss","Opposite hormonal direction to Myxedema"] },
+  { id:"addison", sys:"endo", code:"ENDO-09", name:"Addison's Disease", hy:false,
+    cause:"Deficiency of adrenal cortex hormones (corticosteroids).",
+    features:["Fatigue","Disturbed carbohydrate metabolism","Adrenal cortex, not adrenal medulla"] },
+  { id:"dm", sys:"endo", code:"ENDO-10", name:"Diabetes Mellitus", hy:true,
+    cause:"Insulin deficiency or resistance.",
+    features:["Glucose AND ketones appear in urine","Managed by insulin therapy / lifestyle control","Contrast sharply with Diabetes Insipidus"] },
+
+  // ---------------- INFECTIOUS: BACTERIAL ----------------
+  { id:"typhoid", sys:"inf", ptype:"b", code:"INF-B1", name:"Typhoid", hy:true,
+    cause:"<i>Salmonella typhi</i>, spread via contaminated food and water.",
+    features:["Sustained fever, ~39–40°C","Abdominal pain, loss of appetite","Diagnosed with the Widal test"],
+    note:"Famous historical carrier: 'Typhoid Mary'." },
+  { id:"pneumonia", sys:"inf", ptype:"b", code:"INF-B2", name:"Pneumonia", hy:true,
+    cause:"<i>Streptococcus pneumoniae</i> and <i>Haemophilus influenzae</i>, spread by droplet infection.",
+    features:["Fever and chills","Difficulty breathing","Blue lips &amp; nails (cyanosis) from low oxygen"] },
+  { id:"diphtheria", sys:"inf", ptype:"b", code:"INF-B3", name:"Diphtheria", hy:false,
+    cause:"Bacterial infection of the throat/respiratory tract.",
+    features:["Listed alongside typhoid &amp; leprosy as a key bacterial disease","Covered by routine childhood vaccination"] },
+  { id:"leprosy", sys:"inf", ptype:"b", code:"INF-B4", name:"Leprosy", hy:false,
+    cause:"Chronic bacterial infection affecting skin and peripheral nerves.",
+    features:["Grouped with typhoid &amp; diphtheria as bacterial disease","Long incubation, chronic course"] },
+
+  // ---------------- INFECTIOUS: VIRAL ----------------
+  { id:"cold", sys:"inf", ptype:"v", code:"INF-V1", name:"Common Cold", hy:false,
+    cause:"<i>Rhinovirus</i>, spread by droplets and contaminated surfaces (fomites).",
+    features:["Affects the upper respiratory tract","Nasal congestion, sore throat, cough"] },
+  { id:"dengue", sys:"inf", ptype:"v", code:"INF-V2", name:"Dengue", hy:true,
+    cause:"Dengue virus (family Flaviviridae), transmitted by the <i>Aedes aegypti</i> mosquito.",
+    features:["'Break-bone fever' — severe joint/muscle pain","Rash and high fever","Can progress to hemorrhagic fever in severe cases"] },
+  { id:"chikungunya", sys:"inf", ptype:"v", code:"INF-V3", name:"Chikungunya", hy:false,
+    cause:"Chikungunya virus, also spread by <i>Aedes</i> mosquitoes.",
+    features:["Severe joint pain that can persist for years","Shares its vector with Dengue — a common MCQ pairing"] },
+  { id:"hiv", sys:"inf", ptype:"v", code:"INF-V4", name:"HIV / AIDS", hy:true,
+    cause:"Human Immunodeficiency Virus — an RNA retrovirus carrying reverse transcriptase.",
+    features:["Targets macrophages and CD4⁺ T-helper cells","Transmitted via sexual contact, contaminated blood or needles","Diagnosis: ELISA (antigen) → PCR (early) → Western blot (confirmatory)"] },
+
+  // ---------------- INFECTIOUS: PROTOZOAN ----------------
+  { id:"malaria", sys:"inf", ptype:"p", code:"INF-P1", name:"Malaria", hy:true,
+    cause:"<i>Plasmodium</i> species — <i>P. falciparum</i> is the most lethal — transmitted by the female <i>Anopheles</i> mosquito.",
+    features:["Sporozoites infect the liver, then undergo schizogony","RBC rupture releases hemozoin, causing fever cycles","Recurring fever &amp; chills track the RBC rupture cycle"] },
+  { id:"amoebiasis", sys:"inf", ptype:"p", code:"INF-P2", name:"Amoebiasis", hy:false,
+    cause:"<i>Entamoeba histolytica</i>, affecting the large intestine.",
+    features:["Abdominal pain, cramps","Bloody, mucous diarrhoea","Housefly acts as a mechanical carrier"] },
+
+  // ---------------- INFECTIOUS: HELMINTHIC ----------------
+  { id:"ascariasis", sys:"inf", ptype:"h", code:"INF-H1", name:"Ascariasis", hy:false,
+    cause:"<i>Ascaris lumbricoides</i>, a parasitic roundworm.",
+    features:["Intestinal blockage","Anemia and internal bleeding"] },
+  { id:"elephantiasis", sys:"inf", ptype:"h", code:"INF-H2", name:"Elephantiasis (Filariasis)", hy:true,
+    cause:"<i>Wuchereria bancrofti</i>, transmitted by the <i>Culex</i> mosquito.",
+    features:["Lymphatic vessels are blocked/damaged","Fluid accumulates, swelling the lower limbs","Third vector in the mosquito-disease trio — Culex, not Aedes/Anopheles"] },
+
+  // ---------------- INFECTIOUS: FUNGAL ----------------
+  { id:"ringworm", sys:"inf", ptype:"f", code:"INF-F1", name:"Ringworm (Tinea)", hy:false,
+    cause:"Fungi of the genera <i>Microsporum</i>, <i>Trichophyton</i> and <i>Epidermophyton</i>.",
+    features:["Affects warm, humid areas — scalp, nails, feet (athlete's foot)","Spread via soil contact, towels, clothes, combs"] },
+
+  // ---------------- CANCER ----------------
+  { id:"cancer-benign-malignant", sys:"cancer", code:"ONC-01", name:"Benign vs. Malignant Tumours", hy:true,
+    cause:"Uncontrolled cell division with loss of contact inhibition.",
+    features:["Benign: localised, generally easier to treat","Malignant: invasive, capable of metastasis","Metastasis spreads via blood to seed secondary tumours"] },
+  { id:"cancer-dx", sys:"cancer", code:"ONC-02", name:"Cancer Detection &amp; Treatment", hy:false,
+    cause:"—",
+    features:["Detected via biopsy, imaging (X-ray, CT, MRI), histopathology","Treated with surgery, chemotherapy, radiotherapy, immunotherapy"] },
+
+  // ---------------- RENAL & MISC ----------------
+  { id:"uremia", sys:"renal", code:"REN-01", name:"Uremia", hy:true,
+    cause:"Excess urea in the blood due to kidney failure.",
+    features:["Managed temporarily by hemodialysis","Permanent fix: kidney transplant"] },
+  { id:"hemodialysis", sys:"renal", code:"REN-02", name:"Hemodialysis — the process", hy:true,
+    cause:"Blood cleaned externally across a semi-permeable membrane.",
+    features:["Blood drawn from an artery and mixed with heparin (anticoagulant)","Passed through semi-permeable tubing that removes urea","Cleaned blood is returned via a vein"] },
+  { id:"transplant", sys:"renal", code:"REN-03", name:"Kidney Transplant", hy:false,
+    cause:"Permanent replacement for a failed kidney.",
+    features:["Requires immunosuppressants, e.g. Cyclosporin A","Prevents rejection of the transplanted organ"] },
+];
+
+const PTYPE_LABEL = { b:"Bacterial", v:"Viral", p:"Protozoan", h:"Helminthic", f:"Fungal" };
+
+const NOTES = [
+  { title:"Criss-cross (X-linked) inheritance",
+    html:"X-linked recessive conditions — colour blindness, hemophilia — skip generations in a set pattern: an affected father's daughters become <b>carriers</b>, and it's their <b>sons</b> who show the disease. This 'criss-cross' hop from grandfather → carrier mother → grandson is a favourite pedigree question." },
+  { title:"Pleiotropy",
+    html:"One gene, many effects. <b>Sickle cell anaemia</b> (malaria resistance in carriers) and <b>PKU</b> (mental retardation + pigment loss) are the syllabus's two go-to pleiotropy examples — memorise them as a pair." },
+  { title:"Chromosome notation, decoded",
+    html:"<table><tr><td>Normal male</td><td>44+XY</td></tr><tr><td>Klinefelter (male)</td><td>47, XXY</td></tr><tr><td>Turner (female)</td><td>45, X0</td></tr><tr><td>Down syndrome</td><td>47, +21</td></tr></table>" },
+  { title:"Mosquito vectors, side by side",
+    html:"<table><tr><td>Female <i>Anopheles</i></td><td>Malaria</td></tr><tr><td><i>Aedes aegypti</i></td><td>Dengue, Chikungunya</td></tr><tr><td><i>Culex</i></td><td>Elephantiasis (filariasis)</td></tr></table>" },
+  { title:"Sickle cell vs. Thalassemia",
+    html:"Both are autosomal recessive haemoglobin disorders — but sickle cell is a <b>qualitative</b> defect (wrong-shaped Hb, one point mutation) while thalassemia is a <b>quantitative</b> defect (gene deletion, not enough Hb chains made)." },
+  { title:"GH &amp; thyroid opposite pairs",
+    html:"Group hormone disorders as opposite pairs rather than ten separate facts: Dwarfism ↔ Gigantism/Acromegaly (growth hormone); Myxedema/Cretinism ↔ Graves' disease (thyroid). If you know the hormone's normal job, both the excess and deficiency answer themselves." },
+];
+
+const QUIZ = [
+  { q:"A carrier mother (X<sup>c</sup>X) and an unaffected father have children. Which offspring are most likely to show colour blindness?",
+    opts:["Their daughters","Their sons","Both sexes equally","Neither — it skips this generation"], correct:1,
+    exp:"X-linked recessive traits follow criss-cross inheritance: a carrier mother passes the allele to sons, who have no second X to mask it." },
+  { q:"Sickle cell anaemia and phenylketonuria are both classic examples of which genetic phenomenon?",
+    opts:["Codominance","Pleiotropy","Polygenic inheritance","Linkage"], correct:1,
+    exp:"Pleiotropy: a single gene mutation produces multiple, seemingly unrelated effects — sickled RBCs plus malaria resistance in sickle cell; mental retardation plus pigment loss in PKU." },
+  { q:"What is the key structural difference between sickle cell anaemia and thalassemia?",
+    opts:["Sickle cell is X-linked, thalassemia is autosomal","Sickle cell is a qualitative (shape) defect; thalassemia is quantitative (amount)","Thalassemia only affects white blood cells","Sickle cell is caused by a chromosomal deletion"], correct:1,
+    exp:"Sickle cell results from a point mutation altering haemoglobin's shape; thalassemia results from gene deletions reducing the amount of globin chain produced." },
+  { q:"A karyotype reads 47, XXY. Which condition is this?",
+    opts:["Turner syndrome","Down syndrome","Klinefelter syndrome","SCID"], correct:2,
+    exp:"47, XXY — one extra X chromosome in a male — is Klinefelter syndrome, associated with gynecomastia and infertility." },
+  { q:"Erythroblastosis fetalis typically arises in which situation?",
+    opts:["An Rh+ mother carrying an Rh– fetus","An Rh– mother carrying an Rh+ fetus, from the second pregnancy onward","Any first pregnancy, regardless of Rh status","ABO blood group mismatch only"], correct:1,
+    exp:"An Rh– mother sensitised by a first Rh+ fetus produces anti-Rh antibodies that attack the RBCs of a subsequent Rh+ fetus." },
+  { q:"Acromegaly and gigantism are both caused by excess of the same hormone. What determines which one occurs?",
+    opts:["The patient's sex","Whether the epiphyseal plates have already closed","The specific pituitary hormone involved differs","Diet during childhood"], correct:1,
+    exp:"Both stem from excess growth hormone. Before epiphyseal closure it causes gigantism (long bones lengthen); after closure it causes acromegaly (bones thicken instead)." },
+  { q:"Which feature distinguishes Diabetes Insipidus from Diabetes Mellitus?",
+    opts:["DI involves glucose in urine, DM does not","DI is caused by ADH deficiency and produces dilute urine without glucose","DM is caused by ADH deficiency","There is no meaningful difference"], correct:1,
+    exp:"Diabetes Insipidus is due to ADH (vasopressin) deficiency, producing large volumes of dilute urine with no glucose — unlike Diabetes Mellitus, where glucose and ketones appear in urine." },
+  { q:"Which mosquito genus transmits both Dengue and Chikungunya?",
+    opts:["Anopheles","Culex","Aedes","Glossina"], correct:2,
+    exp:"Aedes aegypti transmits both Dengue and Chikungunya viruses, whereas Anopheles transmits malaria and Culex transmits filariasis (elephantiasis)." },
+  { q:"In malaria, the recurring fever and chills are directly caused by:",
+    opts:["Sporozoites entering the liver","Rupture of infected RBCs releasing hemozoin","Mosquito saliva reaction","Bacterial co-infection"], correct:1,
+    exp:"Cyclic fever tracks the schizogony cycle: infected RBCs rupture, releasing merozoites and hemozoin, which triggers the fever spike." },
+  { q:"Which test sequence is used to diagnose HIV, in order of use?",
+    opts:["Widal test → biopsy → MRI","ELISA → PCR (early) → Western blot (confirmatory)","X-ray → CT → PCR","Western blot → ELISA → Widal"], correct:1,
+    exp:"ELISA screens for antigen, PCR allows early detection before antibodies form, and Western blot confirms a positive result." },
+  { q:"What is the Widal test used to diagnose?",
+    opts:["Malaria","Typhoid","Dengue","Tuberculosis"], correct:1,
+    exp:"The Widal test detects antibodies against Salmonella typhi, the bacterium causing typhoid." },
+  { q:"Silicosis and asbestosis share which underlying mechanism?",
+    opts:["Viral infection of the alveoli","Chronic dust inhalation causing lung fibrosis","Autoimmune attack on the trachea","Genetic mutation in surfactant genes"], correct:1,
+    exp:"Both are occupational lung diseases caused by long-term inhalation of fine dust (silica or asbestos), which triggers fibrosis that replaces normal lung tissue." },
+  { q:"Emphysema most directly reduces which physiological capacity?",
+    opts:["Blood clotting ability","Respiratory surface area for gas exchange","Heart's pumping capacity","Kidney filtration rate"], correct:1,
+    exp:"Emphysema damages alveolar walls, reducing the surface area available for gas exchange." },
+  { q:"In the chain of cardiovascular disease, atherosclerosis most directly leads to which condition if untreated?",
+    opts:["Turner syndrome","Angina pectoris / myocardial infarction","Diabetes insipidus","Elephantiasis"], correct:1,
+    exp:"Narrowed coronary arteries reduce blood/oxygen supply to heart muscle, producing angina and, if severe, myocardial infarction." },
+  { q:"Which hormone deficiency defines Addison's disease?",
+    opts:["Growth hormone","Adrenal cortex hormones (corticosteroids)","Insulin","Thyroid hormone"], correct:1,
+    exp:"Addison's disease results from deficient adrenal cortex hormone production, causing fatigue and disturbed carbohydrate metabolism." },
+  { q:"During hemodialysis, what is added to the blood as it leaves the body, and why?",
+    opts:["Insulin, to control glucose","Heparin, to prevent clotting","Cyclosporin A, to prevent rejection","Hemozoin, to aid filtration"], correct:1,
+    exp:"Heparin is mixed with the blood as it's drawn from an artery to keep it from clotting while it passes through the dialysis membrane." },
+  { q:"What ultimately makes a tumour 'malignant' rather than 'benign'?",
+    opts:["Its size alone","Its ability to invade surrounding tissue and metastasise","Its location in the body","Whether it was detected by biopsy or imaging"], correct:1,
+    exp:"Malignant tumours invade nearby tissue and can metastasise — spreading via the blood to form secondary tumours elsewhere. Benign tumours stay localised." },
+  { q:"A karyotype of 45, X0 corresponds to which condition?",
+    opts:["Klinefelter syndrome","Down syndrome","Turner syndrome","SCID"], correct:2,
+    exp:"45, X0 — a missing X chromosome in a female — is Turner syndrome, the only human monosomy compatible with life." },
+];
+
+/* =======================================================================
+   STATE
+   ======================================================================= */
+let activeSystem = "all";
+let searchTerm = "";
+let hyOnly = false;
+const reviewed = new Set();
+
+/* =======================================================================
+   RENDER: TABS
+   ======================================================================= */
+const tabsEl = document.getElementById("tabs");
+function countFor(sysId){
+  return sysId === "all" ? CASES.length : CASES.filter(c => c.sys === sysId).length;
+}
+function renderTabs(){
+  tabsEl.innerHTML = "";
+  SYSTEMS.forEach(sys=>{
+    const btn = document.createElement("button");
+    btn.className = "tab-btn" + (sys.id===activeSystem ? " active" : "");
+    btn.style.setProperty("--tab-color", sys.color);
+    btn.innerHTML = `${sys.label}<span class="n">${countFor(sys.id)}</span>`;
+    btn.addEventListener("click", ()=>{ activeSystem = sys.id; renderTabs(); renderBoard(); });
+    tabsEl.appendChild(btn);
+  });
+}
+
+/* =======================================================================
+   RENDER: BOARD
+   ======================================================================= */
+const boardEl = document.getElementById("board");
+
+function matchesSearch(c, term){
+  if(!term) return true;
+  const hay = [c.name, c.cause, (c.features||[]).join(" "), c.inherit||"", PTYPE_LABEL[c.ptype]||""]
+    .join(" ").toLowerCase();
+  return hay.includes(term);
+}
+
+function renderBoard(){
+  const term = searchTerm.trim().toLowerCase();
+  let list = CASES.filter(c => activeSystem==="all" || c.sys===activeSystem);
+  if(hyOnly) list = list.filter(c => c.hy);
+  list = list.filter(c => matchesSearch(c, term));
+
+  let html = "";
+  if(activeSystem !== "all" && SYSTEM_INTRO[activeSystem]){
+    html += `<p class="system-intro" style="--tab-color:${sysColor(activeSystem)}">${SYSTEM_INTRO[activeSystem]}</p>`;
+  }
+
+  if(list.length === 0){
+    html += `<div class="empty-state">No matching cases in this chart. Try clearing the search or the high-yield filter.</div>`;
+  } else {
+    html += `<div class="grid">` + list.map(cardHTML).join("") + `</div>`;
+  }
+  boardEl.innerHTML = html;
+
+  // wire up reviewed checkboxes
+  boardEl.querySelectorAll("[data-reviewed-id]").forEach(cb=>{
+    cb.addEventListener("change", (e)=>{
+      const id = e.target.getAttribute("data-reviewed-id");
+      if(e.target.checked) reviewed.add(id); else reviewed.delete(id);
+      e.target.closest(".card").classList.toggle("reviewed", e.target.checked);
+      updateProgress();
+    });
+  });
+  updateProgress();
+}
+
+function sysColor(sysId){
+  const s = SYSTEMS.find(s=>s.id===sysId);
+  return s ? s.color : "var(--ink)";
+}
+
+function cardHTML(c){
+  const color = sysColor(c.sys);
+  const isReviewed = reviewed.has(c.id);
+  const ptypeTag = c.ptype ? `<span class="tag ${c.ptype}">${PTYPE_LABEL[c.ptype]}</span>` : "";
+  const inheritTag = c.inherit ? `<span class="tag inherit">${c.inherit}</span>` : "";
+  const chrom = c.chrom ? `<div class="chrom">Karyotype: <span class="box">${c.chrom.split("→")[0].trim().split(" ").slice(0,2).join(" ") || c.chrom}</span> ${c.chrom.includes("→") ? "&mdash; " + c.chrom.split("→").slice(1).join("→") : ""}</div>` : "";
+  return `
+  <article class="card${isReviewed?" reviewed":""}" style="--tab-color:${color}">
+    <span class="card-tab"></span>
+    ${c.hy ? `<span class="stamp">High<br>Yield</span>` : ""}
+    <div class="card-head">
+      <span class="card-code">${c.code}</span>
+    </div>
+    <h3>${c.name}</h3>
+    <div class="tag-row">${ptypeTag}${inheritTag}</div>
+    <div class="field"><span class="k">Cause</span><span class="v">${c.cause}</span></div>
+    ${chrom}
+    <ul class="feat-list">${(c.features||[]).map(f=>`<li>${f}</li>`).join("")}</ul>
+    ${c.note ? `<div class="field"><span class="k">Note</span><span class="v">${c.note}</span></div>` : ""}
+    <div class="card-foot">
+      <label class="reviewed-toggle">
+        <input type="checkbox" data-reviewed-id="${c.id}" ${isReviewed?"checked":""}>
+        Reviewed
+      </label>
+    </div>
+  </article>`;
+}
+
+function updateProgress(){
+  document.getElementById("progressFoot").textContent =
+    `${reviewed.size} / ${CASES.length} cases reviewed this session`;
+}
+
+/* =======================================================================
+   RENDER: NOTES
+   ======================================================================= */
+const notesGrid = document.getElementById("notesGrid");
+notesGrid.innerHTML = NOTES.map(n => `
+  <div class="note"><h4>${n.title}</h4><div>${n.html}</div></div>
+`).join("");
+
+/* =======================================================================
+   SEARCH + FILTER WIRING
+   ======================================================================= */
+document.getElementById("search").addEventListener("input", (e)=>{
+  searchTerm = e.target.value;
+  renderBoard();
+});
+document.getElementById("hyOnly").addEventListener("change", (e)=>{
+  hyOnly = e.target.checked;
+  renderBoard();
+});
+
+/* =======================================================================
+   QUIZ
+   ======================================================================= */
+let quizIdx = 0;
+let quizScore = 0;
+let quizAnswered = false;
+const quizShell = document.getElementById("quizShell");
+
+function renderQuiz(){
+  if(quizIdx >= QUIZ.length){
+    quizShell.innerHTML = `
+      <div class="quiz-done">
+        <div class="quiz-meta">SELF-TEST COMPLETE</div>
+        <div class="big">${quizScore} / ${QUIZ.length}</div>
+        <div>${scoreRemark(quizScore, QUIZ.length)}</div>
+        <button class="restart-btn" id="restartBtn">Restart round</button>
+      </div>`;
+    document.getElementById("restartBtn").addEventListener("click", ()=>{
+      quizIdx = 0; quizScore = 0; quizAnswered = false; renderQuiz();
+    });
+    return;
+  }
+  const item = QUIZ[quizIdx];
+  quizAnswered = false;
+  quizShell.innerHTML = `
+    <div class="quiz-meta">QUESTION ${quizIdx+1} OF ${QUIZ.length} &middot; SCORE ${quizScore}</div>
+    <p class="quiz-q">${item.q}</p>
+    <div class="quiz-opts">
+      ${item.opts.map((opt,i)=>`<button class="quiz-opt" data-i="${i}">${opt}</button>`).join("")}
+    </div>
+    <div class="quiz-explain" id="quizExplain">${item.exp}</div>
+    <div class="quiz-nav">
+      <span class="quiz-score">Score: ${quizScore}/${quizIdx}</span>
+      <button class="quiz-btn" id="nextBtn" disabled>Next case →</button>
+    </div>`;
+
+  quizShell.querySelectorAll(".quiz-opt").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      if(quizAnswered) return;
+      quizAnswered = true;
+      const i = parseInt(btn.getAttribute("data-i"));
+      quizShell.querySelectorAll(".quiz-opt").forEach((b,bi)=>{
+        b.disabled = true;
+        if(bi === item.correct) b.classList.add("correct");
+        else if(bi === i) b.classList.add("incorrect");
+      });
+      if(i === item.correct) quizScore++;
+      document.getElementById("quizExplain").classList.add("show");
+      document.getElementById("nextBtn").disabled = false;
+    });
+  });
+  document.getElementById("nextBtn").addEventListener("click", ()=>{
+    quizIdx++; renderQuiz();
+  });
+}
+
+function scoreRemark(score, total){
+  const pct = score/total;
+  if(pct === 1) return "Clean chart — nothing left unmarked.";
+  if(pct >= 0.75) return "Strong round. Revisit the ones you missed once more.";
+  if(pct >= 0.5) return "Solid start — re-open the high-yield cards above and try again.";
+  return "Treat this as a diagnostic, not a verdict — work through the case cards above and re-test.";
+}
+
+/* =======================================================================
+   INIT
+   ======================================================================= */
+renderTabs();
+renderBoard();
+renderQuiz();
+</script>
+</body>
+</html>
