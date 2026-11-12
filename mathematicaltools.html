@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ch.04 — Basic Mathematics for Physics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#080B14; --surface:rgba(255,255,255,0.045); --surface2:rgba(255,255,255,0.07);
+    --border:rgba(255,255,255,0.10); --border-strong:rgba(255,255,255,0.20);
+    --text:#E9EEF9; --text-dim:#93A0B8; --text-faint:#5C6880;
+    --cyan:#5EEAD4; --violet:#A78BFA; --amber:#FBBF24; --pink:#F472B6; --good:#34D399; --bad:#F87171;
+    --display:'Space Grotesk', sans-serif; --mono:'JetBrains Mono', monospace; --sans:'Manrope', sans-serif;
+  }
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0; background-color:var(--bg); color:var(--text); font-family:var(--sans);
+    line-height:1.55; -webkit-font-smoothing:antialiased; position:relative; overflow-x:hidden;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.028) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.028) 1px, transparent 1px);
+    background-size:34px 34px;
+  }
+  ::selection{ background:var(--violet); color:#0A0E1A; }
+  a{ color:inherit; } button{ font-family:inherit; cursor:pointer; } input,select{ font-family:inherit; }
+  @media (prefers-reduced-motion: reduce){ *{ animation-duration:.001s !important; transition:none !important; scroll-behavior:auto !important; } }
+
+  .bg-orb{ position:fixed; border-radius:50%; filter:blur(100px); z-index:-1; pointer-events:none; }
+  .o1{ width:440px; height:440px; background:var(--cyan); opacity:.16; top:-140px; left:-120px; animation:floatOrb 20s ease-in-out infinite; }
+  .o2{ width:400px; height:400px; background:var(--violet); opacity:.16; bottom:-160px; right:-100px; animation:floatOrb 24s ease-in-out infinite reverse; }
+  .o3{ width:320px; height:320px; background:var(--amber); opacity:.09; top:38%; right:6%; animation:floatOrb 28s ease-in-out infinite; }
+  @keyframes floatOrb{ 0%,100%{ transform:translate(0,0); } 50%{ transform:translate(26px,-30px); } }
+
+  .topbar{ position:sticky; top:0; z-index:90; background:rgba(8,11,20,0.82); backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border); padding:10px 22px; font-family:var(--mono); font-size:11px;
+    letter-spacing:.06em; color:var(--text-dim); }
+  .topbar b{ color:var(--cyan); }
+
+  .wrap{ max-width:1180px; margin:0 auto; padding:0 22px; }
+
+  /* ---------- hero ---------- */
+  .hero{ padding:56px 0 8px; position:relative; }
+  .hero-tag{ font-family:var(--mono); font-size:11.5px; letter-spacing:.14em; color:var(--cyan); text-transform:uppercase;
+    display:inline-flex; align-items:center; gap:8px; padding:7px 15px; border:1px solid rgba(94,234,212,.35);
+    border-radius:20px; background:rgba(94,234,212,.06); margin-bottom:22px; }
+  .hero h1{ font-family:var(--display); font-weight:700; font-size:clamp(34px,5.6vw,58px); margin:0 0 14px;
+    letter-spacing:-0.02em; background:linear-gradient(135deg,#fff 10%,var(--cyan) 55%,var(--violet) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent; max-width:800px; }
+  .hero .sub{ font-size:15.5px; color:var(--text-dim); max-width:680px; margin:0 0 28px; }
+  .hero .sub b{ color:var(--text); }
+  .orbit-deco{ position:absolute; top:20px; right:0; width:150px; height:150px; opacity:.55; display:none; }
+  @media (min-width:900px){ .orbit-deco{ display:block; } }
+
+  /* ---------- level selector ---------- */
+  .level-select{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:8px; }
+  .level-label{ font-family:var(--mono); font-size:11px; letter-spacing:.06em; text-transform:uppercase; color:var(--text-faint); }
+  .level-btn{ font-family:var(--mono); font-size:12px; font-weight:600; padding:9px 16px; border-radius:24px;
+    border:1px solid var(--border); background:var(--surface); color:var(--text-dim); transition:.2s ease; }
+  .level-btn:hover{ border-color:var(--border-strong); color:var(--text); }
+  .level-btn[data-level="newbie"].active{ background:rgba(94,234,212,.15); border-color:var(--cyan); color:var(--cyan); box-shadow:0 0 18px rgba(94,234,212,.22); }
+  .level-btn[data-level="intermediate"].active{ background:rgba(167,139,250,.15); border-color:var(--violet); color:var(--violet); box-shadow:0 0 18px rgba(167,139,250,.22); }
+  .level-btn[data-level="expert"].active{ background:rgba(251,191,36,.15); border-color:var(--amber); color:var(--amber); box-shadow:0 0 18px rgba(251,191,36,.22); }
+  .level-desc{ font-size:12.5px; color:var(--text-faint); margin:10px 0 30px; max-width:640px; }
+
+  /* ---------- topic tabs ---------- */
+  .topic-tabs{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:28px; }
+  .topic-tab{ font-family:var(--mono); font-size:12.5px; font-weight:600; padding:10px 16px; border-radius:24px;
+    border:1px solid var(--border); background:var(--surface); color:var(--text-dim); display:flex; align-items:center;
+    gap:7px; transition:.18s ease; }
+  .topic-tab:hover{ border-color:var(--border-strong); color:var(--text); transform:translateY(-1px); }
+  .topic-tab.active{ background:linear-gradient(135deg, rgba(94,234,212,.18), rgba(167,139,250,.14));
+    border-color:var(--cyan); color:#fff; box-shadow:0 0 20px rgba(94,234,212,.16); }
+  .topic-tab .glyph{ font-family:var(--mono); opacity:.8; }
+
+  /* ---------- cards ---------- */
+  #topicBoard{ display:grid; grid-template-columns:repeat(auto-fit,minmax(320px,1fr)); gap:20px; padding-bottom:16px; }
+  .card{ background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:24px;
+    backdrop-filter:blur(16px); position:relative; overflow:hidden; box-shadow:0 12px 32px rgba(0,0,0,.35);
+    transition:transform .18s ease, border-color .18s ease; }
+  .card::before{ content:""; position:absolute; top:0; left:0; right:0; height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.28),transparent); }
+  .card:hover{ border-color:var(--border-strong); transform:translateY(-2px); }
+  .card.wide{ grid-column:1/-1; }
+  .card-eyebrow{ font-family:var(--mono); font-size:10.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--text-faint); display:block; margin-bottom:8px; }
+  .card h3{ font-family:var(--display); font-size:21px; margin:0 0 8px; font-weight:600; }
+  .card p{ color:var(--text-dim); font-size:14px; margin:0 0 12px; }
+
+  /* ---------- formulas ---------- */
+  .formula-row{ display:flex; flex-wrap:wrap; margin:4px 0 6px; }
+  .formula{ display:inline-flex; align-items:center; gap:4px; font-family:var(--mono); font-size:14.5px; color:var(--cyan);
+    background:rgba(94,234,212,.08); border:1px solid rgba(94,234,212,.3); padding:9px 13px; border-radius:10px;
+    margin:5px 6px 5px 0; white-space:nowrap; }
+  .formula.violet{ color:var(--violet); background:rgba(167,139,250,.08); border-color:rgba(167,139,250,.3); }
+  .formula.amber{ color:var(--amber); background:rgba(251,191,36,.08); border-color:rgba(251,191,36,.3); }
+  .frac{ display:inline-flex; flex-direction:column; text-align:center; vertical-align:middle; margin:0 3px; line-height:1.15; }
+  .frac .num{ border-bottom:1.4px solid currentColor; padding:0 5px 1px; }
+  .frac .den{ padding:1px 5px 0; }
+
+  table.mono-table{ width:100%; border-collapse:collapse; font-family:var(--mono); font-size:12.5px; margin-top:10px; }
+  table.mono-table th{ text-align:left; color:var(--text-faint); font-weight:500; padding:6px 8px; border-bottom:1px solid var(--border-strong); }
+  table.mono-table td{ padding:7px 8px; border-bottom:1px solid var(--border); color:var(--text-dim); }
+  table.mono-table td:first-child{ color:var(--text); }
+
+  /* ---------- callouts ---------- */
+  .callout{ display:none; padding:13px 15px; border-radius:10px; font-size:13px; line-height:1.6; margin-top:12px; border-left:3px solid; }
+  .callout .lbl{ font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; display:block; margin-bottom:5px; opacity:.85; }
+  .callout.plain{ background:rgba(94,234,212,.07); border-color:var(--cyan); color:#CFF7EE; }
+  .callout.physics{ background:rgba(251,191,36,.07); border-color:var(--amber); color:#FCE7B0; }
+  .callout.trap{ background:rgba(244,114,182,.07); border-color:var(--pink); color:#FBD3E8; }
+  body.level-newbie .callout.plain{ display:block; }
+  body.level-intermediate .callout.physics, body.level-intermediate .callout.trap{ display:block; }
+  body.level-expert .callout.physics, body.level-expert .callout.trap{ display:block; }
+
+  /* ---------- widgets ---------- */
+  .widget{ margin-top:16px; padding:18px; background:rgba(0,0,0,.28); border:1px solid var(--border); border-radius:14px; }
+  .widget canvas, .widget svg{ width:100%; height:auto; display:block; border-radius:8px; background:rgba(255,255,255,.02); }
+  .widget-controls{ display:flex; flex-wrap:wrap; gap:16px; margin-top:14px; }
+  .control{ display:flex; flex-direction:column; gap:6px; font-family:var(--mono); font-size:11px; color:var(--text-dim); flex:1; min-width:150px; }
+  .control select{ background:var(--surface); border:1px solid var(--border); color:var(--text); padding:8px 10px; border-radius:6px; font-family:var(--mono); font-size:12.5px; }
+  .control input[type=number]{ background:var(--surface); border:1px solid var(--border); color:var(--text); padding:8px 10px; border-radius:6px; font-family:var(--mono); font-size:12.5px; width:100%; }
+  input[type=range]{ -webkit-appearance:none; appearance:none; width:100%; height:4px; border-radius:4px; background:rgba(255,255,255,.14); }
+  input[type=range]::-webkit-slider-thumb{ -webkit-appearance:none; width:16px; height:16px; border-radius:50%; background:var(--cyan); cursor:pointer; box-shadow:0 0 10px rgba(94,234,212,.65); }
+  input[type=range]::-moz-range-thumb{ width:16px; height:16px; border-radius:50%; background:var(--cyan); border:none; box-shadow:0 0 10px rgba(94,234,212,.65); }
+  .readout{ font-family:var(--mono); font-size:13px; color:var(--text); margin-top:12px; background:rgba(255,255,255,.03); padding:11px 13px; border-radius:8px; }
+  .readout b{ color:var(--cyan); }
+  .mini-btn{ font-family:var(--mono); font-size:11px; padding:8px 13px; border-radius:20px; border:1px solid var(--border); background:var(--surface2); color:var(--text-dim); margin-top:10px; }
+  .mini-btn:hover{ border-color:var(--border-strong); color:var(--text); }
+
+  /* ---------- gallery ---------- */
+  .gallery-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:16px; margin-top:14px; }
+  .gallery-item{ text-align:center; }
+  .gallery-item canvas{ width:100%; height:auto; border-radius:8px; background:rgba(255,255,255,.02); border:1px solid var(--border); }
+  .gallery-item .cap{ font-family:var(--mono); font-size:10.8px; color:var(--text-dim); margin-top:8px; line-height:1.5; }
+
+  /* ---------- sequence generator ---------- */
+  .seq-mode-row{ display:flex; gap:8px; margin-bottom:6px; }
+  .seq-mode{ font-family:var(--mono); font-size:12px; padding:8px 14px; border-radius:20px; border:1px solid var(--border); background:var(--surface); color:var(--text-dim); }
+  .seq-mode.active{ background:rgba(167,139,250,.18); border-color:var(--violet); color:var(--violet); }
+  .seq-chips{ display:flex; flex-wrap:wrap; align-items:center; gap:6px; margin:14px 0 6px; min-height:40px; }
+  .seq-chip{ font-family:var(--mono); font-size:12.5px; background:rgba(94,234,212,.1); border:1px solid rgba(94,234,212,.35); color:var(--cyan); padding:7px 12px; border-radius:8px; animation:chipIn .3s ease; }
+  .seq-arrow{ color:var(--text-faint); }
+  @keyframes chipIn{ from{ opacity:0; transform:translateY(4px);} to{ opacity:1; transform:none; } }
+
+  /* ---------- cheat sheet ---------- */
+  #cheat{ padding:36px 0 10px; border-top:1px solid var(--border); margin-top:10px; }
+  .cheat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+  .cheat-block{ background:var(--surface); border:1px solid var(--border); border-radius:14px; padding:18px; }
+  .cheat-block h4{ font-family:var(--display); font-size:15px; margin:0 0 10px; color:var(--cyan); font-weight:600; }
+
+  .section-eyebrow{ font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--violet); margin-bottom:6px; display:block; }
+  h2.section-title{ font-family:var(--display); font-size:28px; margin:0 0 20px; font-weight:600; }
+
+  /* ---------- quiz ---------- */
+  #quiz{ padding:36px 0 60px; border-top:1px solid var(--border); margin-top:34px; }
+  .shell{ background:var(--surface); border:1px solid var(--border); border-radius:18px; padding:26px; max-width:680px; backdrop-filter:blur(16px); box-shadow:0 12px 32px rgba(0,0,0,.35); }
+  .quiz-meta{ font-family:var(--mono); font-size:11px; color:var(--text-faint); letter-spacing:.06em; margin-bottom:14px; }
+  .quiz-q{ font-family:var(--display); font-size:18px; margin:0 0 16px; font-weight:600; }
+  .quiz-opts{ display:flex; flex-direction:column; gap:9px; margin-bottom:16px; }
+  .quiz-opt{ text-align:left; padding:12px 15px; border:1px solid var(--border); background:rgba(255,255,255,.03); border-radius:10px; color:var(--text); font-size:14px; transition:.15s; }
+  .quiz-opt:hover:not(:disabled){ border-color:var(--border-strong); }
+  .quiz-opt.correct{ border-color:var(--good); background:rgba(52,211,153,.12); }
+  .quiz-opt.incorrect{ border-color:var(--bad); background:rgba(248,113,113,.12); }
+  .visual-opts{ display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-bottom:16px; }
+  .visual-opt{ background:rgba(255,255,255,.03); border:1px solid var(--border); border-radius:10px; padding:10px; text-align:center; color:var(--text-dim); font-family:var(--mono); font-size:12px; }
+  .visual-opt canvas{ width:100%; border-radius:6px; margin-bottom:6px; }
+  .visual-opt.correct{ border-color:var(--good); }
+  .visual-opt.incorrect{ border-color:var(--bad); }
+  .quiz-explain{ font-size:13px; color:var(--text-dim); background:rgba(255,255,255,.03); padding:12px 14px; border-left:3px solid var(--violet); margin-bottom:16px; display:none; border-radius:8px; }
+  .quiz-explain.show{ display:block; }
+  .quiz-nav{ display:flex; justify-content:space-between; align-items:center; }
+  .quiz-btn{ font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase; padding:10px 18px; border:1px solid var(--cyan); background:rgba(94,234,212,.12); color:var(--cyan); border-radius:8px; }
+  .quiz-btn:disabled{ opacity:.35; cursor:default; }
+  .quiz-score{ font-family:var(--mono); font-size:12px; color:var(--text-dim); }
+  .quiz-done{ text-align:center; padding:14px 0; }
+  .quiz-done .big{ font-family:var(--display); font-size:42px; margin-bottom:6px; color:var(--cyan); }
+  .restart-btn{ margin-top:14px; font-family:var(--mono); font-size:12px; letter-spacing:.05em; text-transform:uppercase; padding:10px 18px; border:1px solid var(--border-strong); background:transparent; color:var(--text); border-radius:8px; }
+
+  footer{ border-top:1px solid var(--border); padding:22px 0 44px; font-family:var(--mono); font-size:11px; color:var(--text-faint); letter-spacing:.04em; }
+
+  @media (max-width:640px){
+    .hero{ padding-top:36px; }
+    .visual-opts{ grid-template-columns:1fr; }
+    .shell{ padding:20px; }
+  }
+</style>
+</head>
+<body class="level-intermediate">
+
+<div class="bg-orb o1"></div>
+<div class="bg-orb o2"></div>
+<div class="bg-orb o3"></div>
+
+<div class="topbar">CH.04 · BASIC MATHEMATICS FOR PHYSICS <b id="topbarTopic">— Powers &amp; Exponents</b></div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <svg class="orbit-deco" viewBox="0 0 150 150">
+      <ellipse cx="75" cy="75" rx="70" ry="26" fill="none" stroke="#5EEAD4" stroke-width="1" opacity="0.6" transform="rotate(20 75 75)"/>
+      <ellipse cx="75" cy="75" rx="70" ry="26" fill="none" stroke="#A78BFA" stroke-width="1" opacity="0.6" transform="rotate(-30 75 75)"/>
+      <ellipse cx="75" cy="75" rx="70" ry="26" fill="none" stroke="#FBBF24" stroke-width="1" opacity="0.4" transform="rotate(80 75 75)"/>
+      <circle cx="75" cy="75" r="5" fill="#FBBF24"/>
+    </svg>
+    <span class="hero-tag">⚛ Chapter 04 · Foundations</span>
+    <h1>Basic Mathematics for Physics</h1>
+    <p class="sub">The math toolkit behind every 11th &amp; 12th class physics formula — <b>calculus, trigonometry, logarithms, graphs, and sequences</b> — explained from zero, with live diagrams you can drag, slide and break.</p>
+
+    <div class="level-select" id="levelSelect">
+      <span class="level-label">Learner level</span>
+      <button class="level-btn" data-level="newbie">🌱 Newbie</button>
+      <button class="level-btn" data-level="intermediate">📘 Intermediate</button>
+      <button class="level-btn" data-level="expert">🎯 Expert</button>
+    </div>
+    <p class="level-desc" id="levelDesc"></p>
+
+    <nav class="topic-tabs" id="topicTabs"></nav>
+  </header>
+
+  <main id="topicBoard"></main>
+
+  <section id="cheat">
+    <span class="section-eyebrow">Rapid Reference</span>
+    <h2 class="section-title">The whole chapter, one glance</h2>
+    <div class="cheat-grid" id="cheatGrid"></div>
+  </section>
+
+  <section id="quiz">
+    <span class="section-eyebrow">Quick Check</span>
+    <h2 class="section-title">Test the toolkit</h2>
+    <div class="shell" id="quizShell"></div>
+  </section>
+
+  <footer>Built as a single-file app — paste into CodePen or serve on GitHub Pages. All graphs are drawn live with Canvas/SVG — no image files, no libraries.</footer>
+
+</div>
+
+<script>
+/* =======================================================================
+   PERSISTENCE NOTE — kept in-memory only so this runs safely inside
+   Claude's own artifact preview. Once hosted yourself, you can persist
+   the level choice with localStorage.setItem('mathLevel', lv) / getItem.
+   ======================================================================= */
+
+function frac(num, den){ return '<span class="frac"><span class="num">'+num+'</span><span class="den">'+den+'</span></span>'; }
+function roundNice(x){ if(!isFinite(x)) return '—'; return Math.round(x*1000)/1000; }
+function shuffle(arr){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+
+/* =======================================================================
+   CANVAS PLOTTING ENGINE — shared by every graph in this chapter
+   ======================================================================= */
+function niceStep(range){
+  const raw = range/8;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const norm = raw/mag;
+  let step;
+  if(norm < 1.5) step = 1; else if(norm < 3) step = 2; else if(norm < 7) step = 5; else step = 10;
+  return step*mag;
+}
+function drawPlot(canvas, cfg){
+  if(!canvas) return null;
+  const { xMin, xMax, yMin, yMax, curves = [], points = [], tangent = null, area = null } = cfg;
+  const ctx = canvas.getContext('2d');
+  const w = canvas.width, h = canvas.height;
+  ctx.clearRect(0,0,w,h);
+  const toPx = (x,y) => [ (x-xMin)/(xMax-xMin)*w, h-(y-yMin)/(yMax-yMin)*h ];
+
+  ctx.strokeStyle = 'rgba(255,255,255,0.07)'; ctx.lineWidth = 1;
+  const xStep = niceStep(xMax-xMin), yStep = niceStep(yMax-yMin);
+  for(let gx = Math.ceil(xMin/xStep)*xStep; gx <= xMax; gx += xStep){
+    const px = toPx(gx,0)[0]; ctx.beginPath(); ctx.moveTo(px,0); ctx.lineTo(px,h); ctx.stroke();
+  }
+  for(let gy = Math.ceil(yMin/yStep)*yStep; gy <= yMax; gy += yStep){
+    const py = toPx(0,gy)[1]; ctx.beginPath(); ctx.moveTo(0,py); ctx.lineTo(w,py); ctx.stroke();
+  }
+  ctx.strokeStyle = 'rgba(230,236,246,0.4)'; ctx.lineWidth = 1.5;
+  if(yMin <= 0 && yMax >= 0){ const py = toPx(0,0)[1]; ctx.beginPath(); ctx.moveTo(0,py); ctx.lineTo(w,py); ctx.stroke(); }
+  if(xMin <= 0 && xMax >= 0){ const px = toPx(0,0)[0]; ctx.beginPath(); ctx.moveTo(px,0); ctx.lineTo(px,h); ctx.stroke(); }
+
+  if(area && area.rects){
+    area.rects.forEach(r=>{
+      const x0px = toPx(r.x0,0)[0], x1px = toPx(r.x1,0)[0];
+      const ytoppx = toPx(0,r.y)[1], ybasepx = toPx(0,0)[1];
+      ctx.fillStyle = area.color || 'rgba(167,139,250,0.28)';
+      ctx.strokeStyle = 'rgba(167,139,250,0.7)'; ctx.lineWidth = 1;
+      const top = Math.min(ytoppx,ybasepx), bottom = Math.max(ytoppx,ybasepx);
+      ctx.fillRect(Math.min(x0px,x1px), top, Math.abs(x1px-x0px), bottom-top);
+      ctx.strokeRect(Math.min(x0px,x1px), top, Math.abs(x1px-x0px), bottom-top);
+    });
+  }
+
+  curves.forEach(c=>{
+    ctx.strokeStyle = c.color; ctx.lineWidth = 2.5; ctx.beginPath();
+    let started = false;
+    const steps = 320;
+    for(let i=0;i<=steps;i++){
+      const x = xMin + (xMax-xMin)*i/steps;
+      let y; try{ y = c.fn(x); }catch(e){ y = NaN; }
+      if(y===undefined || y===null || isNaN(y) || !isFinite(y)){ started=false; continue; }
+      if(y < yMin-(yMax-yMin)*0.6 || y > yMax+(yMax-yMin)*0.6){ started=false; continue; }
+      const [px,py] = toPx(x,y);
+      if(!started){ ctx.moveTo(px,py); started=true; } else { ctx.lineTo(px,py); }
+    }
+    ctx.stroke();
+  });
+
+  let slope = null;
+  if(tangent){
+    const { x0, fn, h:hh, color } = tangent;
+    slope = (fn(x0+hh)-fn(x0-hh))/(2*hh);
+    const y0 = fn(x0);
+    ctx.strokeStyle = color || '#FBBF24'; ctx.lineWidth = 2; ctx.setLineDash([6,4]);
+    ctx.beginPath();
+    const ya = y0 + slope*(xMin-x0), yb = y0 + slope*(xMax-x0);
+    const [pxa,pya] = toPx(xMin,ya), [pxb,pyb] = toPx(xMax,yb);
+    ctx.moveTo(pxa,pya); ctx.lineTo(pxb,pyb); ctx.stroke();
+    ctx.setLineDash([]);
+    const [px0,py0] = toPx(x0,y0);
+    ctx.fillStyle = color || '#FBBF24'; ctx.beginPath(); ctx.arc(px0,py0,5,0,Math.PI*2); ctx.fill();
+  }
+  points.forEach(p=>{
+    const [px,py] = toPx(p.x,p.y);
+    ctx.fillStyle = p.color || '#FBBF24';
+    ctx.beginPath(); ctx.arc(px,py,5,0,Math.PI*2); ctx.fill();
+  });
+  return slope;
+}
+
+/* =======================================================================
+   LEVEL SELECTOR
+   ======================================================================= */
+let currentLevel = "intermediate";
+const LEVEL_DESC = {
+  newbie: "Every card opens with a plain-English explanation first — formulas come second, once the idea already makes sense.",
+  intermediate: "The standard view — formulas, physics tie-ins, and common traps, side by side.",
+  expert: "Traps and physics shortcuts stay visible everywhere; treat the formulas as the fast lane.",
+};
+function setLevel(lv){
+  currentLevel = lv;
+  document.body.className = document.body.className.replace(/level-\S+/g,"").trim();
+  document.body.classList.add("level-" + lv);
+  document.querySelectorAll(".level-btn").forEach(b=> b.classList.toggle("active", b.getAttribute("data-level")===lv));
+  document.getElementById("levelDesc").textContent = LEVEL_DESC[lv];
+}
+document.querySelectorAll(".level-btn").forEach(btn=>{
+  btn.addEventListener("click", ()=> setLevel(btn.getAttribute("data-level")));
+});
+
+/* =======================================================================
+   TOPIC TABS
+   ======================================================================= */
+const TOPICS = [
+  { id:"pow",    label:"Powers & Exponents", glyph:"xⁿ" },
+  { id:"trig",   label:"Trigonometry",       glyph:"∠θ" },
+  { id:"log",    label:"Logarithms",         glyph:"log" },
+  { id:"graph",  label:"Graphs & Geometry",  glyph:"ƒ(x)" },
+  { id:"seq",    label:"Sequences",          glyph:"Σ" },
+  { id:"diff",   label:"Differentiation",    glyph:"d/dx" },
+  { id:"maxmin", label:"Maxima & Minima",    glyph:"▲▼" },
+  { id:"integ",  label:"Integration",        glyph:"∫" },
+];
+const topicTabsEl = document.getElementById("topicTabs");
+function renderTopicTabs(active){
+  topicTabsEl.innerHTML = TOPICS.map(t=>
+    `<button class="topic-tab${t.id===active?" active":""}" data-topic="${t.id}"><span class="glyph">${t.glyph}</span>${t.label}</button>`
+  ).join("");
+  topicTabsEl.querySelectorAll(".topic-tab").forEach(btn=>{
+    btn.addEventListener("click", ()=> renderTopic(btn.getAttribute("data-topic")));
+  });
+}
+
+/* =======================================================================
+   TOPIC CONTENT (HTML per topic)
+   ======================================================================= */
+const TOPIC_CONTENT = {};
+
+TOPIC_CONTENT.pow = `
+  <article class="card wide">
+    <span class="card-eyebrow">Foundation</span>
+    <h3>Powers &amp; Exponents</h3>
+    <p>Everything from 6th–10th grade power rules resurfaces constantly in physics — inverse-square laws, energy formulas, and unit conversions all lean on this.</p>
+    <div class="formula-row">
+      <span class="formula">x<sup>m</sup> · x<sup>n</sup> = x<sup>m+n</sup></span>
+      <span class="formula">(x<sup>m</sup>)<sup>n</sup> = x<sup>mn</sup></span>
+      <span class="formula violet">x<sup>−n</sup> = ${frac('1','x<sup>n</sup>')}</span>
+      <span class="formula amber">x<sup>0</sup> = 1</span>
+    </div>
+    <div class="callout plain"><span class="lbl">🌱 Plain English</span>An exponent just counts how many times to multiply a number by itself: x³ means x·x·x. A negative exponent doesn't mean a negative number — it means "flip it into a fraction": x⁻² = 1/x².</div>
+    <div class="callout physics"><span class="lbl">⚛ Physics application</span>Kinetic energy uses v² (a power of 2); Newton's law of gravitation uses r⁻² (a negative power) — the inverse-square law you'll meet constantly.</div>
+    <div class="widget">
+      <div class="card-eyebrow" style="margin-bottom:10px;">🎮 Power Playground</div>
+      <div class="widget-controls">
+        <label class="control">Base (x)
+          <input type="number" id="powX" value="2" step="0.5">
+        </label>
+        <label class="control">Exponent (n) — <span id="powNVal">3</span>
+          <input type="range" id="powN" min="-5" max="5" step="1" value="3">
+        </label>
+      </div>
+      <div class="readout" id="powEq"></div>
+    </div>
+  </article>
+`;
+
+TOPIC_CONTENT.trig = `
+  <article class="card">
+    <span class="card-eyebrow">Right-Triangle Ratios</span>
+    <h3>Sine, Cosine &amp; Tangent</h3>
+    <svg viewBox="0 0 260 240" style="max-width:280px;">
+      <polygon points="40,220 220,220 220,60" fill="rgba(94,234,212,0.07)" stroke="#5EEAD4" stroke-width="2"/>
+      <rect x="200" y="202" width="18" height="18" fill="none" stroke="#5EEAD4" stroke-width="1.5"/>
+      <text x="26" y="212" fill="#FBBF24" font-family="JetBrains Mono" font-size="15">θ</text>
+      <text x="112" y="236" fill="#93A0B8" font-family="JetBrains Mono" font-size="11">Base (B)</text>
+      <text x="222" y="145" fill="#93A0B8" font-family="JetBrains Mono" font-size="11">Perp. (P)</text>
+      <text x="95" y="128" fill="#A78BFA" font-family="JetBrains Mono" font-size="11">Hyp. (H)</text>
+    </svg>
+    <div class="formula-row">
+      <span class="formula">sin θ = ${frac('P','H')}</span>
+      <span class="formula violet">cos θ = ${frac('B','H')}</span>
+      <span class="formula amber">tan θ = ${frac('P','B')} = ${frac('sin θ','cos θ')}</span>
+    </div>
+    <div class="callout plain"><span class="lbl">🌱 Plain English</span>Pick any right-angled triangle and an angle θ inside it. Sine, cosine and tangent are just fixed ratios between its three sides — they never change for a given angle, no matter how big or small the triangle is.</div>
+  </article>
+
+  <article class="card">
+    <span class="card-eyebrow">Pythagoras</span>
+    <h3>The Right-Triangle Rule</h3>
+    <div class="formula-row"><span class="formula">B<sup>2</sup> + P<sup>2</sup> = H<sup>2</sup></span></div>
+    <p>Common integer triplets worth memorising — they turn up in numeric physics problems constantly:</p>
+    <div class="formula-row">
+      <span class="formula violet">3 – 4 – 5</span>
+      <span class="formula violet">5 – 12 – 13</span>
+      <span class="formula violet">8 – 15 – 17</span>
+    </div>
+    <div class="callout physics"><span class="lbl">⚛ Physics application</span>Resolving a force or velocity into perpendicular components almost always ends in a right triangle — Pythagoras gives you the resultant magnitude straight back.</div>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Interactive · Signature Tool</span>
+    <h3>The Unit Circle Explorer</h3>
+    <p>Drag the angle below. Watch sin θ (vertical drop) and cos θ (horizontal drop) update live — this single picture explains every sign rule you'll ever need.</p>
+    <div class="widget">
+      <svg viewBox="0 0 300 300" id="unitCircleSvg">
+        <line x1="20" y1="150" x2="280" y2="150" stroke="rgba(230,236,246,0.35)" stroke-width="1.5"/>
+        <line x1="150" y1="20" x2="150" y2="280" stroke="rgba(230,236,246,0.35)" stroke-width="1.5"/>
+        <circle cx="150" cy="150" r="110" fill="none" stroke="rgba(94,234,212,0.5)" stroke-width="1.5"/>
+        <line id="ucCosLine" x1="150" y1="150" x2="260" y2="150" stroke="#5EEAD4" stroke-width="2" stroke-dasharray="4,3"/>
+        <line id="ucSinLine" x1="260" y1="150" x2="260" y2="150" stroke="#A78BFA" stroke-width="2" stroke-dasharray="4,3"/>
+        <line id="ucRadius" x1="150" y1="150" x2="260" y2="150" stroke="#FBBF24" stroke-width="2.5"/>
+        <circle id="ucPoint" cx="260" cy="150" r="6" fill="#FBBF24"/>
+      </svg>
+      <div class="widget-controls">
+        <label class="control">Angle — <span id="ucDegVal">0°</span>
+          <input type="range" id="ucAngle" min="0" max="360" step="1" value="40">
+        </label>
+      </div>
+      <button class="mini-btn" id="ucRandom">🎲 Random angle</button>
+      <div class="readout">
+        sin θ = <b id="ucSinVal">—</b> &nbsp; cos θ = <b id="ucCosVal">—</b> &nbsp; tan θ = <b id="ucTanVal">—</b><br>
+        Quadrant: <b id="ucQuadVal">—</b>
+      </div>
+    </div>
+    <table class="mono-table">
+      <tr><th>Angle</th><th>sin</th><th>cos</th><th>tan</th></tr>
+      <tr><td>0°</td><td>0</td><td>1</td><td>0</td></tr>
+      <tr><td>30°</td><td>1/2</td><td>√3/2</td><td>1/√3</td></tr>
+      <tr><td>37°</td><td>3/5</td><td>4/5</td><td>3/4</td></tr>
+      <tr><td>45°</td><td>1/√2</td><td>1/√2</td><td>1</td></tr>
+      <tr><td>53°</td><td>4/5</td><td>3/5</td><td>4/3</td></tr>
+      <tr><td>60°</td><td>√3/2</td><td>1/2</td><td>√3</td></tr>
+      <tr><td>90°</td><td>1</td><td>0</td><td>undefined</td></tr>
+    </table>
+    <div class="callout trap"><span class="lbl">⚠ Exam trap</span>Past 90°, only ONE of sin/cos/tan stays positive per quadrant — remember it as "All / Sin / Tan / Cos" going anticlockwise from quadrant I to IV.</div>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Physics in Action</span>
+    <h3>Vector Components — Projectile Motion</h3>
+    <p>Any velocity vector u launched at angle θ splits into a horizontal part (uₓ = u cos θ) and a vertical part (u_y = u sin θ). Drag both sliders and watch the split happen live.</p>
+    <div class="widget">
+      <svg viewBox="0 0 320 280" id="vecSvg">
+        <defs><marker id="arrowHead" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#FBBF24"/></marker></defs>
+        <line x1="30" y1="250" x2="300" y2="250" stroke="rgba(230,236,246,.35)" stroke-width="1.5"/>
+        <line x1="30" y1="250" x2="30" y2="20" stroke="rgba(230,236,246,.35)" stroke-width="1.5"/>
+        <line id="vecX" x1="30" y1="250" x2="200" y2="250" stroke="#5EEAD4" stroke-width="2.5" stroke-dasharray="5,3"/>
+        <line id="vecY" x1="200" y1="250" x2="200" y2="120" stroke="#A78BFA" stroke-width="2.5" stroke-dasharray="5,3"/>
+        <line id="vecMain" x1="30" y1="250" x2="200" y2="120" stroke="#FBBF24" stroke-width="3" marker-end="url(#arrowHead)"/>
+      </svg>
+      <div class="widget-controls">
+        <label class="control">Speed u — <span id="vecUVal">17</span>
+          <input type="range" id="vecU" min="20" max="220" step="1" value="170">
+        </label>
+        <label class="control">Angle θ — <span id="vecAngVal">40°</span>
+          <input type="range" id="vecAngle" min="0" max="90" step="1" value="40">
+        </label>
+      </div>
+      <div class="readout">u<sub>x</sub> = u cos θ ≈ <b id="vecUxVal">—</b> &nbsp; u<sub>y</sub> = u sin θ ≈ <b id="vecUyVal">—</b></div>
+    </div>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Advanced Identities</span>
+    <h3>Sum, Difference &amp; Double-Angle Formulas</h3>
+    <div class="formula-row">
+      <span class="formula">sin²θ + cos²θ = 1</span>
+      <span class="formula violet">sin(a ± b) = sin a cos b ± cos a sin b</span>
+    </div>
+    <div class="formula-row">
+      <span class="formula violet">cos(a ± b) = cos a cos b ∓ sin a sin b</span>
+      <span class="formula amber">sin 2θ = 2 sin θ cos θ</span>
+      <span class="formula amber">cos 2θ = cos²θ − sin²θ</span>
+    </div>
+  </article>
+`;
+
+TOPIC_CONTENT.log = `
+  <article class="card">
+    <span class="card-eyebrow">Definition</span>
+    <h3>What Is a Logarithm?</h3>
+    <div class="formula-row"><span class="formula">log<sub>b</sub> a = c &nbsp;⇔&nbsp; b<sup>c</sup> = a</span></div>
+    <div class="callout plain"><span class="lbl">🌱 Plain English</span>A log answers one question: "what power do I raise the base to, to get this number?" log₂8 = 3 simply because 2³ = 8 — the log and the exponent are the same fact, viewed from opposite sides.</div>
+  </article>
+
+  <article class="card">
+    <span class="card-eyebrow">Rules</span>
+    <h3>Log Algebra</h3>
+    <div class="formula-row">
+      <span class="formula">log<sub>b</sub>(MN) = log<sub>b</sub>M + log<sub>b</sub>N</span>
+    </div>
+    <div class="formula-row">
+      <span class="formula violet">log<sub>b</sub>${frac('M','N')} = log<sub>b</sub>M − log<sub>b</sub>N</span>
+      <span class="formula amber">log<sub>b</sub>(M<sup>r</sup>) = r·log<sub>b</sub>M</span>
+    </div>
+    <p>And one constant to just remember: log<sub>b</sub>(1) = 0, for any base b.</p>
+  </article>
+
+  <article class="card">
+    <span class="card-eyebrow">Two Special Bases</span>
+    <h3>Common Log vs Natural Log</h3>
+    <div class="formula-row">
+      <span class="formula">log<sub>10</sub> x — "common log"</span>
+      <span class="formula violet">ln x = log<sub>e</sub> x — "natural log"</span>
+    </div>
+    <div class="callout physics"><span class="lbl">⚛ Physics application</span>Natural logs appear whenever something grows or decays continuously — radioactive decay and capacitor discharge both solve out to a ln term.</div>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Interactive</span>
+    <h3>Log Playground</h3>
+    <div class="widget">
+      <div class="widget-controls">
+        <label class="control">Base (b)
+          <input type="number" id="logB" value="2" step="1" min="1.01">
+        </label>
+        <label class="control">Value (a)
+          <input type="number" id="logA" value="8" step="1" min="0.01">
+        </label>
+      </div>
+      <div class="readout" id="logEq"></div>
+    </div>
+  </article>
+`;
+
+TOPIC_CONTENT.graph = `
+  <article class="card">
+    <span class="card-eyebrow">Coordinate Basics</span>
+    <h3>Distance &amp; Slope</h3>
+    <div class="formula-row"><span class="formula">d = √((x₂−x₁)² + (y₂−y₁)²)</span></div>
+    <div class="formula-row"><span class="formula violet">m = ${frac('y₂ − y₁','x₂ − x₁')}</span></div>
+    <div class="callout plain"><span class="lbl">🌱 Plain English</span>Slope is just "how much y climbs for every step x takes" — a steep line has a big slope, a flat line has a slope near zero, and a line going downhill has a negative slope.</div>
+  </article>
+
+  <article class="card">
+    <span class="card-eyebrow">Shapes</span>
+    <h3>Circle Equation</h3>
+    <div class="formula-row"><span class="formula amber">(x−h)² + (y−k)² = r²</span></div>
+    <p>Centre at (h, k), radius r. If the centre sits at the origin, this simplifies to x² + y² = r².</p>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Interactive</span>
+    <h3>The Line Grapher</h3>
+    <p>Every straight line is y = mx + c. Slide m (the slope = tan θ of the line's tilt) and c (where it crosses the y-axis) and watch the line move.</p>
+    <div class="widget">
+      <canvas id="lineGraphCanvas" width="480" height="300"></canvas>
+      <div class="widget-controls">
+        <label class="control">Slope m — <span id="lineMVal">1.0</span>
+          <input type="range" id="lineM" min="-3" max="3" step="0.1" value="1">
+        </label>
+        <label class="control">Intercept c — <span id="lineCVal">0.0</span>
+          <input type="range" id="lineC" min="-8" max="8" step="0.5" value="0">
+        </label>
+      </div>
+      <button class="mini-btn" id="lineRandom">🎲 Randomize</button>
+      <div class="readout" id="lineEqDisplay"></div>
+    </div>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Curve Gallery</span>
+    <h3>Curves You'll Meet Constantly in Physics</h3>
+    <div class="gallery-grid">
+      <div class="gallery-item"><canvas id="galParabola" width="220" height="160"></canvas><div class="cap">y = x² — parabola<br>e.g. KE ∝ v²</div></div>
+      <div class="gallery-item"><canvas id="galHyperbola" width="220" height="160"></canvas><div class="cap">y = 1/x — hyperbola<br>e.g. isothermal PV = const</div></div>
+      <div class="gallery-item"><canvas id="galExp" width="220" height="160"></canvas><div class="cap">y = eˣ &amp; y = e⁻ˣ<br>growth vs. decay</div></div>
+    </div>
+    <p style="margin-top:12px;">One more worth knowing by sight: <b style="color:var(--text);">y² = x</b> is the exact same parabola shape as y = x², just rotated 90° — it opens sideways ("C-shaped") instead of upward.</p>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Interactive</span>
+    <h3>Sine Wave Explorer — Phase Shift</h3>
+    <p>y = A·sin(ωx + φ). Amplitude (A) sets the height, ω sets how squeezed the wave is, and phase φ slides the whole wave left or right — exactly what "initial conditions" do to oscillations in physics.</p>
+    <div class="widget">
+      <canvas id="sineCanvas" width="480" height="280"></canvas>
+      <div class="widget-controls">
+        <label class="control">Amplitude A — <span id="sineAVal">1.0</span>
+          <input type="range" id="sineA" min="0.2" max="3" step="0.1" value="1">
+        </label>
+        <label class="control">Angular freq ω — <span id="sineWVal">1.0</span>
+          <input type="range" id="sineW" min="0.5" max="3" step="0.1" value="1">
+        </label>
+        <label class="control">Phase φ — <span id="sinePhiVal">0°</span>
+          <input type="range" id="sinePhi" min="0" max="360" step="5" value="0">
+        </label>
+      </div>
+      <div class="readout" id="sineEqDisplay"></div>
+    </div>
+  </article>
+`;
+
+TOPIC_CONTENT.seq = `
+  <article class="card wide">
+    <span class="card-eyebrow">Sequences</span>
+    <h3>Arithmetic &amp; Geometric Progressions</h3>
+    <div class="formula-row">
+      <span class="formula">AP: aₙ = a + (n−1)d</span>
+      <span class="formula violet">Sₙ = ${frac('n','2')}(2a + (n−1)d)</span>
+    </div>
+    <div class="formula-row">
+      <span class="formula amber">GP: aₙ = a·r<sup>n−1</sup></span>
+      <span class="formula amber">Sₙ = ${frac('a(rⁿ − 1)','r − 1')}</span>
+      <span class="formula amber">S<sub>∞</sub> = ${frac('a','1 − r')} &nbsp;(only if |r| &lt; 1)</span>
+    </div>
+    <div class="callout plain"><span class="lbl">🌱 Plain English</span>AP: keep adding the same number each time (2, 5, 8, 11 …). GP: keep multiplying by the same number each time (2, 6, 18, 54 …). That single difference — add vs. multiply — is all that separates them.</div>
+    <div class="callout physics"><span class="lbl">⚛ Physics application</span>Infinite GP sums show up whenever a physical effect keeps shrinking by a constant fraction each step — like successive bounces of a ball each reaching a fixed fraction of the last height.</div>
+    <div class="widget">
+      <div class="card-eyebrow" style="margin-bottom:10px;">🎮 Sequence Generator</div>
+      <div class="seq-mode-row">
+        <button class="seq-mode active" data-mode="ap">Arithmetic (AP)</button>
+        <button class="seq-mode" data-mode="gp">Geometric (GP)</button>
+      </div>
+      <div class="widget-controls">
+        <label class="control">First term (a)
+          <input type="number" id="seqA" value="2" step="1">
+        </label>
+        <label class="control" id="seqDRLabelWrap">Common difference (d)
+          <input type="number" id="seqDR" value="3" step="0.5">
+        </label>
+        <label class="control">Terms (n) — <span id="seqNVal">6</span>
+          <input type="range" id="seqN" min="3" max="12" step="1" value="6">
+        </label>
+      </div>
+      <div class="seq-chips" id="seqChips"></div>
+      <div class="readout">Sum of these terms: <b id="seqSumVal">—</b><br><span id="seqInfSum" style="color:var(--text-dim);"></span></div>
+    </div>
+  </article>
+`;
+
+TOPIC_CONTENT.diff = `
+  <article class="card wide">
+    <span class="card-eyebrow">Definition</span>
+    <h3>What Is a Derivative?</h3>
+    <div class="formula-row">
+      <span class="formula">${frac('dy','dx')} = lim<sub>Δx→0</sub> ${frac('f(x+Δx) − f(x)','Δx')}</span>
+    </div>
+    <div class="callout plain"><span class="lbl">🌱 Plain English</span>A derivative is just the slope of the curve at one exact point — zoom in close enough on any smooth curve and it looks like a straight line; the derivative is that line's steepness. It's also called the "instantaneous rate of change."</div>
+  </article>
+
+  <article class="card">
+    <span class="card-eyebrow">Core Rules</span>
+    <h3>Power Rule &amp; Constants</h3>
+    <div class="formula-row">
+      <span class="formula">${frac('d','dx')}(x<sup>n</sup>) = n·x<sup>n−1</sup></span>
+      <span class="formula violet">${frac('d','dx')}(constant) = 0</span>
+    </div>
+    <table class="mono-table">
+      <tr><th>f(x)</th><th>f′(x)</th></tr>
+      <tr><td>sin x</td><td>cos x</td></tr>
+      <tr><td>cos x</td><td>−sin x</td></tr>
+      <tr><td>tan x</td><td>sec²x</td></tr>
+      <tr><td>eˣ</td><td>eˣ</td></tr>
+      <tr><td>ln x</td><td>1/x</td></tr>
+    </table>
+  </article>
+
+  <article class="card">
+    <span class="card-eyebrow">Combining Functions</span>
+    <h3>Product &amp; Chain Rule</h3>
+    <div class="formula-row"><span class="formula">(uv)′ = u′v + uv′</span></div>
+    <p style="margin-top:10px;">Chain rule, worked: for y = sin(2x + 3), differentiate the "outside" then multiply by the derivative of the "inside":</p>
+    <div class="formula-row"><span class="formula amber">y′ = cos(2x + 3) · 2</span></div>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Interactive · Signature Tool</span>
+    <h3>Tangent Line Explorer</h3>
+    <p>Pick a function, slide the point along it, and watch the tangent line — and its slope, the actual derivative value — update live.</p>
+    <div class="widget">
+      <canvas id="tangentCanvas" width="480" height="300"></canvas>
+      <div class="widget-controls">
+        <label class="control">Function
+          <select id="tangentFn">
+            <option value="x2">y = x²</option>
+            <option value="sinx">y = sin x</option>
+            <option value="cubic">y = x³/3 − x</option>
+          </select>
+        </label>
+        <label class="control">Point x₀ — <span id="tangentXVal">0</span>
+          <input type="range" id="tangentX" min="-4" max="4" step="0.05" value="1">
+        </label>
+      </div>
+      <div class="readout">Slope (dy/dx) at this point ≈ <b id="tangentSlopeVal">—</b></div>
+    </div>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Physics in Action</span>
+    <h3>Calculus <em>Is</em> the Language of Motion</h3>
+    <div class="formula-row">
+      <span class="formula">v = ${frac('dx','dt')}</span>
+      <span class="formula violet">a = ${frac('dv','dt')}</span>
+      <span class="formula amber">F = ${frac('dp','dt')}</span>
+    </div>
+    <p>Velocity is how fast position changes. Acceleration is how fast velocity changes. Force is how fast momentum changes. Each one is just "the derivative of the thing before it."</p>
+  </article>
+`;
+
+TOPIC_CONTENT.maxmin = `
+  <article class="card wide">
+    <span class="card-eyebrow">Critical Points</span>
+    <h3>Finding Peaks and Valleys</h3>
+    <div class="formula-row"><span class="formula">Critical point: ${frac('dy','dx')} = 0</span></div>
+    <div class="formula-row">
+      <span class="formula violet">${frac('d²y','dx²')} &gt; 0 → local minimum</span>
+      <span class="formula amber">${frac('d²y','dx²')} &lt; 0 → local maximum</span>
+    </div>
+    <div class="widget">
+      <canvas id="maxminCanvas" width="480" height="300"></canvas>
+      <div class="readout">🟡 Gold dot: local <b>maximum</b> at x = −1 &nbsp;&nbsp; 🌸 Pink dot: local <b>minimum</b> at x = 1</div>
+    </div>
+    <div class="callout plain"><span class="lbl">🌱 Plain English</span>At the very top of a hill or the very bottom of a valley, the ground is momentarily flat — slope = 0. The second derivative just tells you whether you're standing on a hilltop (curving downward) or in a valley (curving upward).</div>
+    <div class="callout physics"><span class="lbl">⚛ Physics application</span>Projectile range as a function of launch angle has a maximum at 45° — you find it exactly this way, by setting the derivative of the range formula to zero.</div>
+  </article>
+`;
+
+TOPIC_CONTENT.integ = `
+  <article class="card">
+    <span class="card-eyebrow">Definition</span>
+    <h3>Integration = Reverse Differentiation</h3>
+    <div class="formula-row"><span class="formula">∫f(x) dx = F(x) + C &nbsp;<span style="color:var(--text-faint);">(indefinite)</span></span></div>
+    <div class="formula-row"><span class="formula violet">∫<sub>a</sub><sup>b</sup> f(x) dx = F(b) − F(a) &nbsp;<span style="color:var(--text-faint);">(definite)</span></span></div>
+    <div class="callout plain"><span class="lbl">🌱 Plain English</span>Integration adds up infinitely many, infinitely thin slices. A definite integral between a and b is just "the area trapped under the curve, between those two x-values."</div>
+  </article>
+
+  <article class="card">
+    <span class="card-eyebrow">Standard Integrals</span>
+    <h3>The Reverse Table</h3>
+    <table class="mono-table">
+      <tr><th>∫f(x) dx</th><th>Result</th></tr>
+      <tr><td>xⁿ</td><td>${frac('xⁿ⁺¹','n+1')} + C</td></tr>
+      <tr><td>sin x</td><td>−cos x + C</td></tr>
+      <tr><td>cos x</td><td>sin x + C</td></tr>
+      <tr><td>eˣ</td><td>eˣ + C</td></tr>
+      <tr><td>1/x</td><td>ln|x| + C</td></tr>
+    </table>
+  </article>
+
+  <article class="card wide">
+    <span class="card-eyebrow">Interactive · Signature Tool</span>
+    <h3>Riemann Sum Visualizer — Area Under the Curve</h3>
+    <p>Set the limits a and b, then slide the rectangle count n upward. Watch the blocky approximation close in on the true, smooth area — this <em>is</em> what a definite integral is doing under the hood.</p>
+    <div class="widget">
+      <canvas id="areaCanvas" width="480" height="300"></canvas>
+      <div class="widget-controls">
+        <label class="control">Function
+          <select id="areaFn">
+            <option value="lin">y = x &nbsp;(like v = at)</option>
+            <option value="quad">y = x²/4</option>
+            <option value="sin">y = sin x, 0 to π</option>
+          </select>
+        </label>
+        <label class="control">Lower limit a — <span id="areaAVal">0</span>
+          <input type="range" id="areaA" min="0" max="8" step="0.1" value="0">
+        </label>
+        <label class="control">Upper limit b — <span id="areaBVal">4</span>
+          <input type="range" id="areaB" min="0" max="8" step="0.1" value="4">
+        </label>
+        <label class="control">Rectangles n — <span id="areaNVal">8</span>
+          <input type="range" id="areaN" min="2" max="50" step="1" value="8">
+        </label>
+      </div>
+      <div class="readout">Rectangle approximation ≈ <b id="areaApproxVal">—</b> &nbsp;|&nbsp; True area (fine numeric integral) ≈ <b id="areaExactVal">—</b></div>
+    </div>
+    <div class="callout physics"><span class="lbl">⚛ Physics application</span>Displacement = ∫v dt — the area under a velocity–time graph. Work done = ∫F dx — the area under a force–displacement graph. Same trick, every time.</div>
+  </article>
+`;
+
+/* =======================================================================
+   RENDER TOPIC + WIDGET INIT DISPATCH
+   ======================================================================= */
+const topicBoardEl = document.getElementById("topicBoard");
+const TOPIC_LABEL = {}; TOPICS.forEach(t=> TOPIC_LABEL[t.id]=t.label);
+
+function renderTopic(id){
+  renderTopicTabs(id);
+  topicBoardEl.innerHTML = TOPIC_CONTENT[id];
+  document.getElementById("topbarTopic").textContent = "— " + TOPIC_LABEL[id];
+  initWidgetsFor(id);
+}
+function initWidgetsFor(id){
+  if(id==="pow") initPowerPlayground();
+  if(id==="trig"){ initUnitCircle(); initVectorDecomposer(); }
+  if(id==="log") initLogCalc();
+  if(id==="graph"){ initLineGrapher(); initSineExplorer(); initGallery(); }
+  if(id==="seq") initSeqGenerator();
+  if(id==="diff") initTangentExplorer();
+  if(id==="maxmin") initMaxMinGraph();
+  if(id==="integ") initAreaVisualizer();
+}
+
+/* ---------------- Power Playground ---------------- */
+function initPowerPlayground(){
+  const xEl = document.getElementById("powX"), nEl = document.getElementById("powN");
+  function update(){
+    const x = parseFloat(xEl.value), n = parseFloat(nEl.value);
+    document.getElementById("powNVal").textContent = n;
+    const result = Math.pow(x,n);
+    document.getElementById("powEq").innerHTML = `${x}<sup>${n}</sup> = <b>${isFinite(result) ? roundNice(result) : "undefined"}</b>`;
+  }
+  xEl.addEventListener("input", update);
+  nEl.addEventListener("input", update);
+  update();
+}
+
+/* ---------------- Unit Circle ---------------- */
+function initUnitCircle(){
+  const angleEl = document.getElementById("ucAngle");
+  function update(){
+    const deg = parseFloat(angleEl.value);
+    const rad = deg*Math.PI/180;
+    const cx=150, cy=150, R=110;
+    const px = cx + R*Math.cos(rad);
+    const py = cy - R*Math.sin(rad);
+    document.getElementById("ucRadius").setAttribute("x2", px);
+    document.getElementById("ucRadius").setAttribute("y2", py);
+    document.getElementById("ucPoint").setAttribute("cx", px);
+    document.getElementById("ucPoint").setAttribute("cy", py);
+    document.getElementById("ucCosLine").setAttribute("x1", cx);
+    document.getElementById("ucCosLine").setAttribute("y1", cy);
+    document.getElementById("ucCosLine").setAttribute("x2", px);
+    document.getElementById("ucCosLine").setAttribute("y2", cy);
+    document.getElementById("ucSinLine").setAttribute("x1", px);
+    document.getElementById("ucSinLine").setAttribute("y1", cy);
+    document.getElementById("ucSinLine").setAttribute("x2", px);
+    document.getElementById("ucSinLine").setAttribute("y2", py);
+    const s = Math.sin(rad), c = Math.cos(rad);
+    const t = Math.abs(c) < 1e-9 ? NaN : s/c;
+    document.getElementById("ucSinVal").textContent = roundNice(s);
+    document.getElementById("ucCosVal").textContent = roundNice(c);
+    document.getElementById("ucTanVal").textContent = isNaN(t) ? "undefined" : roundNice(t);
+    document.getElementById("ucDegVal").textContent = deg.toFixed(0) + "°";
+    const dm = ((deg % 360) + 360) % 360;
+    let quad;
+    if(dm < 90) quad = "I (all positive)";
+    else if(dm < 180) quad = "II (sin positive)";
+    else if(dm < 270) quad = "III (tan positive)";
+    else quad = "IV (cos positive)";
+    document.getElementById("ucQuadVal").textContent = quad;
+  }
+  angleEl.addEventListener("input", update);
+  document.getElementById("ucRandom").addEventListener("click", ()=>{
+    angleEl.value = Math.floor(Math.random()*360);
+    update();
+  });
+  update();
+}
+
+/* ---------------- Vector Decomposer ---------------- */
+function initVectorDecomposer(){
+  const uEl = document.getElementById("vecU"), aEl = document.getElementById("vecAngle");
+  function update(){
+    const u = parseFloat(uEl.value), deg = parseFloat(aEl.value), rad = deg*Math.PI/180;
+    const ox=30, oy=250;
+    const dx = u*Math.cos(rad), dy = u*Math.sin(rad);
+    const ex = ox+dx, ey = oy-dy;
+    document.getElementById("vecMain").setAttribute("x2", ex);
+    document.getElementById("vecMain").setAttribute("y2", ey);
+    document.getElementById("vecX").setAttribute("x2", ex);
+    document.getElementById("vecX").setAttribute("y2", oy);
+    document.getElementById("vecY").setAttribute("x1", ex);
+    document.getElementById("vecY").setAttribute("y1", oy);
+    document.getElementById("vecY").setAttribute("x2", ex);
+    document.getElementById("vecY").setAttribute("y2", ey);
+    document.getElementById("vecUVal").textContent = (u/10).toFixed(1);
+    document.getElementById("vecAngVal").textContent = deg.toFixed(0) + "°";
+    document.getElementById("vecUxVal").textContent = roundNice(u*Math.cos(rad)/10);
+    document.getElementById("vecUyVal").textContent = roundNice(u*Math.sin(rad)/10);
+  }
+  uEl.addEventListener("input", update);
+  aEl.addEventListener("input", update);
+  update();
+}
+
+/* ---------------- Log Calculator ---------------- */
+function initLogCalc(){
+  const bEl = document.getElementById("logB"), aEl = document.getElementById("logA");
+  function update(){
+    const b = parseFloat(bEl.value), a = parseFloat(aEl.value);
+    let result = (a>0 && b>0 && b!==1) ? Math.log(a)/Math.log(b) : NaN;
+    document.getElementById("logEq").innerHTML = `log<sub>${b}</sub>(${a}) = <b>${isNaN(result) ? "undefined (need a,b &gt; 0, b ≠ 1)" : roundNice(result)}</b>`;
+  }
+  bEl.addEventListener("input", update);
+  aEl.addEventListener("input", update);
+  update();
+}
+
+/* ---------------- Line Grapher ---------------- */
+function initLineGrapher(){
+  const mEl = document.getElementById("lineM"), cEl = document.getElementById("lineC");
+  function update(){
+    const m = parseFloat(mEl.value), c = parseFloat(cEl.value);
+    document.getElementById("lineMVal").textContent = m.toFixed(1);
+    document.getElementById("lineCVal").textContent = c.toFixed(1);
+    document.getElementById("lineEqDisplay").innerHTML = `y = ${m.toFixed(1)}x ${c>=0 ? "+" : "−"} ${Math.abs(c).toFixed(1)}`;
+    drawPlot(document.getElementById("lineGraphCanvas"), {
+      xMin:-10, xMax:10, yMin:-10, yMax:10,
+      curves:[{ fn:x=> m*x+c, color:"#5EEAD4" }]
+    });
+  }
+  mEl.addEventListener("input", update);
+  cEl.addEventListener("input", update);
+  document.getElementById("lineRandom").addEventListener("click", ()=>{
+    mEl.value = (Math.random()*6-3).toFixed(1);
+    cEl.value = (Math.random()*16-8).toFixed(1);
+    update();
+  });
+  update();
+}
+
+/* ---------------- Sine Wave Explorer ---------------- */
+function initSineExplorer(){
+  const aEl = document.getElementById("sineA"), wEl = document.getElementById("sineW"), pEl = document.getElementById("sinePhi");
+  function update(){
+    const A = parseFloat(aEl.value), w = parseFloat(wEl.value), phDeg = parseFloat(pEl.value);
+    const ph = phDeg*Math.PI/180;
+    document.getElementById("sineAVal").textContent = A.toFixed(1);
+    document.getElementById("sineWVal").textContent = w.toFixed(1);
+    document.getElementById("sinePhiVal").textContent = phDeg.toFixed(0) + "°";
+    document.getElementById("sineEqDisplay").innerHTML = `y = ${A.toFixed(1)} · sin(${w.toFixed(1)}x + ${phDeg.toFixed(0)}°)`;
+    drawPlot(document.getElementById("sineCanvas"), {
+      xMin:-2*Math.PI, xMax:2*Math.PI, yMin:-3.2, yMax:3.2,
+      curves:[{ fn:x=> A*Math.sin(w*x+ph), color:"#A78BFA" }]
+    });
+  }
+  aEl.addEventListener("input", update);
+  wEl.addEventListener("input", update);
+  pEl.addEventListener("input", update);
+  update();
+}
+
+/* ---------------- Curve Gallery ---------------- */
+function initGallery(){
+  drawPlot(document.getElementById("galParabola"), { xMin:-4, xMax:4, yMin:-1, yMax:16, curves:[{ fn:x=>x*x, color:"#5EEAD4" }] });
+  drawPlot(document.getElementById("galHyperbola"), { xMin:-6, xMax:6, yMin:-6, yMax:6, curves:[{ fn:x=> x===0?NaN:1/x, color:"#A78BFA" }] });
+  drawPlot(document.getElementById("galExp"), { xMin:-3, xMax:3, yMin:-1, yMax:20, curves:[{ fn:x=>Math.exp(x), color:"#FBBF24" },{ fn:x=>Math.exp(-x), color:"#F472B6" }] });
+}
+
+/* ---------------- Sequence Generator ---------------- */
+function initSeqGenerator(){
+  const aEl = document.getElementById("seqA"), drEl = document.getElementById("seqDR"), nEl = document.getElementById("seqN");
+  let mode = "ap";
+  function gen(){
+    const a = parseFloat(aEl.value) || 0;
+    const dr = parseFloat(drEl.value) || 0;
+    const n = parseInt(nEl.value) || 3;
+    document.getElementById("seqNVal").textContent = n;
+    const terms = [];
+    let sum = 0;
+    for(let i=0;i<n;i++){
+      const term = mode==="ap" ? a + i*dr : a*Math.pow(dr,i);
+      terms.push(term);
+      sum += term;
+    }
+    document.getElementById("seqChips").innerHTML = terms.map(t=>`<span class="seq-chip">${roundNice(t)}</span>`).join('<span class="seq-arrow">→</span>');
+    document.getElementById("seqSumVal").textContent = roundNice(sum);
+    let infHtml = "";
+    if(mode==="gp" && Math.abs(dr) < 1 && dr !== 0){
+      infHtml = `Infinite sum (|r| &lt; 1): S∞ = a/(1−r) = ${roundNice(a/(1-dr))}`;
+    }
+    document.getElementById("seqInfSum").innerHTML = infHtml;
+  }
+  document.querySelectorAll(".seq-mode").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      document.querySelectorAll(".seq-mode").forEach(b=>b.classList.remove("active"));
+      btn.classList.add("active");
+      mode = btn.getAttribute("data-mode");
+      document.getElementById("seqDRLabelWrap").firstChild.textContent = mode==="ap" ? "Common difference (d)" : "Common ratio (r)";
+      gen();
+    });
+  });
+  aEl.addEventListener("input", gen);
+  drEl.addEventListener("input", gen);
+  nEl.addEventListener("input", gen);
+  gen();
+}
+
+/* ---------------- Tangent Explorer ---------------- */
+const TANGENT_FUNCS = {
+  x2:    { fn:x=>x*x,               xMin:-4, xMax:4,           yMin:-1, yMax:16 },
+  sinx:  { fn:x=>Math.sin(x),       xMin:-2*Math.PI, xMax:2*Math.PI, yMin:-1.5, yMax:1.5 },
+  cubic: { fn:x=>(x*x*x)/3 - x,     xMin:-3, xMax:3,           yMin:-3, yMax:3 },
+};
+function initTangentExplorer(){
+  const fnEl = document.getElementById("tangentFn"), xEl = document.getElementById("tangentX");
+  function update(){
+    const f = TANGENT_FUNCS[fnEl.value];
+    xEl.min = f.xMin; xEl.max = f.xMax; xEl.step = 0.05;
+    let x0 = parseFloat(xEl.value);
+    if(isNaN(x0) || x0 < f.xMin || x0 > f.xMax){ x0 = (f.xMin+f.xMax)/2; xEl.value = x0; }
+    const slope = drawPlot(document.getElementById("tangentCanvas"), {
+      xMin:f.xMin, xMax:f.xMax, yMin:f.yMin, yMax:f.yMax,
+      curves:[{ fn:f.fn, color:"#5EEAD4" }],
+      tangent:{ x0, fn:f.fn, h:0.001, color:"#FBBF24" }
+    });
+    document.getElementById("tangentXVal").textContent = roundNice(x0);
+    document.getElementById("tangentSlopeVal").textContent = roundNice(slope);
+  }
+  fnEl.addEventListener("change", update);
+  xEl.addEventListener("input", update);
+  update();
+}
+
+/* ---------------- Max/Min static graph ---------------- */
+function initMaxMinGraph(){
+  const f = x => (x*x*x)/3 - x;
+  drawPlot(document.getElementById("maxminCanvas"), {
+    xMin:-3, xMax:3, yMin:-3, yMax:3,
+    curves:[{ fn:f, color:"#5EEAD4" }],
+    points:[
+      { x:-1, y:f(-1), color:"#FBBF24" },
+      { x:1,  y:f(1),  color:"#F472B6" }
+    ]
+  });
+}
+
+/* ---------------- Area / Riemann Visualizer ---------------- */
+const AREA_FUNCS = {
+  lin:  { fn:x=>x,          xMin:0, xMax:8, yMin:0, yMax:8 },
+  quad: { fn:x=>(x*x)/4,    xMin:0, xMax:8, yMin:0, yMax:16 },
+  sin:  { fn:x=>Math.sin(x),xMin:0, xMax:Math.PI, yMin:0, yMax:1.2 },
+};
+function initAreaVisualizer(){
+  const fnEl = document.getElementById("areaFn"), aEl = document.getElementById("areaA"), bEl = document.getElementById("areaB"), nEl = document.getElementById("areaN");
+  function update(){
+    const f = AREA_FUNCS[fnEl.value];
+    aEl.min = f.xMin; aEl.max = f.xMax; aEl.step = 0.1;
+    bEl.min = f.xMin; bEl.max = f.xMax; bEl.step = 0.1;
+    let a = parseFloat(aEl.value), b = parseFloat(bEl.value);
+    if(isNaN(a) || a < f.xMin || a > f.xMax) a = f.xMin;
+    if(isNaN(b) || b < f.xMin || b > f.xMax) b = f.xMax;
+    if(a > b){ const tmp = a; a = b; b = tmp; }
+    const n = parseInt(nEl.value);
+    const rects = [];
+    const dx = (b-a)/n;
+    let riemann = 0;
+    for(let i=0;i<n;i++){
+      const x0 = a + i*dx, x1 = x0 + dx;
+      const xm = (x0+x1)/2;
+      const y = f.fn(xm);
+      rects.push({ x0, x1, y });
+      riemann += y*dx;
+    }
+    const fineN = 2000, fdx = (b-a)/fineN;
+    let fine = 0;
+    for(let i=0;i<fineN;i++){ fine += f.fn(a + (i+0.5)*fdx) * fdx; }
+    drawPlot(document.getElementById("areaCanvas"), {
+      xMin:f.xMin, xMax:f.xMax, yMin:f.yMin, yMax:f.yMax,
+      curves:[{ fn:f.fn, color:"#5EEAD4" }],
+      area:{ rects, color:"rgba(167,139,250,0.28)" }
+    });
+    document.getElementById("areaAVal").textContent = roundNice(a);
+    document.getElementById("areaBVal").textContent = roundNice(b);
+    document.getElementById("areaNVal").textContent = n;
+    document.getElementById("areaApproxVal").textContent = roundNice(riemann);
+    document.getElementById("areaExactVal").textContent = roundNice(fine);
+  }
+  fnEl.addEventListener("change", update);
+  aEl.addEventListener("input", update);
+  bEl.addEventListener("input", update);
+  nEl.addEventListener("input", update);
+  update();
+}
+
+/* =======================================================================
+   CHEAT SHEET
+   ======================================================================= */
+const CHEAT = [
+  { title:"Powers", html:`x<sup>m</sup>x<sup>n</sup>=x<sup>m+n</sup> &nbsp; (x<sup>m</sup>)<sup>n</sup>=x<sup>mn</sup> &nbsp; x<sup>0</sup>=1` },
+  { title:"Trigonometry", html:`sinθ=P/H &nbsp; cosθ=B/H &nbsp; tanθ=P/B &nbsp; sin²θ+cos²θ=1` },
+  { title:"Logarithms", html:`log<sub>b</sub>a=c ⇔ b<sup>c</sup>=a &nbsp; log(MN)=logM+logN` },
+  { title:"Lines & Curves", html:`y=mx+c &nbsp; m=(y₂−y₁)/(x₂−x₁) &nbsp; d=√((x₂−x₁)²+(y₂−y₁)²)` },
+  { title:"Sequences", html:`AP: aₙ=a+(n−1)d &nbsp; GP: aₙ=ar<sup>n−1</sup>, S∞=a/(1−r)` },
+  { title:"Differentiation", html:`d/dx(xⁿ)=nx<sup>n−1</sup> &nbsp; d/dx(sinx)=cosx &nbsp; d/dx(eˣ)=eˣ` },
+  { title:"Maxima/Minima", html:`dy/dx=0 at critical pt &nbsp; d²y/dx²&gt;0 → min, &lt;0 → max` },
+  { title:"Integration", html:`∫xⁿdx=xⁿ⁺¹/(n+1)+C &nbsp; ∫ₐᵇf(x)dx=F(b)−F(a)` },
+];
+document.getElementById("cheatGrid").innerHTML = CHEAT.map(c=>`<div class="cheat-block"><h4>${c.title}</h4><div style="font-family:var(--mono);font-size:12px;color:var(--text-dim);line-height:1.9;">${c.html}</div></div>`).join("");
+
+/* =======================================================================
+   QUICK CHECK QUIZ
+   ======================================================================= */
+const QUIZ = [
+  { type:"mcq", q:"What is the derivative of x⁵?", options:["5x⁴","x⁴","5x⁶","4x⁵"], correct:0,
+    exp:"Power rule: d/dx(xⁿ) = n·xⁿ⁻¹, so d/dx(x⁵) = 5x⁴." },
+  { type:"mcq", q:"∫x³ dx = ?", options:["x⁴/4 + C","3x² + C","x⁴ + C","4x³ + C"], correct:0,
+    exp:"∫xⁿdx = xⁿ⁺¹/(n+1) + C, so ∫x³dx = x⁴/4 + C." },
+  { type:"mcq", q:"What is sin(90°)?", options:["0","1","undefined","0.5"], correct:1,
+    exp:"At 90°, the radius line points straight up — sin equals the full radius, which is 1." },
+  { type:"mcq", q:"log₂(8) = ?", options:["2","3","4","8"], correct:1,
+    exp:"2³ = 8, so log₂(8) = 3." },
+  { type:"mcq", q:"At a local maximum, the second derivative is:", options:["Positive","Negative","Zero always","Undefined"], correct:1,
+    exp:"A negative second derivative means the curve bends downward — a hilltop, i.e. a local maximum." },
+  { type:"mcq", q:"Velocity is the derivative of which quantity with respect to time?", options:["Acceleration","Displacement","Force","Momentum"], correct:1,
+    exp:"v = dx/dt — velocity is the rate of change of displacement (position) with time." },
+  { type:"mcq", q:"In a GP with |r| < 1, the sum to infinity is given by:", options:["a·n","a/(1−r)","a(rⁿ−1)/(r−1)","a + (n−1)d"], correct:1,
+    exp:"S∞ = a/(1−r) only converges to a finite value when |r| < 1." },
+  { type:"visual", prompt:"Which graph below shows y = 1/x ?",
+    options:[
+      { fn:x=>x*x, label:"A" },
+      { fn:x=> x===0?NaN:1/x, label:"B" },
+      { fn:x=>Math.sin(x), label:"C" },
+      { fn:x=>Math.exp(x), label:"D" },
+    ], correct:1,
+    exp:"y = 1/x is a hyperbola — two separate curves in opposite corners, with a gap at x = 0. That's option B." },
+  { type:"visual", prompt:"Which graph below shows y = x² (a parabola)?",
+    options:[
+      { fn:x=>x*x, label:"A" },
+      { fn:x=> x===0?NaN:1/x, label:"B" },
+      { fn:x=>Math.sin(x), label:"C" },
+      { fn:x=>Math.exp(x), label:"D" },
+    ], correct:0,
+    exp:"y = x² is the classic U-shaped curve, symmetric about the y-axis — option A." },
+  { type:"mcq", q:"The chain rule is used to differentiate:", options:["A sum of two functions","A function raised inside another function (composite functions)","A constant","A quotient only"], correct:1,
+    exp:"The chain rule handles composite functions — a function nested inside another, like sin(2x+3)." },
+];
+let quizIdx = 0, quizScore = 0;
+const quizShell = document.getElementById("quizShell");
+
+function renderQuiz(){
+  if(quizIdx >= QUIZ.length){
+    quizShell.innerHTML = `
+      <div class="quiz-done">
+        <div class="quiz-meta">QUICK CHECK COMPLETE</div>
+        <div class="big">${quizScore} / ${QUIZ.length}</div>
+        <div style="color:var(--text-dim);">${quizScore===QUIZ.length ? "Full marks — the toolkit's locked in." : quizScore/QUIZ.length>=0.6 ? "Solid — revisit the ones you missed above." : "Head back through the topic cards and try again."}</div>
+        <button class="restart-btn" id="quizRestart">Restart</button>
+      </div>`;
+    document.getElementById("quizRestart").addEventListener("click", ()=>{ quizIdx=0; quizScore=0; renderQuiz(); });
+    return;
+  }
+  const item = QUIZ[quizIdx];
+  let answered = false;
+
+  if(item.type === "visual"){
+    quizShell.innerHTML = `
+      <div class="quiz-meta">QUESTION ${quizIdx+1} OF ${QUIZ.length} &middot; SCORE ${quizScore}</div>
+      <p class="quiz-q">${item.prompt}</p>
+      <div class="visual-opts">${item.options.map((o,i)=>`<button class="visual-opt" data-i="${i}"><canvas id="vqc_${quizIdx}_${i}" width="140" height="100"></canvas>Option ${o.label}</button>`).join("")}</div>
+      <div class="quiz-explain" id="quizExplain">${item.exp}</div>
+      <div class="quiz-nav"><span class="quiz-score">Score: ${quizScore}/${quizIdx}</span><button class="quiz-btn" id="nextBtn" disabled>Next →</button></div>`;
+    item.options.forEach((o,i)=>{
+      drawPlot(document.getElementById(`vqc_${quizIdx}_${i}`), { xMin:-5, xMax:5, yMin:-6, yMax:6, curves:[{ fn:o.fn, color:"#5EEAD4" }] });
+    });
+    quizShell.querySelectorAll(".visual-opt").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if(answered) return; answered = true;
+        const i = parseInt(btn.getAttribute("data-i"));
+        quizShell.querySelectorAll(".visual-opt").forEach((b,bi)=>{
+          b.disabled = true;
+          if(bi === item.correct) b.classList.add("correct");
+          else if(bi === i) b.classList.add("incorrect");
+        });
+        if(i === item.correct) quizScore++;
+        document.getElementById("quizExplain").classList.add("show");
+        document.getElementById("nextBtn").disabled = false;
+      });
+    });
+  } else {
+    quizShell.innerHTML = `
+      <div class="quiz-meta">QUESTION ${quizIdx+1} OF ${QUIZ.length} &middot; SCORE ${quizScore}</div>
+      <p class="quiz-q">${item.q}</p>
+      <div class="quiz-opts">${item.options.map((opt,i)=>`<button class="quiz-opt" data-i="${i}">${opt}</button>`).join("")}</div>
+      <div class="quiz-explain" id="quizExplain">${item.exp}</div>
+      <div class="quiz-nav"><span class="quiz-score">Score: ${quizScore}/${quizIdx}</span><button class="quiz-btn" id="nextBtn" disabled>Next →</button></div>`;
+    quizShell.querySelectorAll(".quiz-opt").forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if(answered) return; answered = true;
+        const i = parseInt(btn.getAttribute("data-i"));
+        quizShell.querySelectorAll(".quiz-opt").forEach((b,bi)=>{
+          b.disabled = true;
+          if(bi === item.correct) b.classList.add("correct");
+          else if(bi === i) b.classList.add("incorrect");
+        });
+        if(i === item.correct) quizScore++;
+        document.getElementById("quizExplain").classList.add("show");
+        document.getElementById("nextBtn").disabled = false;
+      });
+    });
+  }
+  document.getElementById("nextBtn").addEventListener("click", ()=>{ quizIdx++; renderQuiz(); });
+}
+
+/* =======================================================================
+   INIT
+   ======================================================================= */
+setLevel("intermediate");
+renderTopic("pow");
+renderQuiz();
+</script>
+</body>
+</html>
